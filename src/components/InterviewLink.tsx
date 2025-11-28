@@ -71,7 +71,7 @@ const InterviewLink = () => {
             // }
             value={
               interviewData
-                ? `https://ai-voice-app-five.vercel.app/interview/${interviewData.interview_id}`
+                ? `${process.env.NEXT_PUBLIC_HOST_URL}/interview/${interviewData.interview_id}`
                 : "Loading..."
             }
             readOnly
@@ -81,7 +81,7 @@ const InterviewLink = () => {
             onClick={async () => {
               if (interviewData) {
                 await navigator.clipboard.writeText(
-                  `${process.env.NEXT_PUBLIC_HOST_URL}/${interviewData.interview_id}`
+                  `${process.env.NEXT_PUBLIC_HOST_URL}/interview/${interviewData.interview_id}`
                 );
                 toast("Link copied");
               }

@@ -93,32 +93,32 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
         }
 
         if (!existingCandidate) {
-          console.log("No candidate found → inserting new candidate");
-
-          const { data: insertedCandidate, error: insertError } = await supabase
-            .from("candidates")
-            .insert([
-              {
+          console.log("No candidate found → inserting new candidate via server API");
+          try {
+            const res = await fetch("/api/create-candidate", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                id: authUser.id,
                 name: authUser.user_metadata?.name || "",
                 email: authUser.email,
                 picture: authUser.user_metadata?.picture || "",
                 current_occupation: "",
                 referal_link: "",
-              },
-            ])
-            .select();
-
-          if (insertError) {
-            console.error("Error inserting candidate:", insertError);
-          } else {
-            console.log("Candidate inserted:", insertedCandidate);
+              }),
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data?.error || "Failed to create candidate");
+            console.log("Candidate inserted via server:", data);
+          } catch (e) {
+            console.error("Error inserting candidate via server:", e);
           }
         } else {
           console.log("✔ Candidate already exists");
         }
 
         setLoading(false);
-        return; 
+        return;
       }
 
       // ----------------------------------------------------------
@@ -137,26 +137,26 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
       }
 
       if (!usersDB || usersDB.length === 0) {
-        console.log("No user found → inserting new user");
-
-        const { data: insertedData, error: insertError } = await supabase
-          .from("users")
-          .insert([
-            {
+        console.log("No user found → inserting new user via server API");
+        try {
+          const res = await fetch("/api/create-user", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              id: authUser.id,
               name: authUser.user_metadata?.name,
               email: authUser.email,
               picture: authUser.user_metadata?.picture,
               organization: "no organization",
-            },
-          ])
-          .select();
-
-        if (insertError) {
-          console.log("❌ Error inserting new user:", insertError.message);
-        } else {
-          console.log("✅ New user inserted:", insertedData);
-          setUsers(insertedData);
+            }),
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data?.error || "Failed to create user");
+          console.log("✅ New user inserted via server:", data);
+          setUsers(data);
           setIsNewUser(true);
+        } catch (e: any) {
+          console.log("❌ Error inserting new user via server:", e.message || e);
         }
       } else {
         setUsers(usersDB);
