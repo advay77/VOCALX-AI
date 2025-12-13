@@ -90,7 +90,7 @@ export function AppSidebar() {
                 darkTheme ? "text-white" : "text-black"
               )}
             >
-              VOCALX
+              VOCALHIRE
             </h2>
             <p className="text-sm text-gray-500 capitalize font-medium truncate font-inter max-w-[180px]">
               {users?.[0].organization}

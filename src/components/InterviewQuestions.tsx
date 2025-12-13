@@ -50,11 +50,11 @@ interface InterviewFormData {
 type InterviewQuestion = {
   question: string;
   type:
-    | "Technical"
-    | "Behavioral"
-    | "Problem Solving"
-    | "Leadership"
-    | "Experience";
+  | "Technical"
+  | "Behavioral"
+  | "Problem Solving"
+  | "Leadership"
+  | "Experience";
 };
 
 type AIResponse = {
@@ -108,8 +108,20 @@ const InterviewQuestions: React.FC<InterviewQuestionsProps> = ({
       }
       setQuestions(result.data.data.interviewQuestions);
     } catch (e: any) {
+      // Improved error reporting for Axios and generic errors so browser
+      // shows the server's JSON error body (if any) instead of a vague 500.
       console.error("❌ Request failed:", e);
-      toast("A network/server error occurred. Please try again.");
+      // Axios error shape: e.response?.data
+      const serverData = e?.response?.data;
+      if (serverData && (serverData.error || serverData.isError)) {
+        const message = serverData.error || JSON.stringify(serverData);
+        console.error("Server response:", serverData);
+        toast(message);
+      } else if (e?.message) {
+        toast(e.message);
+      } else {
+        toast("A network/server error occurred. Please try again.");
+      }
       setIsError(true);
     } finally {
       setLoading(false);
@@ -118,30 +130,68 @@ const InterviewQuestions: React.FC<InterviewQuestionsProps> = ({
 
   const onFinish = async () => {
     setSaveLoading(true);
-    // console.log("onFinish called---------------");
-    // console.log("users email", users?.[0]?.email);
 
-    // get current user credits
-    const { data: userData, error: userError } = await supabase
-      .from("users")
-      .select("remainingCredits")
-      .eq("email", users?.[0]?.email)
-      .single();
-
-    console.log("Fetched userData:", userData);
-    // console.log("userError:", userError);
-
-    if (userError) {
+    const userEmail = users?.[0]?.email;
+    if (!userEmail) {
       setSaveLoading(false);
-      toast("Error fetching user data");
+      toast("User not loaded. Please re-authenticate.");
       return;
     }
 
-    if (!userData || userData.remainingCredits <= 0) {
-      setSaveLoading(false);
-      setIsDialogOpen(true);
-      toast("No remaining credits!");
-      return;
+    // Give unlimited credits for the owner account
+    const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL || "syedmohammadaquib12@gmail.com";
+    const isAdmin = userEmail === ADMIN_EMAIL;
+
+    // Debug auth session to ensure requests carry a valid Supabase session (RLS can fail without it)
+    const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+    console.log("Supabase session check:", {
+      hasSession: !!sessionData?.session,
+      user: sessionData?.session?.user?.email,
+      sessionError,
+    });
+
+    let remainingCreditsVal = Number.POSITIVE_INFINITY;
+
+    if (!isAdmin) {
+      // get current user credits
+      const { data: userData, error: userError, status, statusText } = await supabase
+        .from("users")
+        // Try common variants; DB column appears to be mis-cased, so request all
+        .select("remainingcredits, remaining_credits, remainingCredits")
+        .eq("email", userEmail)
+        .maybeSingle();
+
+      console.log("Fetched userData:", userData, "email:", userEmail, "status:", status, statusText);
+      if (userError) {
+        console.error("Supabase user fetch error:", userError);
+        console.error("Supabase user fetch error (stringified):", JSON.stringify(userError, null, 2));
+        console.error("Email used for query:", userEmail);
+
+        // If the column truly doesn't exist, show a friendly message instead of generic error
+        if (userError.code === "42703") {
+          setSaveLoading(false);
+          setIsDialogOpen(true);
+          toast("Credits are not configured for this account. Please contact support.");
+          return;
+        }
+
+        setSaveLoading(false);
+        toast("Error fetching user data");
+        return;
+      }
+
+      remainingCreditsVal =
+        (userData as any)?.remainingCredits ??
+        (userData as any)?.remaining_credits ??
+        (userData as any)?.remainingcredits ??
+        0;
+
+      if (!userData || remainingCreditsVal <= 0) {
+        setSaveLoading(false);
+        setIsDialogOpen(true);
+        toast("No remaining credits!");
+        return;
+      }
     }
 
     // insert interview
@@ -158,37 +208,49 @@ const InterviewQuestions: React.FC<InterviewQuestionsProps> = ({
       ])
       .select();
 
-    // console.log("Inserted interview:", data);
-    // console.log("Interview insert error:", error);
-
     if (error) {
+      console.error("Interview insert error:", error);
+      console.error("Interview insert error (stringified):", JSON.stringify(error, null, 2));
       setSaveLoading(false);
-      toast("Error creating interview");
+
+      // 404 means table doesn't exist or isn't accessible
+      if (error.code === 'PGRST116' || error.message?.includes('404')) {
+        toast("The interviews table is not set up. Please configure your Supabase database.");
+      } else {
+        toast("Error creating interview: " + (error.message || "Unknown error"));
+      }
       return;
     }
 
     // decrement credits in DB
-    const { data: updatedUser, error: updateError } = await supabase
-      .from("users")
-      .update({
-        remainingCredits: userData.remainingCredits - 1,
-      })
-      .eq("email", users?.[0]?.email)
-      .select()
-      .single();
+    if (!isAdmin) {
+      const { data: updatedUser, error: updateError } = await supabase
+        .from("users")
+        .update({
+          remainingcredits: remainingCreditsVal - 1,
+        })
+        .eq("email", users?.[0]?.email)
+        .select()
+        .single();
 
-    if (!updateError && updatedUser) {
-      // also update context so sidebar reflects immediately
-      setRemainingCredits(updatedUser.remainingCredits);
-    }
+      if (!updateError && updatedUser) {
+        // also update context so sidebar reflects immediately
+        const updatedRemaining =
+          (updatedUser as any)?.remainingCredits ??
+          (updatedUser as any)?.remaining_credits ??
+          (updatedUser as any)?.remainingcredits ??
+          0;
+        setRemainingCredits(updatedRemaining);
+      }
 
-    // console.log("Updated user:", updatedUser);
-    // console.log("Update error:", updateError);
-
-    if (updateError) {
-      setSaveLoading(false);
-      toast("Error updating credits");
-      return;
+      if (updateError) {
+        setSaveLoading(false);
+        toast("Error updating credits");
+        return;
+      }
+    } else {
+      // For admin, ensure UI reflects "unlimited"
+      setRemainingCredits(9999);
     }
 
     setSaveLoading(false);
