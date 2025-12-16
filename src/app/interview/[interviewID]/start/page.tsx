@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unused-expressions */
-/* eslint-disable react-hooks/exhaustive-deps */
-// 5bddec57-596b-458d-bdf5-e762fdc61a92
 "use client";
 import { useInterview } from "@/context/interviewContext";
 import {
