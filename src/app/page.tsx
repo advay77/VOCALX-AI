@@ -16,16 +16,16 @@ export default function Home() {
 
       if (error) {
         console.error("❌ Error fetching session:", error.message);
-         setTimeout(() => router.replace("/auth"), 3000);
+        setTimeout(() => router.replace("/auth"), 3000);
         return;
       }
 
       if (session && session.user) {
         console.log("✅ Session found:", session.user.email);
-         setTimeout(() => router.replace("/auth/callback"), 3000);
+        setTimeout(() => router.replace("/auth/callback"), 3000);
       } else {
         console.log("❌ No session, redirecting to /web");
-         setTimeout(() => router.replace("/auth"), 3000);
+        setTimeout(() => router.replace("/auth"), 3000);
       }
     };
 
@@ -44,7 +44,7 @@ export default function Home() {
       />
       <div className="z-50 flex flex-col items-center justify-center w-full h-screen ">
         <h1 className="font-extrabold md:text-2xl font-sora tracking-tight mb-3 z-50">
-          VOCALX AI
+          INTERVIEWX AI
         </h1>
         <p className="flex items-center mt-3 gap-4 text-lg font-inter"><LuLoader className="animate-spin" /> Configuring your Session</p>
       </div>

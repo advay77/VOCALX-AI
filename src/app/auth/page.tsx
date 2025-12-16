@@ -9,7 +9,7 @@ import { SparklesCore } from "@/components/ui/sparkles";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 const Login = () => {
-const router = useRouter();
+  const router = useRouter();
   const handleLogin = async (provider: "google" | "discord") => {
     const redirectUrl = process.env.NEXT_PUBLIC_SITE_URL + "/auth/callback";
 
@@ -55,7 +55,7 @@ const router = useRouter();
         </div>
 
         <h1 className="font-extrabold text-5xl md:text-6xl font-sora tracking-tight mb-3">
-          VOCALX
+          INTERVIEWX
         </h1>
 
         <h2 className=" text-2xl md:text-4xl font-sora font-semibold tracking-tight text-center w-full md:max-w-[700px] mx-auto  leading-tight max-[600px]:px-4 max-[650px]:mt-3">
@@ -108,9 +108,9 @@ const router = useRouter();
         </div>
 
         <p className="text-gray-600 mt-12 text-sm font-light cursor-pointer font-inter ">
-        You are a Candidate ? <span onClick={()=>router.push("/candidate-auth")} className="text-blue-600 underline underline-offset-4 cursor-pointer">Click Here !</span>
+          You are a Candidate ? <span onClick={() => router.push("/candidate-auth")} className="text-blue-600 underline underline-offset-4 cursor-pointer">Click Here !</span>
         </p>
-       
+
       </div>
     </div>
   );

@@ -45,7 +45,7 @@ export default function AuthCallbackPage() {
     return (
       <div className="bg-gray-100 w-full h-screen flex flex-col justify-center items-center">
         <h2 className="text-3xl font-sora tracking-tight font-semibold mb-3">
-          VOCALX AI
+          INTERVIEWX AI
         </h2>
         <p className="text-2xl font-medium font-sora flex items-center gap-4">
           <LuLoader className="animate-spin text-xl text-black duration-500" />
@@ -72,53 +72,53 @@ export default function AuthCallbackPage() {
           backgroundRepeat: "no-repeat",
         }}
       />
-        <div className="p-8 rounded-2xl shadow-lg border bg-white max-w-md w-full space-y-6 relative overflow-hidden">
-          {/* Gradient Accent Border */}
-         
+      <div className="p-8 rounded-2xl shadow-lg border bg-white max-w-md w-full space-y-6 relative overflow-hidden">
+        {/* Gradient Accent Border */}
 
-          <h1 className="font-extrabold text-3xl font-sora text-center tracking-tight">
-            VOCALX
-          </h1>
 
-          <h2 className="text-xl font-semibold font-sora text-center text-gray-800">
-            Welcome, {users?.[0].name}
-          </h2>
+        <h1 className="font-extrabold text-3xl font-sora text-center tracking-tight">
+          INTERVIEWX
+        </h1>
 
-          <div className="h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent my-2" />
-          <p className="text-base text-gray-600 font-inter text-center leading-relaxed">
-            Before proceeding, please enter your{" "}
-            <span className="font-semibold text-gray-900">organization name</span>
-            .
-          </p>
+        <h2 className="text-xl font-semibold font-sora text-center text-gray-800">
+          Welcome, {users?.[0].name}
+        </h2>
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">
-              Organization
-            </label>
-            <Input
-              type="text"
-              value={orgInput}
-              onChange={(e) => setOrgInput(e.target.value)}
-              placeholder="e.g. Vrsa Analytics"
-              className="focus:ring-2 focus:ring-black/80 focus:border-black transition rounded-lg"
-            />
-          </div>
+        <div className="h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent my-2" />
+        <p className="text-base text-gray-600 font-inter text-center leading-relaxed">
+          Before proceeding, please enter your{" "}
+          <span className="font-semibold text-gray-900">organization name</span>
+          .
+        </p>
 
-          <Button
-            onClick={handleSubmit}
-            disabled={submitting || orgInput.trim() === ""}
-            className="w-full py-3 rounded-xl font-semibold text-white bg-black hover:bg-gray-900 active:scale-[0.98] transition flex justify-center"
-          >
-            {submitting ? (
-              <span className="flex items-center gap-2 font-inter">
-                <LuLoader className="animate-spin w-4 h-4" />
-                Saving...
-              </span>
-            ) : (
-              "Continue"
-            )}
-          </Button>
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-gray-700">
+            Organization
+          </label>
+          <Input
+            type="text"
+            value={orgInput}
+            onChange={(e) => setOrgInput(e.target.value)}
+            placeholder="e.g. Vrsa Analytics"
+            className="focus:ring-2 focus:ring-black/80 focus:border-black transition rounded-lg"
+          />
         </div>
+
+        <Button
+          onClick={handleSubmit}
+          disabled={submitting || orgInput.trim() === ""}
+          className="w-full py-3 rounded-xl font-semibold text-white bg-black hover:bg-gray-900 active:scale-[0.98] transition flex justify-center"
+        >
+          {submitting ? (
+            <span className="flex items-center gap-2 font-inter">
+              <LuLoader className="animate-spin w-4 h-4" />
+              Saving...
+            </span>
+          ) : (
+            "Continue"
+          )}
+        </Button>
+      </div>
     </div>
   ) : null;
 }

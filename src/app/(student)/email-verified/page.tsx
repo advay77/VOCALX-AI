@@ -19,7 +19,7 @@ export default function EmailVerified() {
       />
       <div className="absolute inset-0 z-0 top-5 left-5">
         <div className="flex items-center">
-          <h1 className="font-sora text-2xl font-extrabold tracking-tight">VOCALX</h1>
+          <h1 className="font-sora text-2xl font-extrabold tracking-tight">INTERVIEWX</h1>
         </div>
       </div>
 

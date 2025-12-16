@@ -56,7 +56,7 @@ export default function CandidateOnboarding() {
       />
 
       <div className="w-full max-w-lg mx-auto p-6 bg-white shadow-lg rounded-xl mt-10 relative overflow-hidden">
-        <h1 className="font-sora text-center text-xl">Welcome To <span className="font-extrabold">VOCALX</span></h1>
+        <h1 className="font-sora text-center text-xl">Welcome To <span className="font-extrabold">INTERVIEWX</span></h1>
         <p className="font-inter text-sm tracking-tight text-center my-2">Kindly Fill Your Details for your smooth onboarding</p>
         {/* STEP INDICATOR */}
         <div className="flex justify-center gap-3 mt-4">

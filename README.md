@@ -1,10 +1,10 @@
 <!--
-  Vibrant, animated README for VocalHire.
+  Vibrant, animated README for INTERVIEWX.
   Replace placeholder images/assets (assets/demo.gif, assets/screenshot-1.png) with real files from your repo.
 -->
 
 <!-- Animated SVG hero (renders on GitHub) -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 240" width="100%" height="180" preserveAspectRatio="xMidYMid slice" role="img" aria-label="VocalHire banner">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 240" width="100%" height="180" preserveAspectRatio="xMidYMid slice" role="img" aria-label="INTERVIEWX banner">
   <defs>
     <linearGradient id="grad" x1="0" x2="1">
       <stop offset="0%" stop-color="#ff8a00">
@@ -23,7 +23,7 @@
   <rect width="1200" height="240" fill="#071026"/>
   <g transform="translate(60,40)">
     <text x="0" y="80" font-family="Inter, Roboto, sans-serif" font-size="64" font-weight="800" fill="url(#grad)" filter="url(#softGlow)" style="letter-spacing: -1px">
-      VocalHire
+      INTERVIEWX
     </text>
     <text x="0" y="120" font-family="Inter, Roboto, sans-serif" font-size="20" fill="#9fb6d8" opacity="0.95">
       Discover, audition, and hire the perfect voice talent — fast, smart, and beautifully designed.
@@ -33,9 +33,9 @@
 
 <!-- Badges -->
 <p align="center">
-  <a href="https://github.com/syedmohammadaquib/VocalHire/actions"><img src="https://img.shields.io/github/workflow/status/syedmohammadaquib/VocalHire/CI?label=build&logo=github&color=blue" alt="build status"></a>
-  <img src="https://img.shields.io/github/issues/syedmohammadaquib/VocalHire?color=orange" alt="issues">
-  <img src="https://img.shields.io/github/license/syedmohammadaquib/VocalHire?color=green" alt="license">
+  <a href="https://github.com/syedmohammadaquib/INTERVIEWX/actions"><img src="https://img.shields.io/github/workflow/status/syedmohammadaquib/INTERVIEWX/CI?label=build&logo=github&color=blue" alt="build status"></a>
+  <img src="https://img.shields.io/github/issues/syedmohammadaquib/INTERVIEWX?color=orange" alt="issues">
+  <img src="https://img.shields.io/github/license/syedmohammadaquib/INTERVIEWX?color=green" alt="license">
   <img src="https://img.shields.io/badge/stack-Modern--Web-purple" alt="tech stack">
 </p>
 
@@ -57,7 +57,7 @@ Table of contents
 
 About
 -----
-VocalHire is a beautiful, modern (web + mobile-ready) platform concept to help producers, agencies, and startups find and hire professional voice talent quickly. It focuses on fast discovery, audition management, transparent rates, and clean profiles with audio demos and sample reels.
+INTERVIEWX is a beautiful, modern (web + mobile-ready) platform concept to help producers, agencies, and startups find and hire professional voice talent quickly. It focuses on fast discovery, audition management, transparent rates, and clean profiles with audio demos and sample reels.
 
 This README provides:
 - A colorful, animated introduction
@@ -100,8 +100,8 @@ Quick start
 -----------
 1. Clone the repo
 ```bash
-git clone https://github.com/syedmohammadaquib/VocalHire.git
-cd VocalHire
+git clone https://github.com/syedmohammadaquib/INTERVIEWX.git
+cd INTERVIEWX
 ```
 
 2. Install (example monorepo with frontend & backend)
@@ -136,16 +136,16 @@ Environment & configuration
 Create a .env file in backend and frontend (if needed). Example backend .env:
 ```
 PORT=4000
-DATABASE_URL=postgres://user:pass@localhost:5432/vocalhire
+DATABASE_URL=postgres://user:pass@localhost:5432/interviewx
 JWT_SECRET=replace_with_a_strong_secret
 S3_ENDPOINT=https://s3.example.com
-S3_BUCKET=vocalhire-audio
+S3_BUCKET=interviewx-audio
 S3_ACCESS_KEY=yourkey
 S3_SECRET_KEY=yoursecret
 ```
 5. Live Test
 
-Live test - https://www.vocalx.xyz/
+Live test - https://www.interviewx.xyz/
 
 Accessibility & Performance tips
 --------------------------------

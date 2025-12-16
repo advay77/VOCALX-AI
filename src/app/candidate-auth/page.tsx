@@ -92,7 +92,7 @@ const StudentLogin = () => {
         </div>
 
         <h1 className="font-extrabold text-5xl md:text-6xl font-sora tracking-tight mb-3">
-          VOCALX
+          INTERVIEWX
         </h1>
 
         <h2 className=" text-2xl md:text-4xl font-sora font-semibold tracking-tight text-center w-full md:max-w-[700px] mx-auto  leading-tight max-[600px]:px-4 max-[650px]:mt-3">

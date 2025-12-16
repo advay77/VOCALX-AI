@@ -81,7 +81,7 @@ export function AppSidebar() {
               darkTheme ? "bg-white text-black" : "bg-blue-600 text-white"
             )}
           >
-            V
+            I
           </div>
           <div>
             <h2
@@ -90,7 +90,7 @@ export function AppSidebar() {
                 darkTheme ? "text-white" : "text-black"
               )}
             >
-              VOCALHIRE
+              INTERVIEWX
             </h2>
             <p className="text-sm text-gray-500 capitalize font-medium truncate font-inter max-w-[180px]">
               {users?.[0].organization}

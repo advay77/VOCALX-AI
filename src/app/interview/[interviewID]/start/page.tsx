@@ -465,7 +465,7 @@ Ensure the interview remains focused on React
         <div>
           <h1 className="text-[24px] font-sora font-semibold mt-2 flex items-center gap-4">
             <span className="font-extrabold font-sora text-2xl tracking-tighter">
-              VOCALX
+              INTERVIEWX
             </span>{" "}
             AI Interview <LuVideo className="w-6 h-6" />
           </h1>
@@ -522,7 +522,7 @@ Ensure the interview remains focused on React
                   className="rounded-full w-[200px] h-[200px] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
                 />
                 <p className="absolute top-[70%] left-1/2 -translate-x-1/2 font-inter capitalize text-lg font-semibold">{interviewInfo?.userName} </p>
-                
+
               </div>
             )}
 
@@ -610,16 +610,14 @@ Ensure the interview remains focused on React
               {messages.map((msg, i) => (
                 <div
                   key={i}
-                  className={`flex ${
-                    msg.type === "assistant" ? "justify-start" : "justify-end"
-                  }`}
+                  className={`flex ${msg.type === "assistant" ? "justify-start" : "justify-end"
+                    }`}
                 >
                   <div
-                    className={`max-w-[70%] px-4 py-2 rounded-2xl text-xs tracking-tight font-inter shadow-sm ${
-                      msg.type === "assistant"
+                    className={`max-w-[70%] px-4 py-2 rounded-2xl text-xs tracking-tight font-inter shadow-sm ${msg.type === "assistant"
                         ? "bg-white text-foreground rounded-bl-none"
                         : "bg-primary text-primary-foreground rounded-br-none"
-                    }`}
+                      }`}
                   >
                     {msg.content}
                   </div>

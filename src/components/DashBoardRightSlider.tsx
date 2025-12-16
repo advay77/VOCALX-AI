@@ -87,11 +87,11 @@ export function SheetDemo() {
       <SheetContent className="bg-slate-800 py-4 px-2">
         <SheetHeader>
           <SheetTitle className="font-extrabold text-lg text-white font-sora tracking-tight flex gap-3">
-            VOCALX AI <Stars className="text-blue-400" />
+            INTERVIEWX AI <Stars className="text-blue-400" />
           </SheetTitle>
           <SheetDescription className="text-sm font-inter tracking-wide mt-2 text-gray-400 px-1">
             I&apos;m an AI agent that can help you with getting started with
-            VOCALX, sending mails to candidates, solving quiries.
+            INTERVIEWX, sending mails to candidates, solving quiries.
           </SheetDescription>
         </SheetHeader>
         {/*---------------- AI MESSAGES DIPLAY--------------------- */}
@@ -102,7 +102,7 @@ export function SheetDemo() {
                 <p>Getting started with creating interviews</p>
               </div>
               <div className="p-2 rounded-sm bg-blue-200 border-2 border-blue-500 text-black font-sora text-xs tracking-tight text-center hover:bg-blue-200 hover:scale-105 transition-all duration-200">
-                <p>Get To know more about VOCALX</p>
+                <p>Get To know more about INTERVIEWX</p>
               </div>
               <div className="p-2 rounded-sm bg-blue-200 border-2 border-blue-500 text-black font-sora text-xs tracking-tight text-center hover:bg-blue-200 hover:scale-105 transition-all duration-200">
                 <p>Creating Tickets to solve complex quiries</p>
@@ -117,13 +117,12 @@ export function SheetDemo() {
                 {messages.map((msg, idx) => (
                   <div
                     key={idx}
-                    className={`max-w-[75%] px-3 py-2 rounded-md text-sm font-inter ${
-                      msg.role === "user"
+                    className={`max-w-[75%] px-3 py-2 rounded-md text-sm font-inter ${msg.role === "user"
                         ? "bg-blue-500 text-white self-end"
                         : "bg-gray-200/10 text-gray-200 self-start"
-                    }`}
+                      }`}
                   >
-                     <ReactMarkdown>{msg.text}</ReactMarkdown>
+                    <ReactMarkdown>{msg.text}</ReactMarkdown>
                   </div>
                 ))}
 

@@ -17,8 +17,8 @@ const inter = Inter({
   weight: ["400", "600", "700"],
 });
 export const metadata: Metadata = {
-  title: "Vocal-AI",
-  description: "AI powered Recruitment",
+  title: "INTERVIEWX AI",
+  description: "AI powered recruitment platform",
 };
 
 export default function RootLayout({
@@ -47,7 +47,7 @@ export default function RootLayout({
             },
           }}
         />
-     
+
       </body>
     </html>
   );
