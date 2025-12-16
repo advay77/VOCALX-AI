@@ -46,21 +46,20 @@ const AllInterview = () => {
       .select("*")
       .eq("userEmail", users?.[0].email);
 
-         setInterviewList(data);
+    setInterviewList(data);
   };
 
   return (
     <div
-      className={`w-full h-full p-6 ${
-        !darkTheme
+      className={`w-full h-full p-6 ${!darkTheme
           ? "bg-gradient-to-br from-blue-50 to-gray-100"
           : "bg-gray-200"
-      } relative`}
+        } relative`}
     >
       <div className="">
         <div className=" flex items-center justify-between">
           <h2 className="font-semibold text-2xl font-inter capitalize ml-5">
-          Interviews
+            Interviews
           </h2>
           <div className="flex items-center gap-5 mr-10">
             <div className="space-x-2 bg-white p-2 rounded-md flex">
@@ -103,9 +102,7 @@ const AllInterview = () => {
 
         {interviewList && (
           <div
-            className={`grid ${
-              view === "grid" ? "grid-cols-2 min-[1220px]:grid-cols-3" : "grid-cols-1"
-            } gap-4 mt-10`}
+            className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 mt-10 justify-items-center"
           >
             {interviewList?.map((item: any, index: number) => {
               const Icon = icons[index % icons.length]; // pick icon by index
@@ -113,26 +110,33 @@ const AllInterview = () => {
               return (
                 <Card
                   key={item.interview_id}
-                  className="bg-white border rounded-lg shadow-sm hover:shadow-md transition p-3"
+                  className="relative bg-white/90 backdrop-blur border border-slate-200/80 rounded-2xl shadow-[0_10px_40px_-24px_rgba(0,0,0,0.35)] hover:shadow-[0_14px_50px_-22px_rgba(0,0,0,0.4)] hover:-translate-y-1 transition-all duration-200 p-6 w-full max-w-md flex flex-col gap-4"
                 >
-                  <CardHeader className="flex flex-row items-center justify-between">
-                    <div className="p-2 rounded-md bg-gray-100">
-                      <Icon className="w-5 h-5 text-blue-500" />
+                  <CardHeader className="flex flex-row items-start justify-start gap-3 pb-0">
+                    <div className="p-3 rounded-xl bg-blue-50 text-blue-600 shadow-inner shrink-0">
+                      <Icon className="w-5 h-5" />
                     </div>
-                    <CardTitle className="font-medium text-lg text-black font-sora">
-                      {item.jobTitle}
-                    </CardTitle>
+                    <div className="flex flex-col gap-1">
+                      <p className="text-xs uppercase tracking-[0.08em] text-slate-500 font-semibold">Role</p>
+                      <CardTitle className="font-semibold text-xl text-slate-900 font-sora leading-tight">
+                        {item.jobTitle}
+                      </CardTitle>
+                    </div>
                   </CardHeader>
 
-                  <CardContent className="text-sm text-muted-foreground text-center font-inter space-y-2">
-                    <p className="line-clamp-2">{item.jobDescription}</p>
-                    <div className="flex items-center justify-start text-base mt-3 text-gray-500">
-                      <span>⏱ {item.interviewDuration} mins</span>
-                      {/* <span>📌 {item.interviewType}</span> */}
+                  <CardContent className="text-sm text-slate-600 font-inter space-y-4 pt-2">
+                    <p className="line-clamp-3 text-left leading-relaxed text-slate-700">{item.jobDescription}</p>
+                    <div className="flex items-center gap-3 text-sm text-slate-700">
+                      <span className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 font-medium">
+                        ⏱
+                        <span className="text-slate-800">{item.interviewDuration} mins</span>
+                      </span>
                     </div>
                   </CardContent>
 
-                  <CardFooter className="flex justify-center gap-6">
+                  <div className="h-px bg-slate-100" />
+
+                  <CardFooter className="flex justify-between gap-4 pt-2">
                     <Button
                       variant="outline"
                       size="sm"
@@ -154,11 +158,11 @@ const AllInterview = () => {
                       Send <Send className="ml-2 w-4 h-4" />
                     </Button> */}
 
-                     <Button
+                    <Button
                       size="sm"
                       variant="destructive"
                       className=""
-                      onClick={() => {}}
+                      onClick={() => { }}
                     >
                       Archive <Archive className="ml-2 w-4 h-4" />
                     </Button>

@@ -659,7 +659,7 @@ Ensure the interview remains focused on React
               <InfoIcon className="w-8 h-8 text-blue-600" />
               <p className="tracking-tight text-sm font-inter">
                 You can either close this tab or you can also check other
-                interviews by clikcing on Explore!
+                interviews by clicking on Explore!
               </p>
             </div>
 
