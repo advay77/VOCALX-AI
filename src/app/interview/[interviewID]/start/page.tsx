@@ -226,10 +226,7 @@ Ensure the interview remains focused on React
           "Thanks for chatting! Hope to see you crushing projects soon!",
         endCallPhrases: ["goodbye", "bye", "end call", "hang up"],
 
-        // Silence timeout (in seconds)
         silenceTimeoutSeconds: 20,
-
-        // Max call duration (in seconds) - 10 minutes/ 5min
         maxDurationSeconds: 300,
       });
     } catch (error) {

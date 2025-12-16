@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
-import React, { useRef,useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { useTheme } from "@/context/ThemeProvider";
 import { useUserData } from "@/context/UserDetailContext";
 import { Button } from "@/components/ui/button";
@@ -17,22 +17,25 @@ const Page = () => {
   const { darkTheme } = useTheme();
   const { users, loading } = useUserData();
   const router = useRouter();
+  const [showRecentInterviewsModal, setShowRecentInterviewsModal] = useState(false);
+
+  const openRecentInterviewsModal = () => {
+    setShowRecentInterviewsModal(true);
+  };
 
   return (
     <div
-      className={`w-full h-full ${
-        !darkTheme
-          ? "bg-gradient-to-br from-blue-50 to-gray-100"
-          : "bg-gray-200"
-      } relative`}
+      className={`w-full h-full ${!darkTheme
+        ? "bg-gradient-to-br from-blue-50 to-gray-100"
+        : "bg-gray-200"
+        } relative`}
     >
       <div className="flex-1">
         <div className="w-full py-4 px-6">
           {/* WELCOM BOX */}
           <div
-            className={`${
-              darkTheme ? "bg-slate-800 text-white" : "bg-white text-black"
-            } rounded-md flex items-center justify-between relative h-auto max-w-[620px] mx-auto shadow`}
+            className={`${darkTheme ? "bg-slate-800 text-white" : "bg-white text-black"
+              } rounded-md flex items-center justify-between relative h-auto max-w-[620px] mx-auto shadow`}
           >
             <div className=" flex flex-col justify-evenly h-full py-3 px-4">
               <h1 className="font-semibold text-2xl tracking-tight capitalize font-sora mb-3">
@@ -56,13 +59,29 @@ const Page = () => {
           </div>
           {/* OPTIONS */}
           <DashBoardOptions />
-          {/* RECENTLY INTERVIEWS */}
-          <DasboardRecentInterviews />
+
+          {/* VIEW RECENT INTERVIEWS BUTTON */}
+          <div className="flex justify-center mt-8 mb-8">
+            <Button
+              onClick={openRecentInterviewsModal}
+              className="bg-blue-600 hover:bg-blue-700 text-white font-inter font-semibold py-2 px-6 rounded-lg"
+            >
+              View Recent Interviews
+            </Button>
+          </div>
         </div>
       </div>
+
+      {/* MODAL FOR RECENT INTERVIEWS */}
+      <Dialog open={showRecentInterviewsModal} onOpenChange={setShowRecentInterviewsModal}>
+        <DialogContent className="sm:max-w-[80vw] w-[98vw] h-[80vh] overflow-y-auto p-6">
+          <DasboardRecentInterviews />
+        </DialogContent>
+      </Dialog>
+
       <SheetDemo />
 
-      <ScreenSizeBlocker/>
+      <ScreenSizeBlocker />
     </div>
   );
 };

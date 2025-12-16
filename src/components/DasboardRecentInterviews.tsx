@@ -62,31 +62,11 @@ const DasboardRecentInterviews = () => {
   return (
     <div className="my-10">
       <div className=" flex items-center justify-between">
-        <h2 className="font-semibold text-xl font-inter capitalize ml-5">
+        <h2 className="font-semibold text-xl font-inter capitalize ml-5" style={{ fontSize: "37px", textDecoration: "underline" }}>
           Recent Interviews
         </h2>
 
         <div className="flex items-center gap-5 mr-10">
-          <div className="space-x-2 bg-white p-2 rounded-md flex">
-            <Button
-              variant={view === "grid" ? "default" : "ghost"}
-              size="icon"
-              onClick={() => setView("grid")}
-              className="rounded-md"
-            >
-              <Grid2X2 className="w-4 h-4" />
-            </Button>
-
-            <Button
-              variant={view === "list" ? "default" : "ghost"}
-              size="icon"
-              onClick={() => setView("list")}
-              className="rounded-md"
-            >
-              <List className="w-4 h-4" />
-            </Button>
-          </div>
-
           <div className="flex items-center gap-3 bg-white p-2 rounded-md">
             <Filter />
             <p>Filters</p>
@@ -118,9 +98,8 @@ const DasboardRecentInterviews = () => {
 
       {interviewList && !loading && (
         <div
-          className={`grid ${
-            view === "grid" ? "grid-cols-2 xl:grid-cols-3" : "grid-cols-1"
-          } gap-4 mt-10`}
+          className={`grid ${view === "grid" ? "grid-cols-2 xl:grid-cols-3" : "grid-cols-1"
+            } gap-4 mt-10`}
         >
           {interviewList?.map((item: any, index: number) => {
             const Icon = icons[index % icons.length]; // pick icon by index
@@ -164,7 +143,7 @@ const DasboardRecentInterviews = () => {
                   <Button
                     size="sm"
                     className=" bg-blue-600 hover:bg-blue-700 text-white"
-                    onClick={() => {}}
+                    onClick={() => { }}
                   >
                     Send <Send className="ml-2 w-4 h-4" />
                   </Button>
