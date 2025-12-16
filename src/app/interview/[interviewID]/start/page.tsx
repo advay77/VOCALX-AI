@@ -325,9 +325,6 @@ Ensure the interview remains focused on React
       }
     });
   }, [vapi]);
-
-  // =============================================
-
   vapi.on("error", (e) => {
     console.error(e);
     setVapiError(e);

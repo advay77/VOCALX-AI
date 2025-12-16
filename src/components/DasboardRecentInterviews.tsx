@@ -4,7 +4,7 @@
 "use client";
 import { useUserData } from "@/context/UserDetailContext";
 import { supabase } from "@/services/supabaseClient";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { LuLoader, LuVideo } from "react-icons/lu";
 import {
   Card,
@@ -14,6 +14,9 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Button } from "./ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 
 import {
   Briefcase,
@@ -30,11 +33,23 @@ import {
 import { toast } from "sonner";
 
 const icons = [Briefcase, Clock, FileText, UserCheck, Calendar];
+const TYPE_OPTIONS = [
+  "All",
+  "Technical",
+  "Behavioral",
+  "Experience",
+  "Problem Solving",
+  "Leadership",
+];
+const DURATION_OPTIONS = [10, 15, 30, 45];
 const DasboardRecentInterviews = () => {
   const [interviewList, setInterviewList] = useState<any>([]);
   const [loading, setLoading] = useState(false);
   const { users } = useUserData();
   const [view, setView] = useState("grid");
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+  const [selectedDuration, setSelectedDuration] = useState<number | null>(null);
 
   useEffect(() => {
     users && GetInterview();
@@ -59,6 +74,66 @@ const DasboardRecentInterviews = () => {
     }
   };
 
+  const toggleType = (t: string) => {
+    setSelectedTypes((prev) =>
+      prev.includes(t) ? prev.filter((x) => x !== t) : [...prev, t]
+    );
+  };
+
+  const clearFilters = () => {
+    setSelectedTypes([]);
+    setSelectedDuration(null);
+  };
+
+  const filteredInterviews = useMemo(() => {
+    const selectedTypesLc = selectedTypes.map((t) => t.toLowerCase());
+
+    const extractTypeTokens = (it: any): string[] => {
+      const explicit = it.interviewType ?? it.jobType ?? it.job_title ?? it.type ?? it.category ?? null;
+      const tokens: string[] = [];
+      if (Array.isArray(explicit)) {
+        explicit.forEach((v) => tokens.push(String(v).toLowerCase().trim()));
+      } else if (typeof explicit === "string") {
+        explicit
+          .split(/[,/|]/)
+          .map((s) => s.trim().toLowerCase())
+          .filter(Boolean)
+          .forEach((v) => tokens.push(v));
+      } else if (explicit != null) {
+        tokens.push(String(explicit).toLowerCase().trim());
+      }
+      const titleLc = String(it.jobTitle || "").toLowerCase();
+      const descriptionLc = String(it.jobDescription || "").toLowerCase();
+      // Heuristic: include common keywords from title/description
+      ["technical", "behavioral", "experience", "problem solving", "leadership"].forEach((kw) => {
+        if (titleLc.includes(kw) || descriptionLc.includes(kw)) tokens.push(kw);
+      });
+      return Array.from(new Set(tokens));
+    };
+
+    return (interviewList || []).filter((item: any) => {
+      const itemTokens = extractTypeTokens(item);
+      const durationVal = Number(item.interviewDuration);
+      const matchesDuration = selectedDuration === null || durationVal === selectedDuration;
+      // Type matching supports two modes:
+      // 1) AND mode: when specific types are selected (without "All"), item must include ALL selected types.
+      // 2) ALL mode: when "All" is selected, include everything EXCEPT items that match any other selected types (treated as exclusions).
+      let matchesType = true;
+      const hasAll = selectedTypesLc.includes("all");
+      const otherTypes = selectedTypesLc.filter((t) => t !== "all");
+      if (selectedTypesLc.length === 0) {
+        matchesType = true;
+      } else if (hasAll) {
+        // Exclude items containing any explicitly selected types (acting as blocklist)
+        matchesType = otherTypes.length === 0 || !otherTypes.some((t) => itemTokens.includes(t));
+      } else {
+        // AND across selected types
+        matchesType = otherTypes.every((t) => itemTokens.includes(t));
+      }
+      return matchesType && matchesDuration;
+    });
+  }, [interviewList, selectedTypes, selectedDuration]);
+
   const handleSend = (item: any) => {
     const url = `${window.location.origin}/interview/${item.interview_id}`;
     const subject = encodeURIComponent(`Interview link for ${item.jobTitle ?? "your role"}`);
@@ -81,10 +156,62 @@ Thanks.`
         </h2>
 
         <div className="flex items-center gap-5 mr-10">
-          <div className="flex items-center gap-3 bg-white p-2 rounded-md">
-            <Filter />
-            <p>Filters</p>
-          </div>
+          <Popover open={filterOpen} onOpenChange={setFilterOpen}>
+            <PopoverTrigger asChild>
+              <Button variant="outline" className="flex items-center gap-2">
+                <Filter className="w-4 h-4" />
+                Filters
+                {(selectedTypes.length > 0 || selectedDuration !== null) && (
+                  <span className="ml-1 inline-flex items-center justify-center text-xs px-2 py-0.5 rounded-full bg-blue-600 text-white">
+                    {selectedTypes.length + (selectedDuration !== null ? 1 : 0)}
+                  </span>
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-80">
+              <div className="space-y-4">
+                <div>
+                  <p className="font-medium mb-2">Interview Type</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {TYPE_OPTIONS.map((t) => (
+                      <label key={t} className="flex items-center gap-2 rounded-md border p-2">
+                        <Checkbox
+                          checked={selectedTypes.includes(t)}
+                          onCheckedChange={() => toggleType(t)}
+                        />
+                        <span className="text-sm">{t}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <p className="font-medium mb-2">Interview Duration</p>
+                  <div className="flex flex-wrap gap-2">
+                    {DURATION_OPTIONS.map((d) => (
+                      <Button
+                        key={d}
+                        size="sm"
+                        variant={selectedDuration === d ? "default" : "outline"}
+                        onClick={() =>
+                          setSelectedDuration(selectedDuration === d ? null : d)
+                        }
+                      >
+                        {d} min
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+                <div className="flex items-center justify-between pt-2">
+                  <Button variant="ghost" size="sm" onClick={clearFilters}>
+                    Clear
+                  </Button>
+                  <Button size="sm" onClick={() => setFilterOpen(false)}>
+                    Apply
+                  </Button>
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
 
@@ -110,11 +237,11 @@ Thanks.`
         )}
       </div>
 
-      {interviewList && !loading && (
+      {filteredInterviews && !loading && (
         <div
           className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 mt-10 justify-items-center"
         >
-          {interviewList?.map((item: any, index: number) => {
+          {filteredInterviews?.map((item: any, index: number) => {
             const Icon = icons[index % icons.length]; // pick icon by index
 
             return (
@@ -138,7 +265,37 @@ Thanks.`
                   <p className="line-clamp-3 text-left leading-relaxed text-slate-700">
                     {item.jobDescription}
                   </p>
-                  <div className="flex items-center gap-3 text-sm text-slate-700">
+                  <div className="flex flex-wrap items-center gap-2 text-sm text-slate-700">
+                    {(() => {
+                      const tokens = ((): string[] => {
+                        const explicit = item.interviewType ?? item.jobType ?? item.job_title ?? item.type ?? item.category ?? null;
+                        const t: string[] = [];
+                        if (Array.isArray(explicit)) {
+                          explicit.forEach((v) => t.push(String(v).toLowerCase().trim()));
+                        } else if (typeof explicit === "string") {
+                          explicit
+                            .split(/[,/|]/)
+                            .map((s) => s.trim().toLowerCase())
+                            .filter(Boolean)
+                            .forEach((v) => t.push(v));
+                        } else if (explicit != null) {
+                          t.push(String(explicit).toLowerCase().trim());
+                        }
+                        const titleLc = String(item.jobTitle || "").toLowerCase();
+                        const descriptionLc = String(item.jobDescription || "").toLowerCase();
+                        ["technical", "behavioral", "experience", "problem solving", "leadership"].forEach((kw) => {
+                          if (titleLc.includes(kw) || descriptionLc.includes(kw)) t.push(kw);
+                        });
+                        return Array.from(new Set(t)).slice(0, 5);
+                      })();
+                      return tokens.map((tag) => (
+                        <span key={tag} className="inline-flex items-center gap-1 rounded-full bg-indigo-50 text-indigo-700 px-3 py-1 font-medium">
+                          {tag}
+                        </span>
+                      ));
+                    })()}
+                  </div>
+                  <div className="mt-2 flex items-center gap-2 text-sm text-slate-700">
                     <span className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 font-medium">
                       ⏱
                       <span className="text-slate-800">{item.interviewDuration} mins</span>
