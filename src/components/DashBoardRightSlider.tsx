@@ -10,7 +10,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Loader2, Stars } from "lucide-react";
+import { Loader2, Stars, Video, BookOpen, Ticket, Mail } from "lucide-react";
 import { LuAlignRight, LuSend, LuStar } from "react-icons/lu";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -36,6 +36,21 @@ export function SheetDemo() {
   const [input, setInput] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Hide sheet overlay
+    const style = document.createElement('style');
+    style.innerHTML = `
+      [data-state="open"] {
+        --tw-bg-opacity: 0 !important;
+      }
+      .fixed.inset-0 {
+        display: none !important;
+      }
+    `;
+    document.head.appendChild(style);
+    return () => document.head.removeChild(style);
+  }, []);
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -88,7 +103,11 @@ export function SheetDemo() {
           <Stars className="text-3xl text-white animate-pulse group-hover:animate-bounce" />
         </div>
       </SheetTrigger>
-      <SheetContent className={`${darkTheme ? "bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950" : "bg-gradient-to-b from-white via-blue-50/30 to-white"} py-8 px-5 border-l ${darkTheme ? "border-slate-700/50 shadow-2xl shadow-slate-900/50" : "border-blue-100/50 shadow-xl"}`}>
+      <SheetContent className={`${darkTheme
+        ? "bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950"
+        : "bg-white"} py-8 px-5 border-l ${darkTheme
+          ? "border-slate-700/50 shadow-2xl shadow-slate-900/50"
+          : "border-transparent shadow-none"}`}>
         <SheetHeader>
           <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700`} />
           <SheetTitle className={`font-extrabold text-2xl font-sora tracking-tight flex gap-3 items-center ${darkTheme ? "text-white" : "text-slate-900"}`}>
@@ -106,38 +125,38 @@ export function SheetDemo() {
               <h3 className={`text-sm font-semibold tracking-tight mb-4 ${darkTheme ? "text-slate-300" : "text-slate-700"}`}>Quick Actions</h3>
               <div className="grid grid-cols-2 gap-3">
                 <button className={`p-4 rounded-xl border-2 font-sora text-xs tracking-tight text-center hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer font-semibold group ${darkTheme
-                  ? "bg-gradient-to-br from-blue-600/30 to-blue-600/10 border-blue-500/50 text-blue-200 hover:from-blue-600/40 hover:to-blue-600/20 hover:border-blue-400"
-                  : "bg-gradient-to-br from-blue-100 to-blue-50 border-blue-400 text-blue-700 hover:from-blue-200 hover:to-blue-100 hover:border-blue-500"
+                  ? "bg-gradient-to-br from-blue-600/30 to-blue-600/10 border-blue-500/50 text-blue-200 hover:from-blue-600/40 hover:to-blue-600/20 hover:border-blue-400 min-h-[120px]"
+                  : "bg-gradient-to-br from-blue-100 to-blue-50 border-blue-400 text-blue-700 hover:from-blue-200 hover:to-blue-100 hover:border-blue-500 min-h-[120px]"
                   }`}>
-                  <div className="flex items-center justify-center gap-1 h-full flex-col">
-                    <span>📹</span>
+                  <div className="flex items-center justify-center gap-2 h-full flex-col">
+                    <Video size={32} className="text-current" />
                     <p>Create Interviews</p>
                   </div>
                 </button>
                 <button className={`p-4 rounded-xl border-2 font-sora text-xs tracking-tight text-center hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer font-semibold group ${darkTheme
-                  ? "bg-gradient-to-br from-purple-600/30 to-purple-600/10 border-purple-500/50 text-purple-200 hover:from-purple-600/40 hover:to-purple-600/20 hover:border-purple-400"
-                  : "bg-gradient-to-br from-purple-100 to-purple-50 border-purple-400 text-purple-700 hover:from-purple-200 hover:to-purple-100 hover:border-purple-500"
+                  ? "bg-gradient-to-br from-purple-600/30 to-purple-600/10 border-purple-500/50 text-purple-200 hover:from-purple-600/40 hover:to-purple-600/20 hover:border-purple-400 min-h-[120px]"
+                  : "bg-gradient-to-br from-purple-100 to-purple-50 border-purple-400 text-purple-700 hover:from-purple-200 hover:to-purple-100 hover:border-purple-500 min-h-[120px]"
                   }`}>
-                  <div className="flex items-center justify-center gap-1 h-full flex-col">
-                    <span>📚</span>
+                  <div className="flex items-center justify-center gap-2 h-full flex-col">
+                    <BookOpen size={32} className="text-current" />
                     <p>About INTERVIEWX</p>
                   </div>
                 </button>
                 <button className={`p-4 rounded-xl border-2 font-sora text-xs tracking-tight text-center hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer font-semibold group ${darkTheme
-                  ? "bg-gradient-to-br from-pink-600/30 to-pink-600/10 border-pink-500/50 text-pink-200 hover:from-pink-600/40 hover:to-pink-600/20 hover:border-pink-400"
-                  : "bg-gradient-to-br from-pink-100 to-pink-50 border-pink-400 text-pink-700 hover:from-pink-200 hover:to-pink-100 hover:border-pink-500"
+                  ? "bg-gradient-to-br from-pink-600/30 to-pink-600/10 border-pink-500/50 text-pink-200 hover:from-pink-600/40 hover:to-pink-600/20 hover:border-pink-400 min-h-[120px]"
+                  : "bg-gradient-to-br from-pink-100 to-pink-50 border-pink-400 text-pink-700 hover:from-pink-200 hover:to-pink-100 hover:border-pink-500 min-h-[120px]"
                   }`}>
-                  <div className="flex items-center justify-center gap-1 h-full flex-col">
-                    <span>🎫</span>
+                  <div className="flex items-center justify-center gap-2 h-full flex-col">
+                    <Ticket size={32} className="text-current" />
                     <p>Create Tickets</p>
                   </div>
                 </button>
                 <button className={`p-4 rounded-xl border-2 font-sora text-xs tracking-tight text-center hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer font-semibold group ${darkTheme
-                  ? "bg-gradient-to-br from-emerald-600/30 to-emerald-600/10 border-emerald-500/50 text-emerald-200 hover:from-emerald-600/40 hover:to-emerald-600/20 hover:border-emerald-400"
-                  : "bg-gradient-to-br from-emerald-100 to-emerald-50 border-emerald-400 text-emerald-700 hover:from-emerald-200 hover:to-emerald-100 hover:border-emerald-500"
+                  ? "bg-gradient-to-br from-emerald-600/30 to-emerald-600/10 border-emerald-500/50 text-emerald-200 hover:from-emerald-600/40 hover:to-emerald-600/20 hover:border-emerald-400 min-h-[120px]"
+                  : "bg-gradient-to-br from-emerald-100 to-emerald-50 border-emerald-400 text-emerald-700 hover:from-emerald-200 hover:to-emerald-100 hover:border-emerald-500 min-h-[120px]"
                   }`}>
-                  <div className="flex items-center justify-center gap-1 h-full flex-col">
-                    <span>✉️</span>
+                  <div className="flex items-center justify-center gap-2 h-full flex-col">
+                    <Mail size={32} className="text-current" />
                     <p>Send Mails</p>
                   </div>
                 </button>
