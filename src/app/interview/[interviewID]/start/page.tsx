@@ -431,59 +431,59 @@ Ensure the interview remains focused on React
 
   //   -----------------------------
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 px-6 py-6 text-slate-50">
-      <div className="mx-auto flex max-w-6xl flex-col space-y-6">
-        <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-5 py-4 shadow-[0_20px_60px_rgba(0,0,0,0.35)] backdrop-blur">
-          <div className="space-y-2">
-            <p className="text-[11px] uppercase tracking-[0.3em] text-slate-400">
+    <div className="h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 px-3 py-3 text-slate-50 overflow-hidden flex flex-col">
+      <div className="mx-auto flex max-w-7xl flex-col gap-2 flex-1 w-full">
+        <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-5 py-3 shadow-[0_20px_60px_rgba(0,0,0,0.35)] backdrop-blur">
+          <div className="flex flex-col gap-1.5">
+            <p className="text-[10px] font-medium uppercase tracking-[0.3em] text-slate-400">
               Live interview
             </p>
-            <h1 className="flex items-center gap-3 text-2xl font-semibold font-sora tracking-tight">
+            <h1 className="flex items-center gap-2.5 text-xl font-bold font-sora tracking-tight">
               <span className="font-extrabold">INTERVIEWX</span> AI Interview
-              <LuVideo className="h-6 w-6 text-sky-300" />
+              <LuVideo className="h-5 w-5 text-sky-300" />
             </h1>
-            <p className="text-sm text-slate-400">
+            <p className="text-xs font-medium text-slate-400">
               Stay relaxed - we will guide you through every question.
             </p>
           </div>
 
-          <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 shadow-inner shadow-sky-900/40">
+          <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 shadow-inner shadow-sky-900/40">
             <div
-              className={`h-2.5 w-2.5 rounded-full ${loading ? "bg-amber-400 animate-pulse" : "bg-emerald-400"}`}
+              className={`h-3 w-3 rounded-full ${loading ? "bg-amber-400 animate-pulse" : "bg-emerald-400"}`}
             />
-            <span className="text-sm font-medium">
+            <span className="text-sm font-semibold">
               {loading ? "Connecting" : "Connected"}
             </span>
-            <Separator orientation="vertical" className="mx-2 h-6 bg-white/10" />
-            <div className="flex items-center gap-2 text-sm font-semibold">
-              <Timer className="h-4 w-4" /> {formatTime(seconds)}
+            <Separator orientation="vertical" className="h-5 bg-white/10" />
+            <div className="flex items-center gap-2 text-sm font-bold tabular-nums">
+              <Timer className="h-4 w-4 text-slate-300" /> {formatTime(seconds)}
             </div>
-            <Separator orientation="vertical" className="mx-2 h-6 bg-white/10" />
+            <Separator orientation="vertical" className="h-5 bg-white/10" />
             <Image
               src={"/profile.png"}
               alt="User Avatar"
-              width={56}
-              height={56}
-              className="h-12 w-12 rounded-full border border-white/10 object-cover"
+              width={48}
+              height={48}
+              className="h-11 w-11 rounded-full border-2 border-white/20 object-cover shadow-sm"
               priority
             />
           </div>
         </div>
 
-        <div className="grid grid-cols-[1.65fr_0.6fr] gap-5 max-lg:grid-cols-1">
+        <div className="grid grid-cols-[1.4fr_0.8fr] gap-3 max-lg:grid-cols-1 flex-1 overflow-hidden">
           {/* LEFT */}
-          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900/80 via-slate-900/50 to-slate-800/80 p-4 shadow-[0_25px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl">
-            <div className="flex items-center justify-between rounded-2xl border border-white/5 bg-white/5 px-4 py-3 text-sm text-slate-200">
+          <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-slate-900/80 via-slate-900/50 to-slate-800/80 p-3 shadow-[0_25px_80px_rgba(0,0,0,0.45)] backdrop-blur-xl flex flex-col">
+            <div className="flex items-center justify-between rounded-xl border border-white/5 bg-white/5 px-3 py-2 text-sm text-slate-200">
               <div className="flex items-center gap-2">
-                <div className="h-2 w-2 rounded-full bg-sky-400" />
-                <span className="font-medium">Voice interview in progress</span>
+                <div className="h-2.5 w-2.5 rounded-full bg-sky-400 animate-pulse" />
+                <span className="font-semibold text-xs">Voice interview in progress</span>
               </div>
-              <span className="rounded-full bg-white/10 px-3 py-1 text-xs text-slate-300">
+              <span className="rounded-full bg-white/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-slate-300">
                 {interviewInfo?.jobPosition || "Interview"}
               </span>
             </div>
 
-            <div className="relative isolate mt-4 flex h-[520px] items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-slate-950/60">
+            <div className="relative isolate mt-2 flex flex-1 items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-slate-950/60">
               <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(56,189,248,0.18),transparent_35%),radial-gradient(circle_at_80%_0%,rgba(99,102,241,0.15),transparent_30%)]" />
               <video
                 ref={videoRef}
@@ -493,47 +493,47 @@ Ensure the interview remains focused on React
                 className="relative z-[1] h-full w-full rounded-2xl object-cover"
               />
               {!isCameraOn && (
-                <div className="relative z-[2] flex flex-col items-center gap-4 text-center">
+                <div className="relative z-[2] flex flex-col items-center gap-2.5 text-center">
                   <Image
-                    src={"/profile.png"}
+                    src="/profile.png"
                     alt="User Avatar"
-                    width={180}
-                    height={180}
-                    className="h-[180px] w-[180px] rounded-full border border-white/20 object-cover"
+                    width={110}
+                    height={110}
+                    className="h-[110px] w-[110px] rounded-full border-3 border-white/20 object-cover shadow-2xl"
                     priority
                   />
-                  <p className="text-lg font-semibold capitalize text-slate-100">
+                  <p className="text-base font-bold capitalize text-slate-100">
                     {interviewInfo?.userName}
                   </p>
                 </div>
               )}
 
-              <div className="absolute right-4 top-4 flex h-[180px] w-[180px] flex-col items-center justify-center overflow-hidden rounded-2xl border border-white/15 bg-white/10 p-3 text-center shadow-lg shadow-sky-900/40">
-                <div className="mb-3 flex h-16 w-16 items-center justify-center rounded-full border border-white/20 bg-white/10">
-                  <h1 className="text-2xl font-extrabold text-white">AI</h1>
+              <div className="absolute right-2 top-2 flex h-[100px] w-[100px] flex-col items-center justify-center overflow-hidden rounded-lg border border-white/20 bg-white/10 backdrop-blur-sm p-2 text-center shadow-xl shadow-sky-900/50">
+                <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-full border-2 border-white/30 bg-white/15 shadow-inner">
+                  <h1 className="text-base font-extrabold text-white tracking-tight">AI</h1>
                 </div>
                 {!loading && (
-                  <div className="flex flex-col items-center space-y-2 text-xs font-medium text-slate-200">
+                  <div className="flex flex-col items-center gap-1 text-[10px] font-semibold text-slate-100">
                     <AI_Voice />
-                    <p>{activeUser ? "Speaking" : "Listening"}</p>
+                    <p className="text-[9px] font-semibold">{activeUser ? "Speaking" : "Listening"}</p>
                   </div>
                 )}
               </div>
             </div>
 
-            <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
+            <div className="mt-2 flex flex-wrap items-center justify-center gap-2">
               <Button
                 variant={isCameraOn ? "default" : "outline"}
                 onClick={toggleCamera}
-                className={`font-inter text-sm font-semibold shadow-lg transition-all duration-150 ${isCameraOn
+                className={`h-9 px-4 font-inter text-xs font-bold shadow-lg transition-all duration-150 ${isCameraOn
                   ? "bg-gradient-to-r from-sky-500 to-indigo-500 text-white hover:from-sky-400 hover:to-indigo-400"
                   : "border-white/20 bg-white/5 text-slate-100 hover:bg-white/10"
                   }`}
               >
                 {isCameraOn ? (
-                  <LuVideo className="mr-2 h-4 w-4" />
+                  <LuVideo className="mr-1.5 h-3.5 w-3.5" />
                 ) : (
-                  <LuVideoOff className="mr-2 h-4 w-4" />
+                  <LuVideoOff className="mr-1.5 h-3.5 w-3.5" />
                 )}
                 Video
               </Button>
@@ -541,15 +541,15 @@ Ensure the interview remains focused on React
               <Button
                 variant={isMicOn ? "default" : "outline"}
                 onClick={toggleMic}
-                className={`font-inter text-sm font-semibold shadow-lg transition-all duration-150 ${isMicOn
+                className={`h-9 px-4 font-inter text-xs font-bold shadow-lg transition-all duration-150 ${isMicOn
                   ? "bg-gradient-to-r from-emerald-500 to-sky-500 text-white hover:from-emerald-400 hover:to-sky-400"
                   : "border-white/20 bg-white/5 text-slate-100 hover:bg-white/10"
                   }`}
               >
                 {isMicOn ? (
-                  <LuMic className="mr-2 h-4 w-4" />
+                  <LuMic className="mr-1.5 h-3.5 w-3.5" />
                 ) : (
-                  <LuMicOff className="mr-2 h-4 w-4" />
+                  <LuMicOff className="mr-1.5 h-3.5 w-3.5" />
                 )}
                 Mic
               </Button>
@@ -557,47 +557,47 @@ Ensure the interview remains focused on React
               <Button
                 variant="destructive"
                 onClick={stopCall}
-                className="font-inter text-sm font-semibold shadow-lg bg-gradient-to-r from-rose-600 to-orange-500 text-white hover:from-rose-500 hover:to-orange-400"
+                className="h-9 px-4 font-inter text-xs font-bold shadow-lg bg-gradient-to-r from-rose-600 to-orange-500 text-white hover:from-rose-500 hover:to-orange-400"
               >
-                <X className="mr-2 h-4 w-4" />
+                <X className="mr-1.5 h-3.5 w-3.5" />
                 End
               </Button>
             </div>
           </div>
 
           {/* RIGHT */}
-          <div className="flex h-[650px] flex-col rounded-3xl border border-white/10 bg-white/5 p-4 shadow-[0_20px_60px_rgba(0,0,0,0.4)] backdrop-blur-xl">
-            <div className="flex items-center justify-between rounded-2xl bg-gradient-to-r from-sky-600/30 via-indigo-500/30 to-fuchsia-500/30 px-4 py-3 text-sm font-semibold text-white shadow-inner">
+          <div className="flex flex-col rounded-2xl border border-white/10 bg-white/5 p-3 shadow-[0_20px_60px_rgba(0,0,0,0.4)] backdrop-blur-xl overflow-hidden">
+            <div className="flex items-center justify-between rounded-xl bg-gradient-to-r from-sky-600/30 via-indigo-500/30 to-fuchsia-500/30 px-3 py-2 text-xs font-bold text-white shadow-inner">
               <div className="flex items-center gap-2">
-                <LuMessagesSquare className="h-5 w-5" />
-                <span>Live Transcription</span>
+                <LuMessagesSquare className="h-4 w-4" />
+                <span className="font-bold text-xs">Live Transcription</span>
               </div>
-              <span className="rounded-full border border-white/20 px-3 py-1 text-[11px] uppercase tracking-[0.15em] text-slate-100">
+              <span className="rounded-full border border-white/25 bg-white/10 px-2.5 py-0.5 text-[9px] uppercase tracking-[0.15em] font-bold text-slate-50">
                 Clarity matters
               </span>
             </div>
 
-            <div className="mt-4 rounded-2xl border border-white/10 bg-white/5 px-4 py-4 text-center text-sm text-slate-200">
+            <div className="mt-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-center text-[11px] leading-relaxed font-medium text-slate-200">
               All transcriptions appear here. Keep answers concise and relevant.
             </div>
 
             {messages.length === 0 ? (
-              <div className="flex flex-1 flex-col items-center justify-center text-center text-slate-400">
-                <LuGhost className="mb-2 h-6 w-6" />
-                <p className="text-sm font-medium">No transcriptions yet</p>
-                <p className="text-xs text-slate-500">Your conversation will appear here once the call begins.</p>
+              <div className="flex flex-1 flex-col items-center justify-center gap-2 text-center text-slate-400">
+                <LuGhost className="h-8 w-8 opacity-50" />
+                <p className="text-xs font-semibold text-slate-300">No transcriptions yet</p>
+                <p className="text-[10px] font-medium text-slate-500 leading-relaxed max-w-[200px]">Your conversation will appear here once the call begins.</p>
               </div>
             ) : (
-              <div className="mt-4 flex-1 space-y-3 overflow-y-auto pr-1">
+              <div className="mt-2 flex-1 space-y-2 overflow-y-auto pr-1.5">
                 {messages.map((msg, i) => (
                   <div
                     key={i}
                     className={`flex ${msg.type === "assistant" ? "justify-start" : "justify-end"}`}
                   >
                     <div
-                      className={`max-w-[75%] rounded-2xl px-4 py-2 text-xs tracking-tight font-inter shadow-sm shadow-black/20 ${msg.type === "assistant"
+                      className={`max-w-[85%] rounded-lg px-3 py-1.5 text-xs leading-relaxed font-inter shadow-sm shadow-black/20 ${msg.type === "assistant"
                         ? "rounded-bl-none border border-white/10 bg-white/10 text-slate-50"
-                        : "rounded-br-none bg-gradient-to-r from-sky-500 to-indigo-500 text-white"
+                        : "rounded-br-none bg-gradient-to-r from-sky-500 to-indigo-500 text-white font-medium"
                         }`}
                     >
                       {msg.content}
@@ -608,10 +608,10 @@ Ensure the interview remains focused on React
               </div>
             )}
 
-            <div className="mt-6 w-full">
-              <Separator className="my-3 bg-white/10" />
-              <Button className="flex w-full items-center justify-center gap-2 bg-gradient-to-r from-sky-500 via-indigo-500 to-fuchsia-500 text-sm font-semibold text-white shadow-lg hover:from-sky-400 hover:via-indigo-400 hover:to-fuchsia-400">
-                Download Transcription <LuDownload className="h-4 w-4" />
+            <div className="mt-auto pt-2 w-full">
+              <Separator className="mb-2 bg-white/10" />
+              <Button className="flex w-full items-center justify-center gap-1.5 bg-gradient-to-r from-sky-500 via-indigo-500 to-fuchsia-500 text-xs font-bold text-white shadow-lg hover:from-sky-400 hover:via-indigo-400 hover:to-fuchsia-400 h-9">
+                Download Transcription <LuDownload className="h-3.5 w-3.5" />
               </Button>
             </div>
           </div>
@@ -619,24 +619,24 @@ Ensure the interview remains focused on React
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent className="max-w-md overflow-hidden rounded-2xl border border-white/10 bg-slate-900 text-white shadow-[0_25px_80px_rgba(0,0,0,0.55)]">
-            <DialogHeader className="bg-gradient-to-br from-sky-600 via-indigo-500 to-fuchsia-400 p-5 text-white">
-              <DialogTitle className="flex items-center justify-center gap-3 text-center text-2xl font-semibold font-sora">
+            <DialogHeader className="bg-gradient-to-br from-sky-600 via-indigo-500 to-fuchsia-400 p-6 text-white">
+              <DialogTitle className="flex items-center justify-center gap-3 text-center text-2xl font-bold font-sora">
                 Congratulations! <LucideCheckCircle className="h-7 w-7 text-white" />
               </DialogTitle>
-              <DialogDescription className="text-center text-base text-slate-100">
+              <DialogDescription className="text-center text-base font-medium text-slate-100">
                 {interviewInfo?.userName}, your interview has ended successfully
               </DialogDescription>
             </DialogHeader>
 
-            <div className="space-y-4 p-6 text-center">
-              <p className="text-base text-slate-200">
+            <div className="flex flex-col gap-5 p-6 text-center">
+              <p className="text-base font-medium text-slate-200">
                 You have just completed your interview for <br />
-                <span className="font-semibold">{interviewInfo?.jobTitle}</span>.
+                <span className="font-bold text-white">{interviewInfo?.jobTitle}</span>.
               </p>
 
-              <p className="text-sm text-slate-400">You can now safely leave this meeting.</p>
+              <p className="text-sm font-medium text-slate-400">You can now safely leave this meeting.</p>
 
-              <div className="mt-6 flex gap-3 rounded-xl border border-white/10 bg-white/5 p-3 text-left text-sm text-slate-200">
+              <div className="flex gap-3 rounded-xl border border-white/10 bg-white/5 p-4 text-left text-sm font-medium text-slate-200">
                 <InfoIcon className="h-6 w-6 text-sky-300" />
                 <p className="leading-relaxed">
                   You can close this tab or explore other interviews. Your feedback will be ready shortly.
@@ -646,11 +646,11 @@ Ensure the interview remains focused on React
               <div className="grid grid-cols-2 gap-4">
                 <Button
                   onClick={() => setIsDialogOpen(false)}
-                  className="w-full bg-white/10 text-white hover:bg-white/20"
+                  className="h-11 w-full font-semibold bg-white/10 text-white hover:bg-white/20"
                 >
                   Close
                 </Button>
-                <Button className="w-full bg-gradient-to-r from-sky-500 to-indigo-500 text-white hover:from-sky-400 hover:to-indigo-400">
+                <Button className="h-11 w-full font-semibold bg-gradient-to-r from-sky-500 to-indigo-500 text-white hover:from-sky-400 hover:to-indigo-400">
                   Explore <SearchCheck />
                 </Button>
               </div>
