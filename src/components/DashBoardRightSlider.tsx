@@ -43,21 +43,6 @@ export function SheetDemo() {
   const [ticketMode, setTicketMode] = useState(false);
 
   useEffect(() => {
-    // Hide sheet overlay
-    const style = document.createElement('style');
-    style.innerHTML = `
-      [data-state="open"] {
-        --tw-bg-opacity: 0 !important;
-      }
-      .fixed.inset-0 {
-        display: none !important;
-      }
-    `;
-    document.head.appendChild(style);
-    return () => document.head.removeChild(style);
-  }, []);
-
-  useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
