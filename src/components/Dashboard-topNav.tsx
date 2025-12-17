@@ -37,7 +37,10 @@ const DashboardTopNav = () => {
     router.push("/auth");
   };
   return (
-    <div>
+    <div className="relative">
+      {/* Decorative gradient top bar */}
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-gray-900 via-gray-700 to-gray-900 z-20"></div>
+
       <div
         className={clsx(
           "px-6 py-[12px] w-full font-inter flex items-center justify-between ",

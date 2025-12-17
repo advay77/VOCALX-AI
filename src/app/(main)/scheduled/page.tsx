@@ -73,17 +73,15 @@ const ScheduledInterview = () => {
   }
   return (
     <div
-      className={`w-full h-full p-6 ${
-        !darkTheme
+      className={`w-full h-full p-6 ${!darkTheme
           ? "bg-gradient-to-br from-blue-50 to-gray-100"
           : "bg-gray-200"
-      } relative`}
+        } relative`}
     >
       <div className="">
         <div
-          className={`${
-            darkTheme ? "bg-slate-800 text-white" : "bg-white text-black"
-          } rounded-md flex items-center justify-between relative h-auto max-w-[620px] mx-auto shadow`}
+          className={`${darkTheme ? "bg-slate-800 text-white" : "bg-white text-black"
+            } rounded-md flex items-center justify-between relative h-auto max-w-[620px] mx-auto shadow`}
         >
           <div className=" flex flex-col justify-evenly h-full py-3 px-4">
             <h1 className="font-semibold text-2xl tracking-tight capitalize font-sora mb-3">
@@ -145,9 +143,8 @@ const ScheduledInterview = () => {
 
         {interviewList && (
           <div
-            className={`grid ${
-              view === "grid" ? "grid-cols-3" : "grid-cols-1"
-            } gap-4 mt-10`}
+            className={`grid ${view === "grid" ? "grid-cols-3" : "grid-cols-1"
+              } gap-4 mt-10`}
           >
             {interviewList?.map((item: any, index: number) => {
               const Icon = icons[index % icons.length]; // pick icon by index

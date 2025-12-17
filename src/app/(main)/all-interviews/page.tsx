@@ -205,8 +205,8 @@ const AllInterview = () => {
                           <label
                             key={t}
                             className={`flex items-center gap-2.5 rounded-lg border-2 p-3 cursor-pointer transition-all duration-200 hover:shadow-md ${selectedTypes.includes(t)
-                                ? 'border-blue-500 bg-gradient-to-br from-blue-50 to-blue-100 shadow-sm'
-                                : 'border-slate-200 bg-white hover:border-blue-300 hover:bg-blue-50/50'
+                              ? 'border-blue-500 bg-gradient-to-br from-blue-50 to-blue-100 shadow-sm'
+                              : 'border-slate-200 bg-white hover:border-blue-300 hover:bg-blue-50/50'
                               }`}
                           >
                             <Checkbox
@@ -234,8 +234,8 @@ const AllInterview = () => {
                             key={d}
                             size="sm"
                             className={`font-medium transition-all duration-200 ${selectedDuration === d
-                                ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-md hover:shadow-lg'
-                                : 'bg-white border-2 border-slate-200 text-slate-600 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700'
+                              ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-md hover:shadow-lg'
+                              : 'bg-white border-2 border-slate-200 text-slate-600 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700'
                               }`}
                             onClick={() =>
                               setSelectedDuration(selectedDuration === d ? null : d)
