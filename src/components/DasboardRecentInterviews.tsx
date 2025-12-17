@@ -161,55 +161,97 @@ Thanks.`
         <div className="flex items-center gap-5 mr-10">
           <Popover open={filterOpen} onOpenChange={setFilterOpen}>
             <PopoverTrigger asChild>
-              <Button variant="outline" className="flex items-center gap-2">
+              <Button className="flex items-center gap-2 bg-gradient-to-r from-blue-50 to-blue-100 text-blue-700 border border-blue-300 hover:from-blue-100 hover:to-blue-200 hover:border-blue-400 transition-all duration-200 shadow-sm hover:shadow-md">
                 <Filter className="w-4 h-4" />
-                Filters
+                <span className="font-semibold">Filters</span>
                 {(selectedTypes.length > 0 || selectedDuration !== null) && (
-                  <span className="ml-1 inline-flex items-center justify-center text-xs px-2 py-0.5 rounded-full bg-blue-600 text-white">
+                  <span className="ml-1 inline-flex items-center justify-center text-xs px-2 py-0.5 rounded-full bg-gradient-to-r from-blue-600 to-blue-700 text-white font-medium shadow-sm">
                     {selectedTypes.length + (selectedDuration !== null ? 1 : 0)}
                   </span>
                 )}
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-80">
-              <div className="space-y-4">
-                <div>
-                  <p className="font-medium mb-2">Interview Type</p>
-                  <div className="grid grid-cols-2 gap-2">
-                    {TYPE_OPTIONS.map((t) => (
-                      <label key={t} className="flex items-center gap-2 rounded-md border p-2">
-                        <Checkbox
-                          checked={selectedTypes.includes(t)}
-                          onCheckedChange={() => toggleType(t)}
-                        />
-                        <span className="text-sm">{t}</span>
-                      </label>
-                    ))}
+            <PopoverContent className="w-96 p-0 shadow-xl border-blue-200">
+              <div className="bg-gradient-to-br from-white to-blue-50/30 rounded-lg">
+                {/* Header */}
+                <div className="px-5 py-4 border-b border-blue-100 bg-gradient-to-r from-blue-50 to-blue-100/50">
+                  <div className="flex items-center gap-2">
+                    <Filter className="w-5 h-5 text-blue-600" />
+                    <h3 className="font-bold text-lg text-blue-900 font-sora">Filter Interviews</h3>
                   </div>
                 </div>
-                <div>
-                  <p className="font-medium mb-2">Interview Duration</p>
-                  <div className="flex flex-wrap gap-2">
-                    {DURATION_OPTIONS.map((d) => (
-                      <Button
-                        key={d}
-                        size="sm"
-                        variant={selectedDuration === d ? "default" : "outline"}
-                        onClick={() =>
-                          setSelectedDuration(selectedDuration === d ? null : d)
-                        }
-                      >
-                        {d} min
-                      </Button>
-                    ))}
+
+                <div className="p-5 space-y-5">
+                  {/* Interview Type Section */}
+                  <div>
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="h-5 w-0.5 bg-gradient-to-b from-blue-600 to-blue-400 rounded-full"></div>
+                      <p className="font-semibold text-sm text-slate-700 font-inter">Interview Type</p>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2.5">
+                      {TYPE_OPTIONS.map((t) => (
+                        <label
+                          key={t}
+                          className={`flex items-center gap-2.5 rounded-lg border-2 p-3 cursor-pointer transition-all duration-200 hover:shadow-md ${selectedTypes.includes(t)
+                              ? 'border-blue-500 bg-gradient-to-br from-blue-50 to-blue-100 shadow-sm'
+                              : 'border-slate-200 bg-white hover:border-blue-300 hover:bg-blue-50/50'
+                            }`}
+                        >
+                          <Checkbox
+                            checked={selectedTypes.includes(t)}
+                            onCheckedChange={() => toggleType(t)}
+                            className="data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
+                          />
+                          <span className={`text-sm font-medium ${selectedTypes.includes(t) ? 'text-blue-700' : 'text-slate-600'}`}>
+                            {t}
+                          </span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Interview Duration Section */}
+                  <div>
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="h-5 w-0.5 bg-gradient-to-b from-blue-600 to-blue-400 rounded-full"></div>
+                      <p className="font-semibold text-sm text-slate-700 font-inter">Interview Duration</p>
+                    </div>
+                    <div className="grid grid-cols-4 gap-2">
+                      {DURATION_OPTIONS.map((d) => (
+                        <Button
+                          key={d}
+                          size="sm"
+                          className={`font-medium transition-all duration-200 ${selectedDuration === d
+                              ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-md hover:shadow-lg'
+                              : 'bg-white border-2 border-slate-200 text-slate-600 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700'
+                            }`}
+                          onClick={() =>
+                            setSelectedDuration(selectedDuration === d ? null : d)
+                          }
+                        >
+                          {d} min
+                        </Button>
+                      ))}
+                    </div>
                   </div>
                 </div>
-                <div className="flex items-center justify-between pt-2">
-                  <Button variant="ghost" size="sm" onClick={clearFilters}>
-                    Clear
+
+                {/* Footer Actions */}
+                <div className="flex items-center justify-between px-5 py-4 border-t border-blue-100 bg-gradient-to-r from-slate-50 to-blue-50/30">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={clearFilters}
+                    className="text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-medium"
+                  >
+                    Clear All
                   </Button>
-                  <Button size="sm" onClick={() => setFilterOpen(false)}>
-                    Apply
+                  <Button
+                    size="sm"
+                    onClick={() => setFilterOpen(false)}
+                    className="bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 shadow-md hover:shadow-lg font-medium px-6"
+                  >
+                    Apply Filters
                   </Button>
                 </div>
               </div>
