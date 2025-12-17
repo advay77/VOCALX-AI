@@ -490,32 +490,32 @@ Ensure the interview remains focused on React
                 autoPlay
                 playsInline
                 muted
-                className="relative z-[1] h-full w-full rounded-2xl object-cover"
+                className="absolute inset-0 h-full w-full rounded-xl object-cover"
               />
               {!isCameraOn && (
-                <div className="relative z-[2] flex flex-col items-center gap-2.5 text-center">
+                <div className="absolute inset-0 z-[1] flex flex-col items-center justify-center gap-2 text-center">
                   <Image
                     src="/profile.png"
                     alt="User Avatar"
-                    width={110}
-                    height={110}
-                    className="h-[110px] w-[110px] rounded-full border-3 border-white/20 object-cover shadow-2xl"
+                    width={100}
+                    height={100}
+                    className="h-[100px] w-[100px] rounded-full border-3 border-white/20 object-cover shadow-2xl"
                     priority
                   />
-                  <p className="text-base font-bold capitalize text-slate-100">
+                  <p className="text-sm font-bold capitalize text-slate-100">
                     {interviewInfo?.userName}
                   </p>
                 </div>
               )}
 
-              <div className="absolute right-2 top-2 flex h-[100px] w-[100px] flex-col items-center justify-center overflow-hidden rounded-lg border border-white/20 bg-white/10 backdrop-blur-sm p-2 text-center shadow-xl shadow-sky-900/50">
-                <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-full border-2 border-white/30 bg-white/15 shadow-inner">
+              <div className="absolute right-3 top-3 z-[2] flex h-[95px] w-[95px] flex-col items-center justify-center overflow-hidden rounded-lg border border-white/20 bg-white/10 backdrop-blur-sm p-2 text-center shadow-xl shadow-sky-900/50">
+                <div className="mb-1.5 flex h-10 w-10 items-center justify-center rounded-full border-2 border-white/30 bg-white/15 shadow-inner">
                   <h1 className="text-base font-extrabold text-white tracking-tight">AI</h1>
                 </div>
                 {!loading && (
-                  <div className="flex flex-col items-center gap-1 text-[10px] font-semibold text-slate-100">
+                  <div className="flex flex-col items-center gap-0.5 text-[9px] font-semibold text-slate-100">
                     <AI_Voice />
-                    <p className="text-[9px] font-semibold">{activeUser ? "Speaking" : "Listening"}</p>
+                    <p className="text-[8px] font-semibold">{activeUser ? "Speaking" : "Listening"}</p>
                   </div>
                 )}
               </div>
