@@ -48,8 +48,8 @@ const Page = () => {
 
             <div
               className={`rounded-2xl flex items-center justify-between relative overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 ${darkTheme
-                  ? "bg-gradient-to-br from-slate-800 to-slate-900 text-white border border-slate-700/50"
-                  : "bg-gradient-to-br from-white via-white to-blue-50/30 text-black border border-blue-100/20"
+                ? "bg-gradient-to-br from-slate-800 to-slate-900 text-white border border-slate-700/50"
+                : "bg-gradient-to-br from-white via-white to-blue-50/30 text-black border border-blue-100/20"
                 }`}
             >
               {/* Decorative gradient line */}
@@ -105,7 +105,10 @@ const Page = () => {
 
       {/* MODAL FOR RECENT INTERVIEWS */}
       <Dialog open={showRecentInterviewsModal} onOpenChange={setShowRecentInterviewsModal}>
-        <DialogContent className="sm:max-w-[80vw] w-[98vw] h-[80vh] overflow-y-auto p-6">
+        <DialogContent className={`sm:max-w-[80vw] w-[98vw] h-[80vh] overflow-y-auto p-6 ${darkTheme
+          ? "bg-slate-900 border-slate-700 [&>button]:text-slate-300 [&>button]:hover:text-white"
+          : "bg-white border-slate-200"
+          }`}>
           <DasboardRecentInterviews />
         </DialogContent>
       </Dialog>
