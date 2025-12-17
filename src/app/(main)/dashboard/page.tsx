@@ -72,10 +72,13 @@ const Page = () => {
                   }`}>
                   Welcome to your dashboard. Check out the recent activity and track who has completed interviews.
                 </p>
-                <Button className={`py-3 px-7 text-sm tracking-tight font-inter font-semibold w-fit mt-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 flex items-center gap-2 ${darkTheme
-                  ? "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white"
-                  : "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white"
-                  }`}>
+                <Button
+                  onClick={() => router.push("/scheduled")}
+                  className={`group py-3 px-7 text-sm tracking-tight font-inter font-semibold w-fit mt-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 flex items-center gap-2 ${darkTheme
+                    ? "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white"
+                    : "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white"
+                    }`}
+                >
                   View Activity
                   <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />

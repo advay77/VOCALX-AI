@@ -321,11 +321,11 @@ Thanks.`
                   </div>
                 </CardHeader>
 
-                <CardContent className={`text-sm font-inter space-y-2 pt-1 relative z-10 ${darkTheme ? "text-slate-300" : "text-slate-600"}`}>
+                <CardContent className={`text-sm font-inter pt-1 relative z-10 flex-1 flex flex-col gap-3 ${darkTheme ? "text-slate-300" : "text-slate-600"}`}>
                   <p className={`line-clamp-2 text-left leading-relaxed text-sm ${darkTheme ? "text-slate-300" : "text-slate-600"}`}>
                     {item.jobDescription}
                   </p>
-                  <div className="flex flex-wrap items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2 min-h-[36px]">
                     {(() => {
                       const tokens = ((): string[] => {
                         const explicit = item.interviewType ?? item.jobType ?? item.job_title ?? item.type ?? item.category ?? null;
@@ -358,7 +358,7 @@ Thanks.`
                       ));
                     })()}
                   </div>
-                  <div className={`flex items-center gap-2 rounded-lg bg-gradient-to-r p-2.5 ${darkTheme
+                  <div className={`mt-auto flex items-center gap-2 rounded-lg bg-gradient-to-r p-2.5 ${darkTheme
                     ? "from-slate-700 to-slate-600"
                     : "from-slate-50 to-slate-100"
                     }`}>
