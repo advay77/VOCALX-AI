@@ -45,9 +45,8 @@ const Interview = () => {
     setUploading(true);
 
     const now = new Date();
-    const timestamp = `${now.getFullYear()}-${
-      now.getMonth() + 1
-    }-${now.getDate()}_${now.getHours()}-${now.getMinutes()}`;
+    const timestamp = `${now.getFullYear()}-${now.getMonth() + 1
+      }-${now.getDate()}_${now.getHours()}-${now.getMinutes()}`;
 
     const filePath = `${timestamp}/resume.pdf`;
 
@@ -134,11 +133,7 @@ const Interview = () => {
 
   return (
     <div
-      className="flex items-center justify-center py-12 w-full h-screen bg-gradient-to-br from-blue-100 to-indigo-300 absolute inset-0 z-0"
-      style={{
-        background:
-          "radial-gradient(125% 125% at 50% 10%, #fff 40%, #6366f1 100%)",
-      }}
+      className="relative flex min-h-screen items-center justify-center px-3 py-4 bg-gradient-to-br from-slate-50 via-white to-sky-100 overflow-hidden"
     >
       {wrongId ? (
         <Card className="min-w-[440px] flex items-center justify-center">
@@ -148,98 +143,105 @@ const Interview = () => {
           </CardContent>
         </Card>
       ) : (
-        <div className="bg-gray-50 shadow-md px-4 py-6 flex flex-col border border-gray-300 rounded-md min-w-[480px] ">
-          <h1 className="font-semibold text-2xl tracking-tight capitalize font-sora mb-3 text-center">
-            Welcome Candidate
-          </h1>
-          <Image
-            src="/workspace.png"
-            width={150}
-            height={150}
-            alt="workspace"
-            className="mx-auto"
-          />
-          <div className="">
-            <p className="text-center text-xl font-semibold tracking-tight font-inter capitalize">
-              {interviewDetails?.jobTitle || "Collecting Information..."}
-            </p>
-            <h2 className="text-center text-lg font-semibold tracking-tight font-inter">
-              {interviewDetails?.organization}
-            </h2>
+        <div className="relative w-full max-w-3xl overflow-hidden border border-slate-200 bg-white/95 px-5 py-5 shadow-[0_25px_60px_rgba(15,23,42,0.12)] backdrop-blur">
+          <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-r from-sky-100 via-indigo-50 to-amber-50 opacity-70" />
+          <div className="relative flex flex-col gap-4">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.25em] text-slate-500">Interview check-in</p>
+                <h1 className="text-2xl font-semibold text-slate-900">Welcome Candidate</h1>
+              </div>
+              <div className="rounded-none border border-sky-200 bg-sky-50 px-3 py-2 text-sm font-semibold uppercase tracking-[0.08em] text-sky-800 shadow-[0_4px_12px_rgba(56,189,248,0.15)]">
+                ID: {interviewID}
+              </div>
+            </div>
 
-            <p className="mt-3 text-center text-base font-inter flex items-center justify-center gap-3 mb-2">
-              Duration:
-              <LuClock2 />
-              {interviewDetails?.interviewDuration} minutes
-            </p>
+            <div className="flex flex-col items-center gap-2 text-center">
+              <Image
+                src="/workspace.png"
+                width={110}
+                height={110}
+                alt="workspace"
+                className="mx-auto drop-shadow-sm"
+              />
+              <p className="text-xl font-semibold text-slate-900 capitalize">
+                {interviewDetails?.jobTitle || "Collecting Information..."}
+              </p>
+              <p className="text-base font-medium text-slate-600">
+                {interviewDetails?.organization || "No organization"}
+              </p>
+              <div className="flex items-center gap-2 rounded-none border border-slate-200 bg-slate-50 px-3 py-1.5 text-sm font-semibold text-slate-800 shadow-sm">
+                <LuClock2 className="h-4 w-4 text-slate-600" />
+                {interviewDetails?.interviewDuration || "--"} minutes
+              </div>
+            </div>
 
-            <Separator className="my-4" />
+            <Separator className="my-1" />
 
-            <div className="w-full px-4 flex flex-col space-y-2">
-              <div className="flex gap-2 items-center">
-                <Label>FullName:</Label>
+            <div className="grid gap-3 md:grid-cols-2">
+              <div className="flex flex-col gap-2">
+                <Label className="text-sm font-semibold text-slate-700">Full name</Label>
                 <Input
                   placeholder="John Doe"
-                  className="w-[320px] ml-auto mt-1 bg-white"
+                  className="h-10 rounded-none border-slate-200 bg-white text-slate-900 focus:border-sky-400 focus:ring-0"
                   onChange={(e) => setUserName(e.target.value)}
                 />
               </div>
-
-              <div className="flex gap-2 items-center">
-                {" "}
-                <Label>Email:</Label>
+              <div className="flex flex-col gap-2">
+                <Label className="text-sm font-semibold text-slate-700">Email</Label>
                 <Input
                   placeholder="john@example.com"
-                  className="w-[320px] ml-auto mt-1 bg-white"
+                  className="h-10 rounded-none border-slate-200 bg-white text-slate-900 focus:border-sky-400 focus:ring-0"
                   onChange={(e) => setUserEmail(e.target.value)}
                 />
               </div>
-
               {interviewDetails?.acceptResume && (
-                <div className="flex gap-2 items-center mt-1">
-                  <Label>Resume:</Label>
-                  <Input
-                    type="file"
-                    accept="application/pdf"
-                    onChange={handleFileChange}
-                    className="w-[200px] ml-auto  bg-white -mr-5"
-                  />
-                  <Button
-                    variant="outline"
-                    className="ml-auto cursor-pointer"
-                    onClick={uploadResume}
-                    disabled={uploading}
-                  >
-                    {uploading ? (
-                      <>
-                        Uploading <Loader2 className="ml-2 animate-spin" />
-                      </>
-                    ) : (
-                      <>
-                        Upload <UploadCloud className="ml-2" />
-                      </>
-                    )}
-                  </Button>
+                <div className="flex flex-col gap-2 md:col-span-2">
+                  <Label className="text-sm font-semibold text-slate-700">Resume (PDF)</Label>
+                  <div className="flex flex-wrap gap-3">
+                    <Input
+                      type="file"
+                      accept="application/pdf"
+                      onChange={handleFileChange}
+                      className="h-10 w-full max-w-sm rounded-none border-slate-200 bg-white text-slate-900 focus:border-sky-400 focus:ring-0"
+                    />
+                    <Button
+                      variant="outline"
+                      className="h-10 rounded-none border-slate-200 text-slate-800 hover:border-sky-300"
+                      onClick={uploadResume}
+                      disabled={uploading}
+                    >
+                      {uploading ? (
+                        <>
+                          Uploading <Loader2 className="ml-2 h-4 w-4 animate-spin" />
+                        </>
+                      ) : (
+                        <>
+                          Upload <UploadCloud className="ml-2 h-4 w-4" />
+                        </>
+                      )}
+                    </Button>
+                  </div>
                 </div>
               )}
             </div>
 
-            <div className="bg-gradient-to-br from-blue-100 to-sky-100 border border-blue-400 rounded-md p-3 mt-8">
-              <ul className="list-disc list-inside  text-blue-600 font-light text-base">
-                <li>Make sure your camera and microphone works properly</li>
-                <li>Ensure you have stable internet connection</li>
-                <li>Find a quiet place for interview</li>
+            <div className="border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 shadow-inner">
+              <ul className="list-disc list-inside space-y-1">
+                <li>Check that your camera and microphone are working.</li>
+                <li>Ensure you have a stable internet connection.</li>
+                <li>Find a quiet place before you begin.</li>
               </ul>
             </div>
-            <div className="w-full flex items-center justify-center mt-4">
+
+            <div className="flex w-full items-center justify-end">
               <Button
-                className=""
-                // disabled={loading || !userName || !userEmail || !uploaded}
-                 disabled={loading || !userName || !userEmail }
+                className="h-11 rounded-none bg-gradient-to-r from-sky-600 to-indigo-600 px-5 text-white shadow-md hover:from-sky-500 hover:to-indigo-500"
+                disabled={loading || !userName || !userEmail}
                 onClick={() => onJoinInterview()}
               >
-                {loading && <Loader2 className="mr-2  animate-spin" />} Join
-                Interview <LuMoveRight />
+                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}Join Interview
+                <LuMoveRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
           </div>
