@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
+import { useTheme } from "@/context/ThemeProvider";
 
 const TASK_SEQUENCES = [
   {
@@ -42,7 +43,7 @@ const TASK_SEQUENCES = [
   },
 ];
 
-const LoadingAnimation = ({ progress }: { progress: number }) => (
+const LoadingAnimation = ({ progress, darkTheme }: { progress: number; darkTheme: boolean }) => (
   <div className="relative w-6 h-6">
     <svg
       viewBox="0 0 240 240"
@@ -98,18 +99,19 @@ const LoadingAnimation = ({ progress }: { progress: number }) => (
         strokeDasharray="18% 40%"
         mask="url(#progress-mask)"
       >
-        <circle r="150" cx="120" cy="120" stroke="#FF2E7E" opacity="0.95" />
-        <circle r="130" cx="120" cy="120" stroke="#00E5FF" opacity="0.95" />
-        <circle r="110" cx="120" cy="120" stroke="#4ADE80" opacity="0.95" />
-        <circle r="90" cx="120" cy="120" stroke="#FFA726" opacity="0.95" />
-        <circle r="70" cx="120" cy="120" stroke="#FFEB3B" opacity="0.95" />
-        <circle r="50" cx="120" cy="120" stroke="#FF4081" opacity="0.95" />
+        <circle r="150" cx="120" cy="120" stroke={darkTheme ? "#60A5FA" : "#FF2E7E"} opacity="0.95" />
+        <circle r="130" cx="120" cy="120" stroke={darkTheme ? "#34D399" : "#00E5FF"} opacity="0.95" />
+        <circle r="110" cx="120" cy="120" stroke={darkTheme ? "#818CF8" : "#4ADE80"} opacity="0.95" />
+        <circle r="90" cx="120" cy="120" stroke={darkTheme ? "#F97316" : "#FFA726"} opacity="0.95" />
+        <circle r="70" cx="120" cy="120" stroke={darkTheme ? "#FBBF24" : "#FFEB3B"} opacity="0.95" />
+        <circle r="50" cx="120" cy="120" stroke={darkTheme ? "#F87171" : "#FF4081"} opacity="0.95" />
       </g>
     </svg>
   </div>
 );
 
 export default function AILoadingState() {
+  const { darkTheme } = useTheme();
   const [sequenceIndex, setSequenceIndex] = useState(0);
   const [visibleLines, setVisibleLines] = useState<
     Array<{ text: string; number: number }>
@@ -186,8 +188,9 @@ export default function AILoadingState() {
         <div className="ml-2 flex items-center space-x-2 text-gray-600 dark:text-gray-300 font-medium">
           <LoadingAnimation
             progress={(sequenceIndex / TASK_SEQUENCES.length) * 100}
+            darkTheme={darkTheme}
           />
-          <span className="text-sm font-inter font-medium text-black">{currentSequence.status}...</span>
+          <span className={`text-sm font-inter font-medium ${darkTheme ? "text-white" : "text-black"}`}>{currentSequence.status}...</span>
         </div>
 
         <div className="relative">

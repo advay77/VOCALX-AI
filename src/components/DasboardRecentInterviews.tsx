@@ -381,8 +381,8 @@ Thanks.`
                       toast.success("Link copied to clipboard");
                     }}
                     className={`transition-all duration-200 flex items-center font-medium flex-1 ${darkTheme
-                        ? "bg-gradient-to-r from-blue-900 to-blue-800 text-blue-300 border border-blue-700 hover:from-blue-800 hover:to-blue-700 hover:border-blue-600 hover:text-blue-200"
-                        : "bg-gradient-to-r from-blue-50 to-blue-100 text-blue-700 border border-blue-300 hover:from-blue-100 hover:to-blue-200 hover:border-blue-400 hover:text-blue-800"
+                      ? "bg-gradient-to-r from-blue-900 to-blue-800 text-blue-300 border border-blue-700 hover:from-blue-800 hover:to-blue-700 hover:border-blue-600 hover:text-blue-200"
+                      : "bg-gradient-to-r from-blue-50 to-blue-100 text-blue-700 border border-blue-300 hover:from-blue-100 hover:to-blue-200 hover:border-blue-400 hover:text-blue-800"
                       }`}
                   >
                     <Copy className="w-4 h-4 mr-2" /> Link

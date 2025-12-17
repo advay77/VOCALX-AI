@@ -30,6 +30,7 @@ type Message = {
 
 export function SheetDemo() {
   const { users } = useUserData();
+  const { darkTheme } = useTheme();
   // ----ai states
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -80,46 +81,64 @@ export function SheetDemo() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg cursor-pointer hover:scale-110 transition-all fixed bottom-10 right-10">
-          <Stars className="text-2xl text-blue-600" />
+        <div className={`w-14 h-14 rounded-full flex items-center justify-center shadow-lg cursor-pointer hover:scale-110 transition-all fixed bottom-10 right-10 group ${darkTheme
+          ? "bg-gradient-to-br from-blue-600 to-blue-700 shadow-xl shadow-blue-600/30"
+          : "bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg"
+          }`}>
+          <Stars className={`text-2xl transition-all ${darkTheme ? "text-white" : "text-white"}`} />
         </div>
       </SheetTrigger>
-      <SheetContent className="bg-slate-800 py-4 px-2">
+      <SheetContent className={`${darkTheme ? "bg-slate-900" : "bg-white"} py-6 px-4 border-l ${darkTheme ? "border-slate-700" : "border-blue-100"}`}>
         <SheetHeader>
-          <SheetTitle className="font-extrabold text-lg text-white font-sora tracking-tight flex gap-3">
-            INTERVIEWX AI <Stars className="text-blue-400" />
+          <SheetTitle className={`font-extrabold text-xl font-sora tracking-tight flex gap-3 ${darkTheme ? "text-white" : "text-slate-900"}`}>
+            INTERVIEWX AI <Stars className={darkTheme ? "text-blue-400" : "text-blue-600"} />
           </SheetTitle>
-          <SheetDescription className="text-sm font-inter tracking-wide mt-2 text-gray-400 px-1">
-            I&apos;m an AI agent that can help you with getting started with
-            INTERVIEWX, sending mails to candidates, solving quiries.
+          <SheetDescription className={`text-sm font-inter tracking-wide mt-3 px-0 leading-relaxed ${darkTheme ? "text-slate-400" : "text-slate-600"}`}>
+            I&apos;m an AI agent that can help you with getting started with INTERVIEWX, sending mails to candidates, and solving queries.
           </SheetDescription>
         </SheetHeader>
         {/*---------------- AI MESSAGES DIPLAY--------------------- */}
-        <div className="h-full flex flex-col ">
+        <div className="h-full flex flex-col mt-6">
           {messages.length == 0 ? (
-            <div className="grid grid-cols-2 gap-4 px-2 mt-5">
-              <div className="p-2 rounded-sm bg-blue-200 border-2 cursor-none border-blue-600 text-black font-sora text-xs tracking-tight text-center hover:bg-blue-200 hover:scale-105 transition-all duration-200">
+            <div className="grid grid-cols-2 gap-3 mt-6">
+              <div className={`p-3 rounded-lg border-2 font-sora text-xs tracking-tight text-center hover:scale-105 transition-all duration-200 cursor-pointer font-medium ${darkTheme
+                ? "bg-blue-600/20 border-blue-500 text-blue-200 hover:bg-blue-600/30 hover:border-blue-400"
+                : "bg-blue-100 border-blue-400 text-blue-700 hover:bg-blue-200 hover:border-blue-500"
+                }`}>
                 <p>Getting started with creating interviews</p>
               </div>
-              <div className="p-2 rounded-sm bg-blue-200 border-2 border-blue-500 text-black font-sora text-xs tracking-tight text-center hover:bg-blue-200 hover:scale-105 transition-all duration-200">
+              <div className={`p-3 rounded-lg border-2 font-sora text-xs tracking-tight text-center hover:scale-105 transition-all duration-200 cursor-pointer font-medium ${darkTheme
+                ? "bg-blue-600/20 border-blue-500 text-blue-200 hover:bg-blue-600/30 hover:border-blue-400"
+                : "bg-blue-100 border-blue-400 text-blue-700 hover:bg-blue-200 hover:border-blue-500"
+                }`}>
                 <p>Get To know more about INTERVIEWX</p>
               </div>
-              <div className="p-2 rounded-sm bg-blue-200 border-2 border-blue-500 text-black font-sora text-xs tracking-tight text-center hover:bg-blue-200 hover:scale-105 transition-all duration-200">
+              <div className={`p-3 rounded-lg border-2 font-sora text-xs tracking-tight text-center hover:scale-105 transition-all duration-200 cursor-pointer font-medium ${darkTheme
+                ? "bg-blue-600/20 border-blue-500 text-blue-200 hover:bg-blue-600/30 hover:border-blue-400"
+                : "bg-blue-100 border-blue-400 text-blue-700 hover:bg-blue-200 hover:border-blue-500"
+                }`}>
                 <p>Creating Tickets to solve complex quiries</p>
               </div>
-              <div className="p-2 rounded-sm bg-blue-200 border-2 border-blue-500 text-black font-sora text-xs tracking-tight text-center hover:bg-blue-200 hover:scale-105 transition-all duration-200">
+              <div className={`p-3 rounded-lg border-2 font-sora text-xs tracking-tight text-center hover:scale-105 transition-all duration-200 cursor-pointer font-medium ${darkTheme
+                ? "bg-blue-600/20 border-blue-500 text-blue-200 hover:bg-blue-600/30 hover:border-blue-400"
+                : "bg-blue-100 border-blue-400 text-blue-700 hover:bg-blue-200 hover:border-blue-500"
+                }`}>
                 <p>Send Mail To candidates</p>
               </div>
             </div>
           ) : (
-            <ScrollArea className="h-[52vh] px-4 py-2">
-              <div className="flex flex-col gap-3">
+            <ScrollArea className={`h-[52vh] px-4 py-3 rounded-lg ${darkTheme ? "bg-slate-800/40" : "bg-blue-50/40"}`}>
+              <div className="flex flex-col gap-4">
                 {messages.map((msg, idx) => (
                   <div
                     key={idx}
-                    className={`max-w-[75%] px-3 py-2 rounded-md text-sm font-inter ${msg.role === "user"
-                        ? "bg-blue-500 text-white self-end"
-                        : "bg-gray-200/10 text-gray-200 self-start"
+                    className={`max-w-[75%] px-4 py-3 rounded-lg text-sm font-inter font-medium shadow-sm ${msg.role === "user"
+                      ? darkTheme
+                        ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white self-end shadow-md"
+                        : "bg-gradient-to-r from-blue-600 to-blue-700 text-white self-end shadow-md"
+                      : darkTheme
+                        ? "bg-slate-700 text-slate-100 self-start"
+                        : "bg-slate-200 text-slate-900 self-start"
                       }`}
                   >
                     <ReactMarkdown>{msg.text}</ReactMarkdown>
@@ -127,9 +146,9 @@ export function SheetDemo() {
                 ))}
 
                 {aiLoading && (
-                  <div className="flex items-center gap-2 text-gray-500 self-start">
+                  <div className={`flex items-center gap-2 self-start px-3 py-2 ${darkTheme ? "text-slate-400" : "text-slate-600"}`}>
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    <span className="text-xs">Thinking…</span>
+                    <span className="text-xs font-medium">Thinking…</span>
                   </div>
                 )}
 
@@ -140,24 +159,30 @@ export function SheetDemo() {
         </div>
 
         {/* TEXTAREA TO SEND ------------ */}
-        <SheetFooter className="shrink-0">
-          <div>
-            <Label className="text-white font-inter text-sm tracking-tight font-medium mt-2 mb-2">
+        <SheetFooter className="shrink-0 mt-6">
+          <div className="w-full">
+            <Label className={`font-inter text-sm tracking-tight font-semibold ${darkTheme ? "text-white" : "text-slate-900"}`}>
               Send a message
             </Label>
-            <div className="relative">
+            <div className="relative mt-3">
               <Textarea
                 placeholder="Write a message"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                className="bg-black text-gray-200 font-inter text-sm tracking-tight font-medium mt-2 mb-2 h-28 resize-none"
+                className={`font-inter text-sm tracking-tight font-medium h-28 resize-none rounded-lg border-2 transition-all ${darkTheme
+                  ? "bg-slate-800 text-white placeholder-slate-500 border-slate-700 focus:border-blue-500 focus:ring-blue-500/20"
+                  : "bg-white text-slate-900 placeholder-slate-400 border-blue-200 focus:border-blue-500 focus:ring-blue-500/10"
+                  }`}
               />
               <Button
-                className="absolute right-2 bottom-2 bg-gray-600"
+                className={`absolute right-2 bottom-2 transition-all ${darkTheme
+                  ? "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg"
+                  : "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-md"
+                  }`}
                 onClick={sendMessage}
               >
-                <LuSend className="text-white" size={10} />
+                <LuSend className="text-white" size={18} />
               </Button>
             </div>
           </div>

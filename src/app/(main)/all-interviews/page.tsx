@@ -288,8 +288,8 @@ const AllInterview = () => {
         <div className="w-full flex items-center justify-center">
           {interviewList?.length == 0 && (
             <div className=" flex flex-col justify-center items-center mt-20">
-              <LuVideo className="text-3xl text-blue-600" />
-              <p className="text-2xl font-medium tracking-tight font-inter mt-2 text-gray-500">
+              <LuVideo className={`text-3xl ${darkTheme ? "text-blue-400" : "text-blue-600"}`} />
+              <p className={`text-2xl font-medium tracking-tight font-inter mt-2 ${darkTheme ? "text-slate-400" : "text-gray-500"}`}>
                 No Interviews to display
               </p>
             </div>
