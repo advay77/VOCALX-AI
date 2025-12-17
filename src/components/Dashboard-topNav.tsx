@@ -80,30 +80,50 @@ const DashboardTopNav = () => {
               {/* </div> */}
             </DropdownMenuTrigger>
             <DropdownMenuContent
-              className="w-56 mr-5 font-inter text-lg space-y-1"
+              className={clsx(
+                "w-72 mr-5 font-inter text-[15px] space-y-1 rounded-none p-3 shadow-xl border",
+                darkTheme
+                  ? "bg-slate-900/95 text-white border-slate-700"
+                  : "bg-white/95 text-slate-900 border-blue-100"
+              )}
               align="start"
             >
-              <DropdownMenuLabel className="font-medium text-center tracking-tight">
-                {users?.[0].name}
+              <DropdownMenuLabel
+                className="font-sora italic font-bold text-center tracking-[0.08em] py-3 rounded-none bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-white uppercase"
+              >
+                HEY, {users?.[0].name}
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="cursor-pointer">
-                <LuUser /> Profile
+              <DropdownMenuItem
+                className={clsx(
+                  "flex items-center gap-2 px-4 py-2.5 rounded-none transition-all",
+                  darkTheme ? "hover:bg-slate-800" : "hover:bg-blue-50"
+                )}
+              >
+                <LuUser className="text-blue-600" /> Profile
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={toggleTheme}
-                className="cursor-pointer"
+                className={clsx(
+                  "flex items-center gap-2 px-4 py-2.5 rounded-none transition-all",
+                  darkTheme ? "hover:bg-slate-800" : "hover:bg-blue-50"
+                )}
               >
-                <LuSun /> Theme
+                <LuSun className="text-yellow-500" /> Theme
               </DropdownMenuItem>
-              <DropdownMenuItem className=" cursor-pointer">
-                <LuWallet /> Subscription
+              <DropdownMenuItem
+                className={clsx(
+                  "flex items-center gap-2 px-4 py-2.5 rounded-none transition-all",
+                  darkTheme ? "hover:bg-slate-800" : "hover:bg-blue-50"
+                )}
+              >
+                <LuWallet className="text-purple-600" /> Subscription
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={handleSignOut}
-                className="flex items-center justify-center gap-3 bg-blue-100 rounded-sm cursor-pointer"
+                className="mt-1 flex items-center justify-center gap-3 rounded-none cursor-pointer bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-md hover:shadow-lg transition-all hover:scale-[1.02]"
               >
-                <LuLogOut className="text-blue-600" /> Logout
+                <LuLogOut className="text-white" /> Logout
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
