@@ -1,5 +1,6 @@
 "use client";
 import { useInterview } from "@/context/interviewContext";
+import { useParams, useRouter } from "next/navigation";
 import {
   InfoIcon,
   Loader2,
@@ -69,6 +70,8 @@ interface Message {
 
 const StartInterview = () => {
   const { interviewInfo, setInterviewInfo } = useInterview();
+  const router = useRouter();
+  const params = useParams<{ interviewID: string }>();
   const [vapiError, setVapiError] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [caption, setCaption] = useState<string>("");
@@ -81,6 +84,7 @@ const StartInterview = () => {
   const [conversation, setConversation] = useState<string>("");
   const [generateLoading, setGenerateLoading] = useState<boolean>(false);
   const [hasStarted, setHasStarted] = useState(false);
+  const [hasAttempted, setHasAttempted] = useState(false);
 
   const [vapi] = useState(() => new Vapi(VAPI_PUBLIC_KEY));
 
@@ -88,8 +92,17 @@ const StartInterview = () => {
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [isCameraOn, setIsCameraOn] = useState(false);
   const [isMicOn, setIsMicOn] = useState(false);
+  const micInitRef = useRef(false);
+  const cameraInitRef = useRef(false);
 
   const transcriptRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const missingRequired = !interviewInfo?.userName || !interviewInfo?.userEmail;
+    if (missingRequired) {
+      const id = (interviewInfo?.interviewID || (params?.interviewID as string)) || "";
+      if (id) router.replace(`/interview/${id}`);
+    }
+  }, [interviewInfo?.userName, interviewInfo?.userEmail, interviewInfo?.interviewID, router, params]);
 
   useEffect(() => {
     const el = transcriptRef.current;
@@ -103,6 +116,20 @@ const StartInterview = () => {
   const handleStart = async () => {
     if (hasStarted) return;
     try {
+      // Prevent multiple attempts from the same email for this interview
+      const already = await checkAlreadyAttempted();
+      if (already) {
+        setHasAttempted(true);
+        toast.error("You have already completed this interview", {
+          description: (
+            <span className="text-sm text-gray-500 font-medium">
+              Each email can submit once for this interview.
+            </span>
+          ),
+        });
+        return;
+      }
+
       await navigator.mediaDevices.getUserMedia({ audio: true });
       await startCall();
       setHasStarted(true);
@@ -117,6 +144,37 @@ const StartInterview = () => {
       });
     }
   };
+
+  // Check in DB whether this email already attempted this interview
+  const checkAlreadyAttempted = async (): Promise<boolean> => {
+    try {
+      if (!interviewInfo?.userEmail || !interviewInfo?.interviewID) return false;
+      const { data, error } = await supabase
+        .from("interview-details")
+        .select("id")
+        .eq("interview_id", interviewInfo.interviewID)
+        .eq("userEmail", interviewInfo.userEmail)
+        .limit(1);
+      if (error) {
+        console.error("Attempt check error:", error);
+        return false;
+      }
+      return Array.isArray(data) && data.length > 0;
+    } catch (e) {
+      console.error("Attempt check unexpected error:", e);
+      return false;
+    }
+  };
+
+  // Preload attempt status when user info becomes available
+  useEffect(() => {
+    (async () => {
+      const attempted = await checkAlreadyAttempted();
+      if (attempted) {
+        setHasAttempted(true);
+      }
+    })();
+  }, [interviewInfo?.userEmail, interviewInfo?.interviewID]);
 
   const startCamera = async () => {
     try {
@@ -152,20 +210,59 @@ const StartInterview = () => {
     else startCamera();
   };
 
-  const toggleMic = async () => {
-    if (isMicOn) {
-      setIsMicOn(false);
-      toast.success("Mic turned off");
-    } else {
+  // Auto-enable camera on load (single prompt)
+  useEffect(() => {
+    if (cameraInitRef.current) return;
+    cameraInitRef.current = true;
+    (async () => {
       try {
+        await startCamera();
+      } catch (err) {
+        console.error("Camera auto-enable error:", err);
+      }
+    })();
+  }, []);
+
+  const toggleMic = async () => {
+    try {
+      if (isMicOn) {
+        // Mute Vapi if supported
+        try {
+          (vapi as any)?.setMuted?.(true);
+        } catch { }
+        setIsMicOn(false);
+        toast.success("Mic turned off");
+      } else {
+        // Ensure permission at least once
         await navigator.mediaDevices.getUserMedia({ audio: true });
+        try {
+          (vapi as any)?.setMuted?.(false);
+        } catch { }
         setIsMicOn(true);
         toast.success("Mic turned on");
-      } catch (err) {
-        console.error("Mic access error:", err);
       }
+    } catch (err) {
+      console.error("Mic access error:", err);
     }
   };
+
+  // Auto-enable mic on load (single prompt)
+  useEffect(() => {
+    if (micInitRef.current) return;
+    micInitRef.current = true;
+    (async () => {
+      try {
+        await navigator.mediaDevices.getUserMedia({ audio: true });
+        try {
+          (vapi as any)?.setMuted?.(false);
+        } catch { }
+        setIsMicOn(true);
+      } catch (err) {
+        console.error("Mic auto-enable error:", err);
+        setIsMicOn(false);
+      }
+    })();
+  }, [vapi]);
 
   const startCall = async () => {
     let questionList = "";
@@ -526,12 +623,28 @@ Ensure the interview remains focused on React
           </div>
 
           <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 shadow-inner shadow-sky-900/40">
-            <div
-              className={`h-3 w-3 rounded-full ${loading ? "bg-amber-400 animate-pulse" : "bg-emerald-400"}`}
-            />
-            <span className="text-sm font-semibold">
-              {loading ? "Connecting" : "Connected"}
-            </span>
+            {(() => {
+              const dotClass = callFinished
+                ? "bg-rose-400"
+                : isCallActive
+                  ? "bg-emerald-400"
+                  : loading
+                    ? "bg-amber-400 animate-pulse"
+                    : "bg-slate-400";
+              const label = callFinished
+                ? "Ended"
+                : isCallActive
+                  ? "Connected"
+                  : loading
+                    ? "Connecting"
+                    : "Ready";
+              return (
+                <>
+                  <div className={`h-3 w-3 rounded-full ${dotClass}`} />
+                  <span className="text-sm font-semibold">{label}</span>
+                </>
+              );
+            })()}
             <Separator orientation="vertical" className="h-5 bg-white/10" />
             <div className="flex items-center gap-2 text-sm font-bold tabular-nums">
               <Timer className="h-4 w-4 text-slate-300" /> {formatTime(seconds)}
@@ -602,16 +715,16 @@ Ensure the interview remains focused on React
             <div className="mt-2 flex flex-wrap items-center justify-center gap-2">
               <Button
                 onClick={handleStart}
-                className="h-9 px-4 font-inter text-xs font-bold shadow-lg bg-gradient-to-r from-sky-500 to-emerald-500 text-white hover:from-sky-400 hover:to-emerald-400"
+                disabled={hasAttempted}
+                className={`h-9 px-4 font-inter text-xs font-bold shadow-lg ${hasAttempted ? "opacity-60 cursor-not-allowed bg-white/10 text-slate-300" : "bg-gradient-to-r from-sky-500 to-emerald-500 text-white hover:from-sky-400 hover:to-emerald-400"}`}
               >
                 Start <SearchCheck className="ml-1.5 h-3.5 w-3.5" />
               </Button>
               <Button
-                variant={isCameraOn ? "default" : "outline"}
                 onClick={toggleCamera}
                 className={`h-9 px-4 font-inter text-xs font-bold shadow-lg transition-all duration-150 ${isCameraOn
                   ? "bg-gradient-to-r from-sky-500 to-indigo-500 text-white hover:from-sky-400 hover:to-indigo-400"
-                  : "border-white/20 bg-white/5 text-slate-100 hover:bg-white/10"
+                  : "border border-white/20 bg-white/5 text-slate-100 hover:bg-white/10"
                   }`}
               >
                 {isCameraOn ? (
@@ -623,11 +736,10 @@ Ensure the interview remains focused on React
               </Button>
 
               <Button
-                variant={isMicOn ? "default" : "outline"}
                 onClick={toggleMic}
                 className={`h-9 px-4 font-inter text-xs font-bold shadow-lg transition-all duration-150 ${isMicOn
                   ? "bg-gradient-to-r from-emerald-500 to-sky-500 text-white hover:from-emerald-400 hover:to-sky-400"
-                  : "border-white/20 bg-white/5 text-slate-100 hover:bg-white/10"
+                  : "border border-white/20 bg-white/5 text-slate-100 hover:bg-white/10"
                   }`}
               >
                 {isMicOn ? (
@@ -730,15 +842,12 @@ Ensure the interview remains focused on React
                 </p>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4">
                 <Button
                   onClick={() => setIsDialogOpen(false)}
                   className="h-11 w-full font-semibold bg-white/10 text-white hover:bg-white/20"
                 >
                   Close
-                </Button>
-                <Button className="h-11 w-full font-semibold bg-gradient-to-r from-sky-500 to-indigo-500 text-white hover:from-sky-400 hover:to-indigo-400">
-                  Explore <SearchCheck />
                 </Button>
               </div>
             </div>
