@@ -12,6 +12,7 @@ import { Separator } from "./ui/separator";
 import { LuArrowRight, LuBrain } from "react-icons/lu";
 import { supabase } from "@/services/supabaseClient";
 import { useUserData } from "@/context/UserDetailContext";
+import { useTheme } from "@/context/ThemeProvider";
 import { v4 as uuidv4 } from "uuid";
 import { LuDelete } from "react-icons/lu";
 import {
@@ -69,6 +70,7 @@ const InterviewQuestions: React.FC<InterviewQuestionsProps> = ({
   formData,
   onCreateLink,
 }) => {
+  const { darkTheme } = useTheme();
   const { users, setRemainingCredits } = useUserData();
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
@@ -274,27 +276,27 @@ const InterviewQuestions: React.FC<InterviewQuestionsProps> = ({
   return (
     <div className="space-y-4">
       {loading && (
-        <div className="mt-5 rounded-2xl border border-sky-200 bg-sky-50 px-6 py-5 text-center shadow-sm">
-          <p className="flex items-center justify-center gap-3 text-lg font-semibold text-slate-800">
+        <div className={`mt-5 rounded-2xl border px-6 py-5 text-center shadow-sm ${darkTheme ? "border-blue-700 bg-blue-900/30" : "border-sky-200 bg-sky-50"}`}>
+          <p className={`flex items-center justify-center gap-3 text-lg font-semibold ${darkTheme ? "text-blue-300" : "text-slate-800"}`}>
             <LuLoader className="h-5 w-5 animate-spin text-sky-600" />
             Generating AI Questions
           </p>
-          <p className="mt-2 text-sm text-slate-600">
+          <p className={`mt-2 text-sm ${darkTheme ? "text-blue-400" : "text-slate-600"}`}>
             We are crafting questions tailored to your role and interview type.
           </p>
         </div>
       )}
 
       {isError && (
-        <div className="mt-5 rounded-2xl border border-rose-200 bg-rose-50 px-6 py-5 text-center shadow-sm">
-          <p className="flex items-center justify-center gap-3 text-lg font-semibold text-rose-700">
+        <div className={`mt-5 rounded-2xl border px-6 py-5 text-center shadow-sm ${darkTheme ? "border-red-700 bg-red-900/30" : "border-red-200 bg-red-50"}`}>
+          <p className={`flex items-center justify-center gap-3 text-lg font-semibold ${darkTheme ? "text-red-300" : "text-red-700"}`}>
             <LuX className="h-5 w-5" /> Error while generating
           </p>
-          <p className="mt-2 text-sm text-rose-600">
+          <p className={`mt-2 text-sm ${darkTheme ? "text-red-300" : "text-red-600"}`}>
             It is on us. Please retry generating the questions.
           </p>
           <Button
-            className="mx-auto mt-4 bg-rose-500 text-white hover:bg-rose-600"
+            className={`mx-auto mt-4 text-white ${darkTheme ? "bg-red-600 hover:bg-red-700" : "bg-red-500 hover:bg-red-600"}`}
             onClick={() => router.push("/dashboard")}
           >
             Retry
@@ -311,35 +313,35 @@ const InterviewQuestions: React.FC<InterviewQuestionsProps> = ({
           }}
           className="flex flex-col gap-4"
         >
-          <div className="rounded-3xl border border-slate-200 bg-white px-5 py-6 shadow-[0_18px_50px_rgba(15,23,42,0.08)]">
+          <div className={`rounded-3xl border px-5 py-6 shadow-[0_18px_50px_rgba(15,23,42,0.08)] ${darkTheme ? "border-slate-700 bg-slate-800" : "border-slate-200 bg-white"}`}>
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="space-y-1">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+                <p className={`text-xs font-semibold uppercase tracking-[0.2em] ${darkTheme ? "text-slate-400" : "text-slate-500"}`}>
                   Step 2 of 3
                 </p>
-                <h2 className="text-2xl font-semibold text-slate-900">Generated Questions</h2>
-                <p className="text-sm text-slate-600">
+                <h2 className={`text-2xl font-semibold ${darkTheme ? "text-white" : "text-slate-900"}`}>Generated Questions</h2>
+                <p className={`text-sm ${darkTheme ? "text-slate-400" : "text-slate-600"}`}>
                   Review, remove, or add questions before sharing the interview link.
                 </p>
               </div>
               <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
-                  <Button className="gap-2 bg-sky-600 text-white hover:bg-sky-500">
+                  <Button className={`gap-2 text-white ${darkTheme ? "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800" : "bg-sky-600 hover:bg-sky-500"}`}>
                     Add New Question
                     <LuListPlus className="h-5 w-5" />
                   </Button>
                 </DialogTrigger>
 
-                <DialogContent className="sm:max-w-md">
+                <DialogContent className={`sm:max-w-md ${darkTheme ? "bg-slate-800 text-white" : ""}`}>
                   <DialogHeader>
-                    <DialogTitle>Add Interview Question</DialogTitle>
+                    <DialogTitle className={darkTheme ? "text-white" : ""}>Add Interview Question</DialogTitle>
                   </DialogHeader>
 
                   <Input
                     placeholder="Enter your question"
                     value={newQuestion}
                     onChange={(e) => setNewQuestion(e.target.value)}
-                    className="mt-2"
+                    className={`mt-2 ${darkTheme ? "border-slate-600 bg-slate-700 text-white placeholder:text-slate-400" : ""}`}
                   />
 
                   <Select
@@ -348,7 +350,7 @@ const InterviewQuestions: React.FC<InterviewQuestionsProps> = ({
                       setNewType(value as InterviewQuestion["type"])
                     }
                   >
-                    <SelectTrigger className="mt-4">
+                    <SelectTrigger className={`mt-4 ${darkTheme ? "border-slate-600 bg-slate-700 text-white" : ""}`}>
                       <SelectValue placeholder="Select type" />
                     </SelectTrigger>
                     <SelectContent>
@@ -361,7 +363,7 @@ const InterviewQuestions: React.FC<InterviewQuestionsProps> = ({
                   </Select>
 
                   <DialogFooter className="mt-4">
-                    <Button className="bg-sky-600 text-white hover:bg-sky-500" onClick={handleAddQuestion}>
+                    <Button className={`text-white ${darkTheme ? "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800" : "bg-sky-600 hover:bg-sky-500"}`} onClick={handleAddQuestion}>
                       Add Question
                     </Button>
                   </DialogFooter>
@@ -377,24 +379,24 @@ const InterviewQuestions: React.FC<InterviewQuestionsProps> = ({
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.35, delay: i * 0.05 }}
-                  className="rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm"
+                  className={`rounded-2xl border px-4 py-3 shadow-sm ${darkTheme ? "border-slate-700 bg-slate-700" : "border-slate-200 bg-white"}`}
                 >
                   <div className="flex items-start gap-3">
-                    <div className="mt-1 flex h-8 w-8 items-center justify-center rounded-full bg-sky-50 text-sm font-semibold text-sky-700 border border-sky-100">
+                    <div className={`mt-1 flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold border ${darkTheme ? "bg-blue-900/30 text-blue-300 border-blue-700" : "bg-sky-50 text-sky-700 border-sky-100"}`}>
                       {i + 1}
                     </div>
                     <div className="flex-1 space-y-2">
-                      <p className="text-base font-semibold text-slate-900">
+                      <p className={`text-base font-semibold ${darkTheme ? "text-white" : "text-slate-900"}`}>
                         {q.question}
                       </p>
                       <div className="flex items-center justify-between">
-                        <span className="rounded-full bg-sky-100 px-3 py-1 text-xs font-semibold text-sky-700">
+                        <span className={`rounded-full px-3 py-1 text-xs font-semibold ${darkTheme ? "bg-blue-900/40 text-blue-300" : "bg-sky-100 text-sky-700"}`}>
                           {q.type}
                         </span>
                         <Button
                           variant="outline"
                           size="icon"
-                          className="h-9 w-9 border-slate-200 text-sky-600 hover:border-sky-300 hover:text-sky-700"
+                          className={`h-9 w-9 ${darkTheme ? "border-red-700/50 text-red-400 hover:border-red-600 hover:text-red-300 hover:bg-red-900/20" : "border-red-300 text-red-600 hover:border-red-400 hover:text-red-700 hover:bg-red-50"}`}
                           onClick={() => handleDelete(i)}
                           aria-label="Remove question"
                         >
@@ -408,28 +410,19 @@ const InterviewQuestions: React.FC<InterviewQuestionsProps> = ({
             </div>
 
             <div className="mt-6 flex flex-wrap items-center justify-end gap-3">
-              <Button className="bg-slate-100 text-slate-800 hover:bg-slate-200">
+              <Button className={`${darkTheme ? "bg-slate-700 text-slate-200 hover:bg-slate-600" : "bg-slate-100 text-slate-800 hover:bg-slate-200"}`}>
                 Cancel <LuX className="ml-2 h-4 w-4" />
               </Button>
               <Button
                 onClick={onFinish}
                 disabled={saveLoading}
-                className="bg-sky-600 text-white hover:bg-sky-500"
+                className={`text-white ${darkTheme ? "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800" : "bg-sky-600 hover:bg-sky-500"}`}
               >
                 {saveLoading && (
                   <LuLoader className="mr-2 h-4 w-4 animate-spin" />
                 )}
                 {saveLoading ? "Saving..." : "Finish"}
                 <LuArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </div>
-
-            <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-gradient-to-r from-sky-500/15 via-indigo-500/15 to-fuchsia-500/15 px-4 py-3 border border-slate-200">
-              <p className="text-sm font-semibold text-slate-800">
-                Need a different angle? Generate a fresh set of questions.
-              </p>
-              <Button className="bg-white text-slate-900 hover:bg-slate-100">
-                Generate New Questions <LuBrain className="ml-2 h-4 w-4" />
               </Button>
             </div>
           </div>

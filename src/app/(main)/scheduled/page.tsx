@@ -145,11 +145,41 @@ const ScheduledInterview = () => {
           <div className="flex items-center gap-3">
             <div className="h-8 w-1 bg-gradient-to-b from-blue-500 via-purple-500 to-pink-500 rounded-full"></div>
             <h2 className={`font-bold text-2xl md:text-3xl font-sora tracking-tight ${darkTheme
-                ? "text-white"
-                : "bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent"
+              ? "text-white"
+              : "bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent"
               }`}>
               Interview Results & Candidates
             </h2>
+          </div>
+
+          {/* View Toggle Buttons */}
+          <div className={`flex items-center gap-2 p-2 rounded-lg border ${darkTheme ? "bg-slate-800 border-slate-600" : "bg-blue-100/50 border-blue-200"}`}>
+            <button
+              onClick={() => setView("grid")}
+              className={`p-2 rounded-md transition-all font-semibold ${view === "grid"
+                ? darkTheme
+                  ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg"
+                  : "bg-white text-blue-600 shadow-md border border-blue-300"
+                : darkTheme
+                  ? "text-slate-200 hover:text-white hover:bg-slate-700"
+                  : "text-slate-600 hover:text-blue-600 hover:bg-blue-200/30"
+                }`}
+            >
+              <Grid2X2 size={20} />
+            </button>
+            <button
+              onClick={() => setView("list")}
+              className={`p-2 rounded-md transition-all font-semibold ${view === "list"
+                ? darkTheme
+                  ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg"
+                  : "bg-white text-blue-600 shadow-md border border-blue-300"
+                : darkTheme
+                  ? "text-slate-200 hover:text-white hover:bg-slate-700"
+                  : "text-slate-600 hover:text-blue-600 hover:bg-blue-200/30"
+                }`}
+            >
+              <List size={20} />
+            </button>
           </div>
         </div>
 

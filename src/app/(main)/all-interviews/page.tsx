@@ -145,30 +145,43 @@ const AllInterview = () => {
       <div className="">
         <div className=" flex items-center justify-between">
           <div className="flex items-center gap-3 ml-5">
-            <div className="h-8 w-1 bg-gradient-to-b from-blue-600 to-blue-400 rounded-full"></div>
-            <h2 className="font-bold text-3xl font-sora bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+            <div className="h-8 w-1 bg-gradient-to-b from-blue-500 via-purple-500 to-pink-500 rounded-full"></div>
+            <h2 className={`font-bold text-2xl md:text-3xl font-sora tracking-tight ${darkTheme
+              ? "text-white"
+              : "bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent"
+              }`}>
               All Interviews
             </h2>
           </div>
           <div className="flex items-center gap-5 mr-10">
-            <div className="space-x-2 bg-white p-2 rounded-md flex">
-              <Button
-                variant={view === "grid" ? "default" : "ghost"}
-                size="icon"
+            <div className={`flex items-center gap-2 p-2 rounded-lg border ${darkTheme ? "bg-slate-800 border-slate-600" : "bg-blue-100/50 border-blue-200"}`}>
+              <button
                 onClick={() => setView("grid")}
-                className="rounded-md"
+                className={`p-2 rounded-md transition-all font-semibold ${view === "grid"
+                  ? darkTheme
+                    ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg"
+                    : "bg-white text-blue-600 shadow-md border border-blue-300"
+                  : darkTheme
+                    ? "text-slate-200 hover:text-white hover:bg-slate-700"
+                    : "text-slate-600 hover:text-blue-600 hover:bg-blue-200/30"
+                  }`}
               >
-                <Grid2X2 className="w-4 h-4" />
-              </Button>
+                <Grid2X2 size={20} />
+              </button>
 
-              <Button
-                variant={view === "list" ? "default" : "ghost"}
-                size="icon"
+              <button
                 onClick={() => setView("list")}
-                className="rounded-md"
+                className={`p-2 rounded-md transition-all font-semibold ${view === "list"
+                  ? darkTheme
+                    ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg"
+                    : "bg-white text-blue-600 shadow-md border border-blue-300"
+                  : darkTheme
+                    ? "text-slate-200 hover:text-white hover:bg-slate-700"
+                    : "text-slate-600 hover:text-blue-600 hover:bg-blue-200/30"
+                  }`}
               >
-                <List className="w-4 h-4" />
-              </Button>
+                <List size={20} />
+              </button>
             </div>
 
             <Popover open={filterOpen} onOpenChange={setFilterOpen}>

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
+import { useTheme } from "@/context/ThemeProvider";
 import {
   Card,
   CardAction,
@@ -71,44 +72,46 @@ const InterviewFormContainer: React.FC<InterviewFormProps> = ({
   onToggleInterviewType,
   onSubmit,
 }) => {
+  const { darkTheme } = useTheme();
+
   return (
-    <div className="bg-white p-4 rounded-md max-w-[700px]">
-      <Card className="p-0 rounded-none shadow-none border-none bg-white text-black">
+    <div className={`p-4 rounded-md max-w-[700px] ${darkTheme ? "bg-slate-800" : "bg-white"}`}>
+      <Card className={`p-0 rounded-none shadow-none border-none ${darkTheme ? "bg-slate-800 text-white" : "bg-white text-black"}`}>
         <CardHeader />
         <CardContent>
-          <Label htmlFor="text" className="text-lg font-inter">
+          <Label htmlFor="text" className={`text-lg font-inter ${darkTheme ? "text-slate-200" : "text-black"}`}>
             Job Position
           </Label>
           <Input
             type="text"
             id="text"
             placeholder="eg: Software Engineer"
-            className="mt-2 max-w-[400px] border-gray-200"
+            className={`mt-2 max-w-[400px] ${darkTheme ? "border-slate-600 bg-slate-700 text-white placeholder:text-slate-400" : "border-gray-200"}`}
             value={formData.jobTitle}
             onChange={(e) => onHandleInputChange("jobTitle", e.target.value)}
           />
         </CardContent>
 
         <CardContent>
-          <Label htmlFor="message" className="text-lg font-inter mb-2">
+          <Label htmlFor="message" className={`text-lg font-inter mb-2 ${darkTheme ? "text-slate-200" : "text-black"}`}>
             Job Description
           </Label>
           <Textarea
             id="message"
             placeholder="Enter Detailed Job Description."
-            className="border-gray-200"
+            className={`${darkTheme ? "border-slate-600 bg-slate-700 text-white placeholder:text-slate-400" : "border-gray-200"}`}
             value={formData.jobDescription}
             onChange={(e) =>
               onHandleInputChange("jobDescription", e.target.value)
             }
           />
-          <div className="text-right text-sm text-muted-foreground mt-1">
+          <div className={`text-right text-sm mt-1 ${darkTheme ? "text-slate-400" : "text-muted-foreground"}`}>
             {formData.jobDescription.length}/800
           </div>
         </CardContent>
 
         <CardContent>
-          <Label htmlFor="duration" className="text-lg font-inter mb-2">
+          <Label htmlFor="duration" className={`text-lg font-inter mb-2 ${darkTheme ? "text-slate-200" : "text-black"}`}>
             Interview Duration
           </Label>
           <Select
@@ -117,14 +120,14 @@ const InterviewFormContainer: React.FC<InterviewFormProps> = ({
               onHandleInputChange("interviewDuration", value)
             }
           >
-            <SelectTrigger className="w-[180px] border-gray-200">
+            <SelectTrigger className={`w-[180px] ${darkTheme ? "border-slate-600 bg-slate-700 text-white" : "border-gray-200"}`}>
               <SelectValue placeholder="Select Duration" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className={darkTheme ? "bg-slate-700 text-white" : ""}>
               <SelectGroup>
-                <SelectLabel>Time in Min:</SelectLabel>
+                <SelectLabel className={darkTheme ? "text-slate-300" : ""}>Time in Min:</SelectLabel>
                 {["10", "15", "30", "45"].map((val) => (
-                  <SelectItem key={val} value={val}>
+                  <SelectItem key={val} value={val} className={darkTheme ? "text-white" : ""}>
                     {val}
                   </SelectItem>
                 ))}
@@ -135,7 +138,7 @@ const InterviewFormContainer: React.FC<InterviewFormProps> = ({
 
         {/* Interview Types */}
         <CardContent>
-          <Label className="text-lg font-inter mb-2">Interview Type</Label>
+          <Label className={`text-lg font-inter mb-2 ${darkTheme ? "text-slate-200" : "text-black"}`}>Interview Type</Label>
           <div className="grid grid-cols-3 gap-3">
             {InterViewType.map((type, index) => {
               const isSelected = formData.interviewType.includes(type.title);
@@ -144,7 +147,10 @@ const InterviewFormContainer: React.FC<InterviewFormProps> = ({
                   key={index}
                   onClick={() => onToggleInterviewType(type.title)}
                   className={`flex items-center gap-2 px-3 py-1 rounded-full w-fit cursor-pointer transition-all duration-300
-                ${isSelected ? "bg-blue-600 text-white" : "bg-blue-100"}
+                ${isSelected
+                      ? darkTheme ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white" : "bg-blue-600 text-white"
+                      : darkTheme ? "bg-slate-700 text-slate-300 hover:bg-slate-600" : "bg-blue-100"
+                    }
                 hover:scale-105 hover:-translate-y-1`}
                 >
                   <span>{type.title}</span>
@@ -167,10 +173,10 @@ const InterviewFormContainer: React.FC<InterviewFormProps> = ({
               className="mt-2"
             />
             <div className="grid">
-              <Label htmlFor="terms-2" className="text-lg font-inter">
+              <Label htmlFor="terms-2" className={`text-lg font-inter ${darkTheme ? "text-slate-200" : "text-black"}`}>
                 Accept Resume
               </Label>
-              <p className="text-muted-foreground text-sm">
+              <p className={`text-sm ${darkTheme ? "text-slate-400" : "text-muted-foreground"}`}>
                 By clicking this, Candidates will be able to upload their
                 resume.
               </p>
@@ -181,7 +187,7 @@ const InterviewFormContainer: React.FC<InterviewFormProps> = ({
         <CardFooter className="w-full flex items-center justify-center my-6">
           <Button
             onClick={onSubmit}
-            className="mt-5 text-white bg-blue-600 hover:bg-blue-700 cursor-pointer"
+            className={`mt-5 text-white cursor-pointer ${darkTheme ? "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800" : "bg-blue-600 hover:bg-blue-700"}`}
           >
             Generate AI Questions
             <LuChevronRight className="inline-flex text-xl text-white" />
