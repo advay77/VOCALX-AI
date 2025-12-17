@@ -21,6 +21,21 @@ const InterviewLink = () => {
   const [interviewData, setInterviewData] = useState<InterviewTableData | null>(
     null
   );
+  const link = interviewData
+    ? `${process.env.NEXT_PUBLIC_HOST_URL}/interview/${interviewData.interview_id}`
+    : "";
+  const encodedLink = encodeURIComponent(link);
+
+  const handleShare = (type: "whatsapp" | "email" | "linkedin") => {
+    if (!link) return;
+    const shareMap = {
+      whatsapp: `https://wa.me/?text=${encodedLink}`,
+      email: `mailto:?subject=Interview%20Link&body=${encodedLink}`,
+      linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedLink}`,
+    } as const;
+    const url = shareMap[type];
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
   const fetchLatestInterview = async () => {
     const { data, error } = await supabase
       .from("interviews")
@@ -64,25 +79,14 @@ const InterviewLink = () => {
         </div>
         <div className="flex items-center justify-between gap-20 mt-5">
           <Input
-            // value={
-            //   interviewData
-            //     ? `${process.env.NEXT_PUBLIC_HOST_URL}/${interviewData.interview_id}`
-            //     : "Loading..."
-            // }
-            value={
-              interviewData
-                ? `${process.env.NEXT_PUBLIC_HOST_URL}/interview/${interviewData.interview_id}`
-                : "Loading..."
-            }
+            value={link || "Loading..."}
             readOnly
             className="bg-slate-100 text-black cursor-pointer"
           />
           <Button
             onClick={async () => {
-              if (interviewData) {
-                await navigator.clipboard.writeText(
-                  `${process.env.NEXT_PUBLIC_HOST_URL}/interview/${interviewData.interview_id}`
-                );
+              if (link) {
+                await navigator.clipboard.writeText(link);
                 toast("Link copied");
               }
             }}
@@ -107,15 +111,30 @@ const InterviewLink = () => {
           Share Through
         </h2>
         <div className="grid grid-cols-3 gap-5 max-w-[600px] mx-auto mt-6">
-          <Button variant={"outline"} className=" mt-2">
+          <Button
+            variant={"outline"}
+            className=" mt-2"
+            onClick={() => handleShare("whatsapp")}
+            disabled={!link}
+          >
             <LuSend className="mr-2" />
-            Watsapp
+            Whatsapp
           </Button>
-          <Button variant={"outline"} className=" mt-2">
+          <Button
+            variant={"outline"}
+            className=" mt-2"
+            onClick={() => handleShare("email")}
+            disabled={!link}
+          >
             <LuSend className="mr-2" />
             Email
           </Button>
-          <Button variant={"outline"} className=" mt-2">
+          <Button
+            variant={"outline"}
+            className=" mt-2"
+            onClick={() => handleShare("linkedin")}
+            disabled={!link}
+          >
             <LuSend className="mr-2" />
             Linkedin
           </Button>
