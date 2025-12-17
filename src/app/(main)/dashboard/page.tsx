@@ -23,9 +23,18 @@ const Page = () => {
     setShowRecentInterviewsModal(true);
   };
 
+  // Lock global scroll while on dashboard
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, []);
+
   return (
     <div
-      className={`w-full h-full ${!darkTheme
+      className={`w-full h-screen overflow-hidden ${!darkTheme
         ? "bg-gradient-to-br from-blue-50 to-gray-100"
         : "bg-gray-200"
         } relative`}

@@ -1,11 +1,21 @@
 ﻿"use client";
 import SendMailForm from "@/components/SendMailForm";
 import { useTheme } from "@/context/ThemeProvider";
+import { useEffect } from "react";
 import { LuMessageSquareMore, LuStar } from "react-icons/lu";
 import { Mail } from "lucide-react";
 
 export default function SendMailPage() {
     const { darkTheme } = useTheme();
+
+    // Lock page scroll while this view is active
+    useEffect(() => {
+        const prev = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
+        return () => {
+            document.body.style.overflow = prev;
+        };
+    }, []);
 
     return (
         <div
