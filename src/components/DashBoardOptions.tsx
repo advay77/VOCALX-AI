@@ -26,10 +26,10 @@ const DashBoardOptions = () => {
               Pro <LuStar className="text-white text-sm" />
             </span>
           </div>
-          <h2 className="font-bold text-xl font-inter mt-3 mb-2 text-slate-800">
+          <h2 className={`font-bold text-xl font-inter mt-3 mb-2 ${darkTheme ? "text-white" : "text-slate-800"}`}>
             Create New Interview
           </h2>
-          <p className="text-sm font-medium tracking-tight font-inter text-slate-600 leading-relaxed">
+          <p className={`text-sm font-medium tracking-tight font-inter leading-relaxed ${darkTheme ? "text-slate-300" : "text-slate-600"}`}>
             Create AI interviews for your candidates and get interview results, insights and more in minutes.
           </p>
           <Link href="/dashboard/create-interview">
@@ -58,10 +58,10 @@ const DashBoardOptions = () => {
               Pro <LuStar className="text-white text-sm" />
             </span>
           </div>
-          <h2 className="font-bold text-xl font-inter mt-3 mb-2 text-slate-800">
+          <h2 className={`font-bold text-xl font-inter mt-3 mb-2 ${darkTheme ? "text-white" : "text-slate-800"}`}>
             Check Submitted Resume
           </h2>
-          <p className="text-sm font-medium tracking-tight font-inter text-slate-600 leading-relaxed">
+          <p className={`text-sm font-medium tracking-tight font-inter leading-relaxed ${darkTheme ? "text-slate-300" : "text-slate-600"}`}>
             See all the resume submitted by candidates during interviews in one place.
           </p>
           <Button
@@ -85,10 +85,10 @@ const DashBoardOptions = () => {
               <LuMessageSquareMore className="text-2xl text-white" />
             </div>
           </div>
-          <h2 className="font-bold text-xl font-inter mt-3 mb-2 text-slate-800">
+          <h2 className={`font-bold text-xl font-inter mt-3 mb-2 ${darkTheme ? "text-white" : "text-slate-800"}`}>
             Send Mails to Candidates
           </h2>
-          <p className="text-sm font-medium tracking-tight font-inter text-slate-600 leading-relaxed">
+          <p className={`text-sm font-medium tracking-tight font-inter leading-relaxed ${darkTheme ? "text-slate-300" : "text-slate-600"}`}>
             Send custom emails to candidates and browse all your mails in one place.
           </p>
           <Link href="/dashboard/send-mail">
