@@ -26,6 +26,7 @@ import {
 import Image from "next/image";
 import axios from "axios";
 import AILoadingState from "@/components/kokonutui/ai-loading";
+import SendMailForm from "@/components/SendMailForm";
 
 // ---------- Interfaces ----------
 interface Question {
@@ -87,6 +88,8 @@ export default function InterviewDetailsPage() {
   const [loading, setLoading] = useState(false);
   const [interviewList, setInterviewList] = useState<Interview[] | null>(null);
   const [selectedCandidate, setSelectedCandidate] =
+    useState<InterviewDetails | null>(null);
+  const [mailCandidate, setMailCandidate] =
     useState<InterviewDetails | null>(null);
 
   useEffect(() => {
@@ -189,6 +192,26 @@ export default function InterviewDetailsPage() {
   }
 
   const interview = interviewList?.[0];
+  const mailSubject = interview?.jobTitle
+    ? `${interview.jobTitle} interview update`
+    : "Interview update";
+
+  const buildMailBody = () => {
+    const name = mailCandidate?.userName || "there";
+    const job = interview?.jobTitle ? ` for ${interview.jobTitle}` : "";
+    const recommendation =
+      mailCandidate?.feedback?.data?.feedback?.recommendation;
+
+    if (recommendation === "No") {
+      return `Hi ${name},\n\nThank you for taking the time to interview${job}. We appreciate your effort. At this time we will not be moving forward, but we encourage you to apply for future roles.\n\nBest regards,\nINTERVIEWX Team`;
+    }
+
+    if (recommendation === "Yes") {
+      return `Hi ${name},\n\nGreat job on your recent interview${job}. Our team would like to proceed with next steps. Please reply with your availability.\n\nBest regards,\nINTERVIEWX Team`;
+    }
+
+    return `Hi ${name},\n\nThank you for interviewing${job}. We will review and get back to you shortly.\n\nBest regards,\nINTERVIEWX Team`;
+  };
 
   return (
     <div
@@ -333,6 +356,12 @@ export default function InterviewDetailsPage() {
                               View Resume <LuDock />
                             </Button>
                           )}
+                          <Button
+                            variant="outline"
+                            onClick={() => setMailCandidate(cand)}
+                          >
+                            Send Mail <LuSend />
+                          </Button>
                         </div>
                       </div>
                     </Card>
@@ -363,9 +392,9 @@ export default function InterviewDetailsPage() {
 
               <div
                 className={`${selectedCandidate?.feedback?.data?.feedback
-                    ?.recommendation === "No"
-                    ? "bg-red-500/30"
-                    : "bg-green-500/30"
+                  ?.recommendation === "No"
+                  ? "bg-red-500/30"
+                  : "bg-green-500/30"
                   } w-fit p-2 rounded-md`}
               >
                 <p className="text-base font-inter font-medium text-black">
@@ -451,7 +480,13 @@ export default function InterviewDetailsPage() {
                   still Revisit this candidate
                 </p>
 
-                <Button variant="outline">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setSelectedCandidate(null);
+                    setMailCandidate(selectedCandidate);
+                  }}
+                >
                   Send Mail <LuSend />
                 </Button>
               </div>
@@ -464,7 +499,13 @@ export default function InterviewDetailsPage() {
                   for this Job
                 </p>
 
-                <Button variant="outline">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setSelectedCandidate(null);
+                    setMailCandidate(selectedCandidate);
+                  }}
+                >
                   Send Mail <LuSend />
                 </Button>
               </div>
@@ -549,6 +590,23 @@ export default function InterviewDetailsPage() {
               )}
             </div>
           </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* MAIL DIALOG */}
+      <Dialog open={!!mailCandidate} onOpenChange={() => setMailCandidate(null)}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-sora tracking-tight">
+              Send email to {mailCandidate?.userName}
+            </DialogTitle>
+          </DialogHeader>
+          <SendMailForm
+            defaultEmail={mailCandidate?.userEmail || ""}
+            defaultSubject={mailSubject}
+            defaultBody={buildMailBody()}
+            onSuccess={() => setMailCandidate(null)}
+          />
         </DialogContent>
       </Dialog>
     </div>

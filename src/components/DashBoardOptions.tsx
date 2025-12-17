@@ -91,11 +91,13 @@ const DashBoardOptions = () => {
           <p className="text-sm font-medium tracking-tight font-inter text-slate-600 leading-relaxed">
             Send custom emails to candidates and browse all your mails in one place.
           </p>
-          <Button
-            className="py-2.5 px-5 text-sm tracking-tight font-inter font-semibold w-full mt-5 bg-gradient-to-r from-pink-600 to-pink-700 hover:from-pink-700 hover:to-pink-800 text-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02] flex items-center justify-center gap-2"
-          >
-            Send Mails <LuMailPlus className="text-lg" />
-          </Button>
+          <Link href="/dashboard/send-mail">
+            <Button
+              className="py-2.5 px-5 text-sm tracking-tight font-inter font-semibold w-full mt-5 bg-gradient-to-r from-pink-600 to-pink-700 hover:from-pink-700 hover:to-pink-800 text-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02] flex items-center justify-center gap-2"
+            >
+              Send Mails <LuMailPlus className="text-lg" />
+            </Button>
+          </Link>
         </div>
       </div>
     </div>
