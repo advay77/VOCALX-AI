@@ -245,33 +245,54 @@ Ensure the interview remains focused on React
     }
   };
 
-  vapi.on("speech-start", () => {
-    setActiveUser(true);
-  });
+  useEffect(() => {
+    const handleSpeechStart = () => {
+      setActiveUser(true);
+    };
 
-  vapi.on("speech-end", () => {
-    setActiveUser(false);
-  });
+    const handleSpeechEnd = () => {
+      setActiveUser(false);
+    };
 
-  vapi.on("call-start", () => {
-    console.log("Call has started");
-    setIsCallActive(true);
-    setLoading(false);
-    toast.info("Interview Has been started", {
-      description: (
-        <span className="text-sm text-gray-500 font-medium">
-          Your Interview Has Been started!{" "}
-          <span className="text-blue-600">All the best</span>
-        </span>
-      ),
-    });
-  });
+    const handleCallStart = () => {
+      console.log("Call has started");
+      setIsCallActive(true);
+      setLoading(false);
+      toast.info("Interview Has been started", {
+        description: (
+          <span className="text-sm text-gray-500 font-medium">
+            Your Interview Has Been started!{" "}
+            <span className="text-blue-600">All the best</span>
+          </span>
+        ),
+      });
+    };
 
-  vapi.on("call-end", () => {
-    console.log("Call has stopped");
-    setIsCallActive(false);
-    setCallFinished(true);
-  });
+    const handleCallEnd = () => {
+      console.log("Call has stopped");
+      setIsCallActive(false);
+      setCallFinished(true);
+    };
+
+    const handleError = (e: any) => {
+      console.error(e);
+      setVapiError(e);
+    };
+
+    vapi.on("speech-start", handleSpeechStart);
+    vapi.on("speech-end", handleSpeechEnd);
+    vapi.on("call-start", handleCallStart);
+    vapi.on("call-end", handleCallEnd);
+    vapi.on("error", handleError);
+
+    return () => {
+      vapi.off("speech-start", handleSpeechStart);
+      vapi.off("speech-end", handleSpeechEnd);
+      vapi.off("call-start", handleCallStart);
+      vapi.off("call-end", handleCallEnd);
+      vapi.off("error", handleError);
+    };
+  }, [vapi]);
 
   useEffect(() => {
     if (callFinished) {
@@ -316,7 +337,7 @@ Ensure the interview remains focused on React
   };
 
   useEffect(() => {
-    vapi.on("message", (message: any) => {
+    const handleMessage = (message: any) => {
       if (message.type === "transcript" && message.transcriptType === "final") {
         const role = message.role === "user" ? "user" : "assistant";
         const content = message.transcript;
@@ -331,13 +352,14 @@ Ensure the interview remains focused on React
           return [...prev, { type: role, content }];
         });
       }
-    });
-  }, [vapi]);
+    };
 
-  vapi.on("error", (e) => {
-    console.error(e);
-    setVapiError(e);
-  });
+    vapi.on("message", handleMessage);
+
+    return () => {
+      vapi.off("message", handleMessage);
+    };
+  }, [vapi]);
 
   const stopCall = () => {
     stopCamera();
@@ -392,6 +414,41 @@ Ensure the interview remains focused on React
     setConversation(
       (prev) => `${prev}\n${type === "user" ? "User" : "Assistant"}: ${content}`
     );
+  };
+
+  const downloadTranscription = () => {
+    if (messages.length === 0) {
+      toast.error("No transcription to download", {
+        description: (
+          <span className="text-sm text-gray-500 font-medium">
+            Start the interview first to generate transcription.
+          </span>
+        ),
+      });
+      return;
+    }
+
+    const transcript = messages
+      .map((msg) => `${msg.type === "user" ? "You" : "AI"}: ${msg.content}`)
+      .join("\n\n");
+
+    const blob = new Blob([transcript], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `interview-transcript-${interviewInfo?.interviewID || "unknown"}-${new Date().toISOString().split("T")[0]}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    toast.success("Transcription downloaded", {
+      description: (
+        <span className="text-sm text-gray-500 font-medium">
+          Your interview transcript has been saved.
+        </span>
+      ),
+    });
   };
 
   const demoConversation = [
@@ -637,7 +694,7 @@ Ensure the interview remains focused on React
 
             <div className="pt-2 w-full shrink-0">
               <Separator className="mb-2 bg-white/10" />
-              <Button className="flex w-full items-center justify-center gap-1.5 bg-gradient-to-r from-sky-500 via-indigo-500 to-fuchsia-500 text-xs font-bold text-white shadow-lg hover:from-sky-400 hover:via-indigo-400 hover:to-fuchsia-400 h-9">
+              <Button onClick={downloadTranscription} className="flex w-full items-center justify-center gap-1.5 bg-gradient-to-r from-sky-500 via-indigo-500 to-fuchsia-500 text-xs font-bold text-white shadow-lg hover:from-sky-400 hover:via-indigo-400 hover:to-fuchsia-400 h-9">
                 Download Transcription <LuDownload className="h-3.5 w-3.5" />
               </Button>
             </div>
