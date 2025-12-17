@@ -355,11 +355,10 @@ Ensure the interview remains focused on React
       console.log("Call has started");
       setIsCallActive(true);
       setLoading(false);
-      toast.info("Interview Has been started", {
+      toast.info("Interview started", {
         description: (
-          <span className="text-sm text-gray-500 font-medium">
-            Your Interview Has Been started!{" "}
-            <span className="text-blue-600">All the best</span>
+          <span className="text-sm text-gray-600 font-medium">
+            Your interview has started. <span className="text-blue-600">All the best!</span>
           </span>
         ),
       });
@@ -468,35 +467,56 @@ Ensure the interview remains focused on React
   const GenerateFeedback = async () => {
     setGenerateLoading(true);
     try {
+      // Validate required info
+      if (!interviewInfo?.userName || !interviewInfo?.userEmail || !interviewInfo?.interviewID) {
+        console.error("❌ Missing interview info:", interviewInfo);
+        toast.error("Missing candidate information. Cannot save feedback.");
+        return;
+      }
+
+      console.log("📝 Generating feedback with info:", interviewInfo);
       const res = await axios.post("/api/ai-feedback", {
         conversation: messages,
       });
-      console.log("Feedback Result From GROQ LLM:", res.data);
+      console.log("✅ Feedback Result From GROQ LLM:", res.data);
+
       const { data, error } = await supabase
         .from("interview-details")
         .insert([
           {
-            userName: interviewInfo?.userName,
-            userEmail: interviewInfo?.userEmail,
-            interview_id: interviewInfo?.interviewID,
+            userName: interviewInfo.userName,
+            userEmail: interviewInfo.userEmail,
+            interview_id: interviewInfo.interviewID,
             feedback: res.data,
             recomended: "No",
-            acceptResume: interviewInfo?.acceptResume,
-            organization: interviewInfo?.organization,
-            resumeURL: interviewInfo?.resumeURL,
+            acceptResume: interviewInfo.acceptResume || false,
+            organization: interviewInfo.organization || "",
+            resumeURL: interviewInfo.resumeURL || null,
           },
         ])
         .select();
-      console.log("✅ Interview Details:", data);
-      toast.success("Feedback Generated Successfully", {
+
+      if (error) {
+        console.error("❌ Database Insert Error:", error);
+        toast.error("Failed to save interview feedback", {
+          description: error.message,
+        });
+        return;
+      }
+
+      console.log("✅ Interview Details Saved:", data);
+      toast.success("Interview feedback saved successfully!", {
         description: (
           <span className="text-sm text-gray-500 font-medium">
-            Feedback Generated Successfully!{" "}
+            Your interview has been completed and feedback has been generated.
           </span>
         ),
       });
-    } catch (err) {
-      console.error("❌ Test Feedback Error:", err);
+    } catch (err: any) {
+      console.error("❌ GenerateFeedback Error:", err);
+      toast.error("Error saving feedback", {
+        description: err.message || "An unexpected error occurred",
+      });
     } finally {
       setGenerateLoading(false);
     }

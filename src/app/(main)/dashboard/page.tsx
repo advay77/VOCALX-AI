@@ -36,7 +36,7 @@ const Page = () => {
     <div
       className={`w-full h-screen overflow-hidden ${!darkTheme
         ? "bg-gradient-to-br from-blue-50 to-gray-100"
-        : "bg-gray-200"
+        : "bg-slate-900"
         } relative`}
     >
       <div className="flex-1">
@@ -47,8 +47,10 @@ const Page = () => {
             <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/5 to-pink-500/10 rounded-2xl blur-3xl"></div>
 
             <div
-              className={`${darkTheme ? "bg-gradient-to-br from-slate-800 to-slate-900 text-white" : "bg-gradient-to-br from-white via-white to-blue-50/30 text-black"
-                } rounded-2xl flex items-center justify-between relative overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 border border-blue-100/20`}
+              className={`rounded-2xl flex items-center justify-between relative overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 ${darkTheme
+                  ? "bg-gradient-to-br from-slate-800 to-slate-900 text-white border border-slate-700/50"
+                  : "bg-gradient-to-br from-white via-white to-blue-50/30 text-black border border-blue-100/20"
+                }`}
             >
               {/* Decorative gradient line */}
               <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"></div>
@@ -60,7 +62,8 @@ const Page = () => {
                     Welcome {users?.[0].name}
                   </h1>
                 </div>
-                <p className="font-inter text-base font-medium max-w-[450px] text-slate-600 leading-relaxed">
+                <p className={`font-inter text-base font-medium max-w-[450px] leading-relaxed ${darkTheme ? "text-slate-300" : "text-slate-600"
+                  }`}>
                   Welcome to your dashboard. Check out the recent activity and track who has completed interviews.
                 </p>
                 <Button className="py-2.5 px-6 text-sm tracking-tight font-inter font-semibold w-fit mt-6 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center gap-2">

@@ -41,6 +41,32 @@ const ScheduledInterview = () => {
   useEffect(() => {
     users && GetInterviewList();
   }, [users]);
+
+  // Subscribe to real-time updates for interview-details
+  useEffect(() => {
+    if (!users?.[0]?.email) return;
+
+    const channel = supabase
+      .channel("interview-details-changes")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "interview-details",
+        },
+        () => {
+          console.log("New interview detail detected, refreshing list...");
+          GetInterviewList();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [users?.[0]?.email]);
+
   // we we have connect 2 tables interviews , interview-details using FK;
   const GetInterviewList = async () => {
     setLoading(true);
@@ -48,14 +74,15 @@ const ScheduledInterview = () => {
       const result = await supabase
         .from("interviews")
         .select(
-          "jobTitle, jobDescription, interview_id, interview-details(userEmail)"
+          "jobTitle, jobDescription, interview_id, created_at, interview-details(userEmail, userName, feedback, resumeURL, created_at)"
         )
         .eq("userEmail", users?.[0].email)
         .order("created_at", { ascending: false });
-      console.log("interview data raw", result.data);
-      setInterviewList(result.data);
+      console.log("interview data with candidates", result.data);
+      setInterviewList(result.data || []);
     } catch (err) {
-      console.log(err);
+      console.error("Error fetching interviews:", err);
+      setInterviewList([]);
     } finally {
       setLoading(false);
     }
@@ -113,33 +140,16 @@ const ScheduledInterview = () => {
           </div>
         </div>
 
-        {/* Header & view toggle */}
-        <div className="flex items-center justify-between mt-8 max-w-[1100px] mx-auto">
+        {/* Header */}
+        <div className="flex items-center justify-between mt-8 max-w-[1400px] mx-auto">
           <div className="flex items-center gap-3">
             <div className="h-8 w-1 bg-gradient-to-b from-blue-500 via-purple-500 to-pink-500 rounded-full"></div>
-            <h2 className="font-bold text-2xl md:text-3xl font-sora tracking-tight bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-              Scheduled Interviews
+            <h2 className={`font-bold text-2xl md:text-3xl font-sora tracking-tight ${darkTheme
+                ? "text-white"
+                : "bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent"
+              }`}>
+              Interview Results & Candidates
             </h2>
-          </div>
-          <div className="flex items-center gap-4">
-            <div className={`${darkTheme ? "bg-slate-800 border border-slate-700" : "bg-white"} p-2 rounded-xl shadow-md flex`}>
-              <Button
-                variant={view === "grid" ? "default" : "ghost"}
-                size="icon"
-                onClick={() => setView("grid")}
-                className="rounded-md"
-              >
-                <Grid2X2 className="w-4 h-4" />
-              </Button>
-              <Button
-                variant={view === "list" ? "default" : "ghost"}
-                size="icon"
-                onClick={() => setView("list")}
-                className="rounded-md"
-              >
-                <List className="w-4 h-4" />
-              </Button>
-            </div>
           </div>
         </div>
 
@@ -154,56 +164,130 @@ const ScheduledInterview = () => {
           )}
         </div>
 
-        {interviewList && (
-          <div
-            className={`grid ${view === "grid" ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"} gap-6 mt-10 max-w-[1100px] mx-auto`}
-          >
-            {interviewList?.map((item: any, index: number) => {
-              const Icon = icons[index % icons.length]; // pick icon by index
+        {/* Interview sections with candidates */}
+        {interviewList && interviewList.length > 0 && (
+          <div className="space-y-10 mt-10 max-w-[1400px] mx-auto">
+            {interviewList?.map((interview: any, index: number) => {
+              const Icon = icons[index % icons.length];
+              const candidates = interview["interview-details"] || [];
 
               return (
-                <Card
-                  key={item.interview_id}
-                  className={`${darkTheme ? "bg-slate-800 border border-slate-700" : "bg-white"} rounded-2xl shadow-md hover:shadow-lg transition-all px-4 py-5 relative overflow-hidden group`}
+                <div
+                  key={interview.interview_id}
+                  className={`${darkTheme ? "bg-slate-800/50 border border-slate-700" : "bg-white"} rounded-2xl p-6 shadow-lg relative overflow-hidden`}
                 >
-                  {/* overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  {/* top line */}
+                  {/* Decorative top line */}
                   <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500" />
 
-                  <CardHeader className="flex flex-row items-center justify-between">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-md">
-                      <Icon className="text-white w-5 h-5" />
-                    </div>
-                    <CardTitle className="font-semibold text-lg font-sora">
-                      {item.jobTitle}
-                    </CardTitle>
-                  </CardHeader>
-
-                  <CardContent className="text-sm font-inter space-y-3">
-                    <p className="line-clamp-2 text-slate-600 dark:text-slate-300">
-                      {item.jobDescription}
-                    </p>
-
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="inline-flex w-2 h-2 rounded-full bg-green-500" />
-                        <span className="text-xs text-slate-600 dark:text-slate-300">Active</span>
+                  {/* Interview header */}
+                  <div className="flex items-start justify-between mb-6">
+                    <div className="flex items-start gap-4">
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-md flex-shrink-0">
+                        <Icon className="text-white w-6 h-6" />
                       </div>
-                      <div className="px-3 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 dark:bg-slate-700 dark:text-slate-200">
-                        Candidates: {item["interview-details"].length}
+                      <div>
+                        <h3 className="font-bold text-xl font-sora mb-1">{interview.jobTitle}</h3>
+                        <p className="text-sm text-slate-600 dark:text-slate-300 max-w-2xl">{interview.jobDescription}</p>
+                        <div className="flex items-center gap-4 mt-2">
+                          <span className="text-xs text-slate-500 flex items-center gap-1">
+                            <span className="inline-flex w-2 h-2 rounded-full bg-green-500" />
+                            Active
+                          </span>
+                          <span className="text-xs text-slate-500">
+                            {candidates.length} {candidates.length === 1 ? "Candidate" : "Candidates"}
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </CardContent>
-
-                  <CardFooter className="flex justify-end">
-                    <Link href={`/scheduled/${item.interview_id}/details`}>
-                      <Button className="font-inter text-sm cursor-pointer bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-xl shadow-md hover:shadow-lg transition-all">
-                        View Details <LuActivity />
+                    <Link href={`/scheduled/${interview.interview_id}/details`}>
+                      <Button variant="outline" className="font-inter text-sm">
+                        Full Details <LuActivity className="ml-2" />
                       </Button>
                     </Link>
-                  </CardFooter>
-                </Card>
+                  </div>
+
+                  {/* Candidates list */}
+                  {candidates.length === 0 ? (
+                    <div className="text-center py-8 text-slate-500">
+                      <p className="text-sm">No candidates have completed this interview yet.</p>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {candidates.map((candidate: any, idx: number) => {
+                        // Calculate average rating
+                        const ratings = candidate.feedback?.data?.feedback?.rating;
+                        let avgScore: number | null = null;
+                        if (ratings) {
+                          const values = Object.values(ratings);
+                          const sum = values.reduce((acc: number, v: any) => acc + (v ?? 0), 0);
+                          avgScore = values.length > 0 ? sum / values.length : null;
+                        }
+
+                        const getColor = (score: number) => {
+                          if (score < 5) return "text-red-500";
+                          if (score < 7) return "text-orange-500";
+                          return "text-green-500";
+                        };
+
+                        const recommendation = candidate.feedback?.data?.feedback?.recommendation;
+
+                        return (
+                          <Card
+                            key={idx}
+                            className={`${darkTheme ? "bg-slate-900 border-slate-700" : "bg-slate-50 border-slate-200"} p-4 relative group hover:shadow-md transition-all`}
+                          >
+                            <div className="flex items-start gap-3">
+                              <Image
+                                src="/profile.png"
+                                alt="profile"
+                                width={48}
+                                height={48}
+                                className="rounded-full flex-shrink-0"
+                              />
+                              <div className="flex-1 min-w-0">
+                                <p className="font-semibold capitalize font-inter text-sm truncate">
+                                  {candidate.userName}
+                                </p>
+                                <p className="text-xs text-muted-foreground truncate">
+                                  {candidate.userEmail}
+                                </p>
+                                {avgScore !== null && (
+                                  <div className="flex items-center gap-2 mt-1">
+                                    <span className={`font-bold text-sm ${getColor(avgScore)}`}>
+                                      {avgScore.toFixed(1)}/10
+                                    </span>
+                                    {recommendation && (
+                                      <span className={`text-xs px-2 py-0.5 rounded-full ${recommendation === "Yes"
+                                        ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
+                                        : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
+                                        }`}>
+                                        {recommendation === "Yes" ? "Approved" : "Not Recommended"}
+                                      </span>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2 mt-3">
+                              <Link href={`/scheduled/${interview.interview_id}/details`} className="flex-1">
+                                <Button variant="outline" size="sm" className="w-full text-xs">
+                                  <LuActivity className="mr-1 h-3 w-3" /> Report
+                                </Button>
+                              </Link>
+                              {candidate.resumeURL && (
+                                <Link href={`/scheduled/${interview.interview_id}/details`} className="flex-1">
+                                  <Button variant="outline" size="sm" className="w-full text-xs">
+                                    <LuDock className="mr-1 h-3 w-3" /> Resume
+                                  </Button>
+                                </Link>
+                              )}
+                            </div>
+                          </Card>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
               );
             })}
           </div>
