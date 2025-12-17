@@ -1,16 +1,21 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { GoogleGenAI, Type } from "@google/genai";
 import { supabase } from "@/services/supabaseClient";
 // import { useUserData } from "@/context/UserDetailContext";
 // import nodemailer from "nodemailer";
 import { toast } from "sonner";
-// import dotenv from "dotenv";
 import axios from "axios";
-// dotenv.config();
 
 const ai = new GoogleGenAI({
   apiKey: process.env.NEXT_PUBLIC_GOOGLE_GENAI_KEY!,
 });
+const PROJECT_NAME = process.env.NEXT_PUBLIC_PROJECT_NAME || "INTERVIEWX";
+const PROJECT_TAGLINE =
+  process.env.NEXT_PUBLIC_PROJECT_TAGLINE ||
+  "AI-powered platform for complete hiring and interviews";
+const PROJECT_SUMMARY =
+  process.env.NEXT_PUBLIC_PROJECT_SUMMARY ||
+  "HR can create interviews, send links to candidates, AI voice agents conduct interviews and produce summaries/insights. Candidates can also upload resumes.";
 
 type HistoryPart =
   | { text: string }
@@ -59,7 +64,7 @@ async function sendMail(to: string, subject: string, body: string) {
             Email has been sent to {to}
           </span>
         ),
-        
+
       });
       return `Email sent to ${to}, messageId: ${res.data.messageId}`;
     }
@@ -130,15 +135,20 @@ export async function runAgent(userMessage: string, userId: number) {
       contents: history,
       config: {
         systemInstruction: `
-          You are helpful AI assitant fro company VOCLAX that is ai powered platform for complete hiring solution. Where HR can create interviews , and send the interview link to candidates and AI voice agents will take interview of the candidates and provide summary and insights. Other than that Candidates can also share their resume on this platform.
-          You will help users to solve any query related to this platform, how to create interviews , send mails to candidates and even creating tickets for user issues.
-          you can guide user to how to create interviews like in thses 3 steps below :
-          1. add job title , description , duration, type and select whether to take resume from candidates or not.
-          2. questions will be AI generated , u can manually add questions too or remove them.
-          3. interview created , send links to candidates.
+          You are the helpful AI assistant for ${PROJECT_NAME}, an ${PROJECT_TAGLINE}.
+          Always refer to the platform as "${PROJECT_NAME}" (never VOCLAX or any other name).
 
-          other than that you have also 2 powerful tools to create tickets for user issues and send mails to candidates.
-`,
+          Platform capabilities:
+          - ${PROJECT_SUMMARY}
+          - You can assist with creating interviews, sending mails to candidates, and opening support tickets for user issues.
+
+          Interview creation guidance (3 steps):
+          1) Add job title, description, duration, type, and choose if candidate resumes are required.
+          2) AI generates questions; users may add/remove questions manually.
+          3) Interview is created; provide/send the interview link to candidates.
+
+          You also have access to tools for creating tickets and sending mails when appropriate.
+        `,
         maxOutputTokens: 600,
         tools: [
           {

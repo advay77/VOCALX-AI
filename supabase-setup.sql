@@ -58,3 +58,66 @@ ON public.interviews
 FOR ALL
 TO authenticated
 USING ("userEmail" = 'syedmohammadaquib12@gmail.com');
+
+-- =============================================
+-- Tickets table + RLS for user-owned tickets
+-- =============================================
+
+CREATE TABLE IF NOT EXISTS public.tickets (
+        id BIGSERIAL PRIMARY KEY,
+        "userId" INTEGER NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+        description TEXT NOT NULL,
+        status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending','open','closed','resolved')),
+        created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_tickets_userId ON public.tickets("userId");
+
+ALTER TABLE public.tickets ENABLE ROW LEVEL SECURITY;
+
+-- Allow authenticated users to select their own tickets
+CREATE POLICY "Users can view their own tickets"
+ON public.tickets
+FOR SELECT
+TO authenticated
+USING (
+    EXISTS (
+        SELECT 1 FROM public.users u
+        WHERE u.id = public.tickets."userId"
+            AND u.email = auth.jwt()->>'email'
+    )
+);
+
+-- Allow authenticated users to insert their own tickets
+CREATE POLICY "Users can create their own tickets"
+ON public.tickets
+FOR INSERT
+TO authenticated
+WITH CHECK (
+    EXISTS (
+        SELECT 1 FROM public.users u
+        WHERE u.id = public.tickets."userId"
+            AND u.email = auth.jwt()->>'email'
+    )
+);
+
+-- Allow authenticated users to update their own tickets
+CREATE POLICY "Users can update their own tickets"
+ON public.tickets
+FOR UPDATE
+TO authenticated
+USING (
+    EXISTS (
+        SELECT 1 FROM public.users u
+        WHERE u.id = public.tickets."userId"
+            AND u.email = auth.jwt()->>'email'
+    )
+)
+WITH CHECK (
+    EXISTS (
+        SELECT 1 FROM public.users u
+        WHERE u.id = public.tickets."userId"
+            AND u.email = auth.jwt()->>'email'
+    )
+);
+

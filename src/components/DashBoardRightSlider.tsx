@@ -22,6 +22,7 @@ import { useUserData } from "@/context/UserDetailContext";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { supabase } from "@/services/supabaseClient";
 import ReactMarkdown from "react-markdown";
 
 type Message = {
@@ -38,6 +39,8 @@ export function SheetDemo() {
   const [input, setInput] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const [ticketMode, setTicketMode] = useState(false);
 
   useEffect(() => {
     // Hide sheet overlay
@@ -58,6 +61,18 @@ export function SheetDemo() {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  const handleCreateTicket = () => {
+    setTicketMode(true);
+    setMessages((prev) => [
+      ...prev,
+      {
+        role: "ai",
+        text: "Please describe your issue in a message. I’ll create a ticket right away.",
+      },
+    ]);
+    setTimeout(() => inputRef.current?.focus(), 0);
+  };
+
   const sendMessage = async () => {
     const content = input.trim();
     if (!content) {
@@ -73,16 +88,37 @@ export function SheetDemo() {
     setInput("");
 
     try {
-      const aiReply = await runAgent(userInput, users[0].id);
-      // console.log("AI Reply:", aiReply);
-      setMessages((prev) => [...prev, { role: "ai", text: aiReply }]);
+      if (ticketMode) {
+        try {
+          const { data, error } = await supabase
+            .from("tickets")
+            .insert({ userId: users[0].id, description: userInput, status: "pending" })
+            .select()
+            .single();
+          if (error) throw error;
+          setMessages((prev) => [
+            ...prev,
+            { role: "ai", text: `✅ Ticket created. Status: ${data.status}. We'll get back to you soon.` },
+          ]);
+        } catch (e: any) {
+          console.error(e);
+          setMessages((prev) => [
+            ...prev,
+            { role: "ai", text: `❌ Failed to create ticket: ${e?.message || "Unknown error"}` },
+          ]);
+        } finally {
+          setTicketMode(false);
+        }
+      } else {
+        const aiReply = await runAgent(userInput, users[0].id);
+        setMessages((prev) => [...prev, { role: "ai", text: aiReply }]);
+      }
     } catch (err) {
       console.error(err);
       setMessages((prev) => [
         ...prev,
         { role: "ai", text: "Something went wrong." },
       ]);
-      setAiLoading(false);
     } finally {
       setAiLoading(false);
     }
@@ -148,7 +184,7 @@ export function SheetDemo() {
                     <p>About INTERVIEWX</p>
                   </div>
                 </button>
-                <button onClick={() => toast.info("Tickets page coming soon")} className={`p-3 rounded-xl border-2 font-sora text-xs tracking-tight text-center hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer font-semibold group ${darkTheme
+                <button onClick={handleCreateTicket} className={`p-3 rounded-xl border-2 font-sora text-xs tracking-tight text-center hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer font-semibold group ${darkTheme
                   ? "bg-gradient-to-br from-pink-600/30 to-pink-600/10 border-pink-500/50 text-pink-200 hover:from-pink-600/40 hover:to-pink-600/20 hover:border-pink-400 min-h-[96px]"
                   : "bg-gradient-to-br from-pink-100 to-pink-50 border-pink-400 text-pink-700 hover:from-pink-200 hover:to-pink-100 hover:border-pink-500 min-h-[96px]"
                   }`}>
@@ -216,6 +252,7 @@ export function SheetDemo() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
+                ref={inputRef}
                 className={`font-inter text-sm tracking-tight font-medium h-24 resize-none rounded-xl border-2 transition-all focus:outline-none ${darkTheme
                   ? "bg-slate-800/60 text-white placeholder-slate-500 border-slate-700/50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 backdrop-blur-sm"
                   : "bg-white/60 text-slate-900 placeholder-slate-400 border-blue-200/50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 backdrop-blur-sm"
@@ -235,6 +272,6 @@ export function SheetDemo() {
           </div>
         </SheetFooter>
       </SheetContent>
-    </Sheet>
+    </Sheet >
   );
 }

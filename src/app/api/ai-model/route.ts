@@ -6,6 +6,12 @@ import { PromptTemplate } from "@langchain/core/prompts";
 import { StructuredOutputParser } from "@langchain/core/output_parsers";
 import { z } from "zod";
 
+// Branding context to ensure the correct project name is used by the LLM
+const PROJECT_NAME = process.env.NEXT_PUBLIC_PROJECT_NAME || "INTERVIEWX";
+const PROJECT_TAGLINE =
+  process.env.NEXT_PUBLIC_PROJECT_TAGLINE ||
+  "AI-powered interview and hiring platform";
+
 interface InterviewRequest {
   jobTitle: string;
   jobDescription: string;
@@ -29,7 +35,10 @@ const questionSchema = z.array(
 
 const parser = StructuredOutputParser.fromZodSchema(questionSchema);
 
-const promptTemplate = PromptTemplate.fromTemplate(`
+const promptText = `
+You are generating interview questions for ${PROJECT_NAME}, an ${PROJECT_TAGLINE}.
+Always refer to the platform as "${PROJECT_NAME}".
+
 Based on the following inputs, generate a well-structured list of high-quality interview questions:
 Job Title: {jobTitle}
 Job Description: {jobDescription}
@@ -38,13 +47,15 @@ Interview Type: {interviewType}
 
 Your task:
 - Analyze the job description to identify the key responsibilities, required skills, and expected experience.
-- Generate questions that can be all covered in  {interviewDuration}-minute interview, Take care of the time.
+- Generate questions that can be all covered in {interviewDuration}-minute interview. Be time-aware.
 - Ensure ALL questions are ONLY of the types specified in {interviewType} (e.g., {interviewType}). Do NOT include questions of any other type.
 - Ensure the questions match the tone and structure of a real-life {interviewType} interview.
 - Return a JSON array containing a single object with the key 'interviewQuestions' containing an array of objects with 'question' and 'type' fields. Do not include markdown, explanations, or extra text.
 
 {format_instructions}
-`);
+`;
+
+const promptTemplate = PromptTemplate.fromTemplate(promptText);
 
 // NOTE: Create the LLM and chain inside the request handler so we can
 // validate env keys at runtime and return actionable errors to the client.
