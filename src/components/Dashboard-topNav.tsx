@@ -154,7 +154,22 @@ const DashboardTopNav = () => {
         </div>
       </div>
 
-      <Separator />
+      {/* Enhanced decorative bottom separator */}
+      <div className="relative w-full h-[2px]">
+        <div className={clsx(
+          "absolute inset-0",
+          darkTheme
+            ? "bg-gradient-to-r from-blue-600/40 via-blue-500/30 to-blue-600/40"
+            : "bg-gradient-to-r from-blue-200/60 via-blue-300/40 to-blue-200/60"
+        )}>
+          <div className={clsx(
+            "absolute inset-0",
+            darkTheme
+              ? "shadow-[0_0_15px_rgba(59,130,246,0.3)]"
+              : "shadow-[0_0_10px_rgba(147,197,253,0.4)]"
+          )} />
+        </div>
+      </div>
     </div>
   );
 };
