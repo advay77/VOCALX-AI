@@ -1,8 +1,8 @@
 "use client";
 import { useTheme } from "@/context/ThemeProvider";
 import clsx from "clsx";
-import React from "react";
-import { LuBell, LuSearch, LuChevronDown } from "react-icons/lu";
+import React, { useState } from "react";
+import { LuBell, LuSearch, LuChevronDown, LuX } from "react-icons/lu";
 import { Input } from "@/components/ui/input";
 import { SidebarTrigger } from "@/components/ui/SideBar";
 import { useUserData } from "@/context/UserDetailContext";
@@ -19,12 +19,24 @@ import {
 import { LuLogOut, LuSun, LuWallet, LuUser } from "react-icons/lu";
 import { supabase } from "@/services/supabaseClient";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 const DashboardTopNav = () => {
   const router = useRouter();
+  const pathname = usePathname();
   const { darkTheme, toggleTheme } = useTheme();
   const { users, setUsers } = useUserData();
+  const [searchValue, setSearchValue] = useState("");
+  const [isFocused, setIsFocused] = useState(false);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchValue.trim()) {
+      // Navigate to search or filter current page
+      console.log("Searching for:", searchValue);
+      // You can add actual search logic here
+    }
+  };
   const handleSignOut = async () => {
     const { error } = await supabase.auth.signOut();
     toast.loading("Signing out...");
@@ -53,30 +65,77 @@ const DashboardTopNav = () => {
         )}
       >
         <SidebarTrigger className={clsx(
-          "h-10 w-10 rounded-xl transition-all duration-300 hover:scale-105 shadow-sm hover:shadow-md",
+          "h-11 w-11 rounded-xl transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl",
           darkTheme
-            ? "bg-gradient-to-br from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800"
-            : "bg-gradient-to-br from-blue-50 to-blue-100 text-blue-700 border border-blue-200 hover:from-blue-100 hover:to-blue-200 hover:border-blue-300"
+            ? "bg-gradient-to-br from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 shadow-blue-500/20"
+            : "bg-gradient-to-br from-blue-50 to-blue-100 text-blue-700 border-2 border-blue-200 hover:from-blue-100 hover:to-blue-200 hover:border-blue-400"
         )} />
-        <div className={clsx(
-          "flex items-center justify-between rounded-full px-3 font-inter shadow-md min-[800px]:min-w-[300px] min-[1000px]:min-w-[360px]",
-          darkTheme
-            ? "bg-slate-800 border border-slate-700"
-            : "bg-blue-50 border border-blue-100"
+
+        {/* Enhanced Search Bar */}
+        <form onSubmit={handleSearch} className={clsx(
+          "relative flex items-center rounded-2xl px-4 py-3 font-inter transition-all duration-300 min-[800px]:min-w-[320px] min-[1000px]:min-w-[420px]",
+          isFocused
+            ? darkTheme
+              ? "bg-slate-800 border-2 border-blue-500 shadow-lg shadow-blue-500/30 ring-4 ring-blue-500/20"
+              : "bg-white border-2 border-blue-500 shadow-xl shadow-blue-300/50 ring-4 ring-blue-400/20"
+            : darkTheme
+              ? "bg-slate-800 border-2 border-slate-600 shadow-md hover:border-blue-400 hover:shadow-lg"
+              : "bg-blue-50 border-2 border-blue-200 shadow-md hover:border-blue-300 hover:shadow-lg backdrop-blur-sm"
         )}>
+          <LuSearch className={clsx(
+            "text-xl mr-3 transition-all duration-300",
+            isFocused
+              ? darkTheme ? "text-blue-400 scale-110" : "text-blue-600 scale-110"
+              : darkTheme ? "text-slate-400" : "text-slate-500"
+          )} />
           <Input
             type="text"
-            placeholder="Search"
+            placeholder="Search interviews, candidates..."
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleSearch(e);
+              }
+            }}
             className={clsx(
-              "bg-transparent shadow-none rounded-none focus-visible:ring-0 border-none",
-              darkTheme ? "text-white placeholder:text-slate-400" : "text-black placeholder:text-gray-400"
+              "flex-1 bg-transparent shadow-none border-none focus-visible:ring-0 h-auto p-0 placeholder:transition-colors font-medium text-[15px]",
+              darkTheme
+                ? "text-white placeholder:text-slate-400"
+                : "text-slate-800 placeholder:text-slate-400"
             )}
           />
-          <LuSearch className={clsx("text-xl", darkTheme ? "text-slate-400" : "text-black")} />
-        </div>
+          {searchValue && (
+            <button
+              type="button"
+              onClick={() => setSearchValue("")}
+              className={clsx(
+                "ml-2 p-1.5 rounded-lg transition-all duration-200 hover:scale-110",
+                darkTheme
+                  ? "hover:bg-slate-700 text-slate-400 hover:text-white"
+                  : "hover:bg-blue-100 text-slate-500 hover:text-blue-600"
+              )}
+            >
+              <LuX className="text-base" />
+            </button>
+          )}
+        </form>
 
         <div className="flex items-center gap-5">
-          <LuBell className="text-xl" />
+          <button className={clsx(
+            "relative p-2.5 rounded-xl transition-all duration-300 hover:scale-105",
+            darkTheme
+              ? "hover:bg-slate-800 text-slate-300 hover:text-white"
+              : "hover:bg-blue-50 text-slate-600 hover:text-blue-600"
+          )}>
+            <LuBell className="text-xl" />
+            <span className={clsx(
+              "absolute top-1.5 right-1.5 w-2 h-2 bg-gradient-to-r from-red-500 to-pink-500 rounded-full animate-pulse",
+              darkTheme ? "border-2 border-slate-900" : "border-2 border-white shadow-sm"
+            )}></span>
+          </button>
           <p className="flex items-center gap-1 font-sora text-sm text-gray-400">
             EN <LuChevronDown />
           </p>
@@ -170,7 +229,7 @@ const DashboardTopNav = () => {
           )} />
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 
