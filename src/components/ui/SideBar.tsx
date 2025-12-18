@@ -237,7 +237,7 @@ function Sidebar({
           // Adjust the padding for floating and inset variants.
           variant === "floating" || variant === "inset"
             ? "p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4))+2px)]"
-            : "group-data-[collapsible=icon]:w-(--sidebar-width-icon) group-data-[side=left]:border-r group-data-[side=right]:border-l",
+            : "group-data-[collapsible=icon]:w-(--sidebar-width-icon)",
           className
         )}
         {...props}
@@ -246,9 +246,24 @@ function Sidebar({
         <div
           data-sidebar="sidebar"
           data-slot="sidebar-inner"
-          className={`${darkTheme ? "bg-slate-900" : "bg-white"} group-data-[variant=floating]:border-sidebar-border flex h-full w-full flex-col group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:shadow-sm`}
+          className={`${darkTheme ? "bg-slate-900" : "bg-white"} group-data-[variant=floating]:border-sidebar-border flex h-full w-full flex-col group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:shadow-sm relative`}
         >
           {children}
+          {/* Enhanced decorative separator */}
+          <div className={cn(
+            "absolute top-0 bottom-0 w-[2px] z-20",
+            side === "left" ? "right-0" : "left-0",
+            darkTheme
+              ? "bg-gradient-to-b from-blue-600/40 via-blue-500/30 to-blue-600/40"
+              : "bg-gradient-to-b from-blue-200/60 via-blue-300/40 to-blue-200/60"
+          )}>
+            <div className={cn(
+              "absolute inset-0",
+              darkTheme
+                ? "shadow-[0_0_15px_rgba(59,130,246,0.3)]"
+                : "shadow-[0_0_10px_rgba(147,197,253,0.4)]"
+            )} />
+          </div>
         </div>
       </div>
     </div>
