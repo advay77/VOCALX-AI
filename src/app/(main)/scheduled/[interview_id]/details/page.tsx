@@ -476,8 +476,8 @@ export default function InterviewDetailsPage() {
                   variant="outline"
                   size="sm"
                   className={darkTheme
-                    ? "border-red-700/60 bg-red-900/30 text-red-50 hover:bg-red-800/50 hover:border-red-600 font-semibold whitespace-nowrap shadow-md"
-                    : "border-red-300 bg-white text-red-700 hover:bg-red-50 hover:border-red-400 font-semibold whitespace-nowrap shadow-sm"}
+                    ? "bg-red-600 text-white border-red-600 hover:bg-red-500 hover:border-red-500 font-semibold whitespace-nowrap shadow-md"
+                    : "bg-red-600 text-white border-red-600 hover:bg-red-500 hover:border-red-500 font-semibold whitespace-nowrap shadow-md"}
                   onClick={() => {
                     setSelectedCandidate(null);
                     setMailCandidate(selectedCandidate);
@@ -503,8 +503,8 @@ export default function InterviewDetailsPage() {
                   variant="outline"
                   size="sm"
                   className={darkTheme
-                    ? "border-emerald-700/60 bg-emerald-900/30 text-emerald-50 hover:bg-emerald-800/50 hover:border-emerald-600 font-semibold whitespace-nowrap shadow-md"
-                    : "border-emerald-300 bg-white text-emerald-700 hover:bg-emerald-50 hover:border-emerald-400 font-semibold whitespace-nowrap shadow-sm"}
+                    ? "bg-emerald-600 text-white border-emerald-600 hover:bg-emerald-500 hover:border-emerald-500 font-semibold whitespace-nowrap shadow-md"
+                    : "bg-emerald-600 text-white border-emerald-600 hover:bg-emerald-500 hover:border-emerald-500 font-semibold whitespace-nowrap shadow-md"}
                   onClick={() => {
                     setSelectedCandidate(null);
                     setMailCandidate(selectedCandidate);
