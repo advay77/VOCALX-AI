@@ -21,8 +21,6 @@ import {
   UserCheck,
   Calendar,
   Send,
-  Grid2X2,
-  List,
   Filter,
 } from "lucide-react";
 import { LuActivity, LuLoader, LuVideo, LuDock } from "react-icons/lu";
@@ -36,7 +34,6 @@ const ScheduledInterview = () => {
   const { darkTheme } = useTheme();
   const [loading, setLoading] = useState(false);
   const [interviewList, setInterviewList] = useState<any>([]);
-  const [view, setView] = useState("grid");
   const [usedFallback, setUsedFallback] = useState(false);
 
   useEffect(() => {
@@ -221,37 +218,6 @@ const ScheduledInterview = () => {
             )}
           </div>
 
-          {/* View Toggle Buttons */}
-          <div className={`flex items-center gap-2 p-2 rounded-lg border ${darkTheme
-            ? "bg-slate-800/80 border-slate-700 backdrop-blur-sm"
-            : "bg-white/80 border-blue-200 backdrop-blur-sm shadow-md"}`}>
-            <button
-              onClick={() => setView("grid")}
-              className={`p-2.5 rounded-md transition-all font-semibold duration-200 ${view === "grid"
-                ? darkTheme
-                  ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg"
-                  : "bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-md"
-                : darkTheme
-                  ? "text-slate-300 hover:text-white hover:bg-slate-700/60"
-                  : "text-slate-600 hover:text-blue-600 hover:bg-blue-100/50"
-                }`}
-            >
-              <Grid2X2 size={20} />
-            </button>
-            <button
-              onClick={() => setView("list")}
-              className={`p-2.5 rounded-md transition-all font-semibold duration-200 ${view === "list"
-                ? darkTheme
-                  ? "bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg"
-                  : "bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-md"
-                : darkTheme
-                  ? "text-slate-300 hover:text-white hover:bg-slate-700/60"
-                  : "text-slate-600 hover:text-blue-600 hover:bg-blue-100/50"
-                }`}
-            >
-              <List size={20} />
-            </button>
-          </div>
         </div>
 
         <div className="w-full flex items-center justify-center">
@@ -324,7 +290,7 @@ const ScheduledInterview = () => {
                       <p className={`text-sm font-medium ${darkTheme ? "text-slate-400" : "text-slate-600"}`}>No candidates have completed this interview yet.</p>
                     </div>
                   ) : (
-                    <div className={view === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" : "space-y-4"}>
+                    <div className="space-y-4">
                       {candidates.map((candidate: any, idx: number) => {
                         // Calculate average rating
                         const ratings = candidate.feedback?.data?.feedback?.rating;

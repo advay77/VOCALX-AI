@@ -204,6 +204,7 @@ const InterviewQuestions: React.FC<InterviewQuestionsProps> = ({
           ...formData,
           questionList: questions,
           userEmail: users?.[0]?.email,
+          created_by: users?.[0]?.id,
           organization: users?.[0]?.organization,
           interview_id: interview_id,
         },
