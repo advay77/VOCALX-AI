@@ -204,8 +204,8 @@ export default function InterviewDetailsPage() {
 
   const interview = interviewList?.[0];
   const mailSubject = interview?.jobTitle
-    ? `${interview.jobTitle} interview update`
-    : "Interview update";
+    ? `🎯 Your ${interview.jobTitle} Interview Results & Next Steps`
+    : "🎯 Your Interview Results & Next Steps";
 
   return (
     <div
@@ -594,9 +594,9 @@ export default function InterviewDetailsPage() {
 
       {/* MAIL DIALOG */}
       <Dialog open={!!mailCandidate} onOpenChange={() => setMailCandidate(null)}>
-        <DialogContent className="sm:max-w-[600px]">
+        <DialogContent className={`sm:max-w-[600px] ${darkTheme ? "bg-slate-900 border-slate-800" : "bg-white border-slate-200"}`}>
           <DialogHeader>
-            <DialogTitle className="text-xl font-sora tracking-tight">
+            <DialogTitle className={`text-xl font-sora tracking-tight ${darkTheme ? "text-white" : "text-slate-900"}`}>
               Send email to {mailCandidate?.userName}
             </DialogTitle>
           </DialogHeader>
