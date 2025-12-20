@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
-import { Ghost, LucideLoader, LucideLoader2, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { Ghost, LucideLoader, LucideLoader2, AlertTriangle, CheckCircle2, UserCircle2 } from "lucide-react";
 import {
   LuActivity,
   LuDatabase,
@@ -389,7 +389,7 @@ export default function InterviewDetailsPage() {
             <DialogTitle className={`text-2xl font-sora tracking-tight flex items-center justify-between px-4 sm:px-6 ${darkTheme ? "text-white" : "text-slate-900"}`}>
               <div className="flex items-center gap-2">
                 <span className={`w-10 h-10 rounded-lg flex items-center justify-center ${darkTheme ? "bg-blue-500/15 text-blue-200" : "bg-blue-50 text-blue-600"}`}>
-                  <LuDatabase />
+                  <UserCircle2 className="h-5 w-5" />
                 </span>
                 <span>Candidate Details</span>
               </div>
