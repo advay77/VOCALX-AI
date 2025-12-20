@@ -524,33 +524,40 @@ export default function InterviewDetailsPage() {
         open={!!resumeCandidate}
         onOpenChange={() => setResumeCandidate(null)}
       >
-        <DialogContent className={`min-w-3xl max-w-5xl w-full p-0 ${darkTheme ? "bg-slate-900 border-slate-800" : "bg-white border-slate-200"}`}>
+        <DialogContent className={`!w-[85vw] !h-[85vh] !max-w-none !max-h-none p-0 ${darkTheme ? "bg-slate-900 border-slate-800" : "bg-white border-slate-200"}`}>
           <DialogHeader className={`p-4 border-b ${darkTheme ? "border-slate-800 bg-slate-900/50" : "border-slate-200 bg-slate-50"}`}>
             <DialogTitle className={`text-xl font-inter tracking-tight ${darkTheme ? "text-white" : "text-slate-900"}`}>
               Resume & ATS Report <LuActivity className="inline ml-2" />
             </DialogTitle>
           </DialogHeader>
-          <div className={`grid grid-cols-2 h-[55vh] ${darkTheme ? "bg-slate-800/30" : "bg-slate-50"}`}>
+          <div className={`grid grid-cols-2 h-[calc(85vh-80px)] overflow-hidden ${darkTheme ? "bg-slate-800/30" : "bg-slate-50"}`}>
             {/* Left: Resume Viewer */}
-            <div className={`h-full border-r w-full flex flex-col items-center justify-center p-6 ${darkTheme ? "border-slate-700 bg-slate-800/20" : "border-slate-200"}`}>
+            <div className={`h-full border-r w-full flex flex-col items-center justify-center p-4 overflow-hidden ${darkTheme ? "border-slate-700 bg-slate-800/20" : "border-slate-200 bg-slate-50"}`}>
               {resumeCandidate?.resumeURL ? (
-                <div className="flex flex-col items-center gap-4 text-center w-full">
-                  <div className={`w-16 h-16 rounded-2xl flex items-center justify-center ${darkTheme ? "bg-blue-500/20 text-blue-300" : "bg-blue-50 text-blue-600"}`}>
-                    <LuDock className="w-8 h-8" />
+                <div className="w-full h-full flex flex-col gap-3">
+                  <embed
+                    src={resumeCandidate.resumeURL}
+                    type="application/pdf"
+                    className="w-full flex-1 rounded-lg"
+                  />
+                  <div className="flex gap-2 flex-shrink-0">
+                    <a
+                      href={resumeCandidate.resumeURL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-all ${darkTheme ? "bg-blue-600 hover:bg-blue-500 text-white shadow-md" : "bg-blue-600 hover:bg-blue-500 text-white shadow-md"}`}
+                    >
+                      <LuDock className="w-4 h-4" />
+                      Open in New Tab
+                    </a>
+                    <a
+                      href={resumeCandidate.resumeURL}
+                      download
+                      className={`inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-all border ${darkTheme ? "border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-100" : "border-slate-300 bg-slate-100 hover:bg-slate-200 text-slate-900"}`}
+                    >
+                      <Download className="w-4 h-4" />
+                    </a>
                   </div>
-                  <div className="space-y-2 w-full">
-                    <p className={`text-sm font-semibold ${darkTheme ? "text-slate-100" : "text-slate-900"}`}>Resume Available</p>
-                    <p className={`text-xs max-w-xs break-words mx-auto ${darkTheme ? "text-slate-400" : "text-slate-500"}`}>{resumeCandidate.resumeURL}</p>
-                  </div>
-                  <a
-                    href={resumeCandidate.resumeURL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-all mt-3 ${darkTheme ? "bg-blue-600 hover:bg-blue-500 text-white shadow-md" : "bg-blue-600 hover:bg-blue-500 text-white shadow-md"}`}
-                  >
-                    <LuDock className="w-4 h-4" />
-                    Open Resume
-                  </a>
                 </div>
               ) : (
                 <div className="flex flex-col items-center gap-3 text-center">
@@ -566,26 +573,14 @@ export default function InterviewDetailsPage() {
             <div className={`w-full h-full p-6 overflow-y-auto ${darkTheme ? "bg-slate-900/40" : "bg-white"}`}>
               {!atsReports?.[resumeCandidate?.userEmail] ? (
                 <div className="flex flex-col gap-4 items-center justify-center h-full">
-                  <div className="space-y-3 w-full">
-                    <Button
-                      onClick={handleGenerate}
-                      disabled={loadingReport}
-                      className={`w-full cursor-pointer font-semibold ${darkTheme ? "bg-blue-600 hover:bg-blue-500 text-white" : "bg-blue-600 hover:bg-blue-500 text-white"}`}
-                    >
-                      {loadingReport ? "Analyzing..." : "Generate Scores"}
-                      <LuActivity className="ml-2" />
-                    </Button>
-                    <a
-                      href={resumeCandidate?.resumeURL}
-                      download
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`w-full inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-semibold text-sm transition-all border ${darkTheme ? "border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-100" : "border-slate-300 bg-slate-100 hover:bg-slate-200 text-slate-900"}`}
-                    >
-                      <Download className="w-4 h-4" />
-                      Download Resume
-                    </a>
-                  </div>
+                  <Button
+                    onClick={handleGenerate}
+                    disabled={loadingReport}
+                    className={`w-full cursor-pointer font-semibold ${darkTheme ? "bg-blue-600 hover:bg-blue-500 text-white" : "bg-blue-600 hover:bg-blue-500 text-white"}`}
+                  >
+                    {loadingReport ? "Analyzing..." : "Generate Scores"}
+                    <LuActivity className="ml-2" />
+                  </Button>
 
                   {loadingReport && <AILoadingState />}
                 </div>
