@@ -46,7 +46,7 @@ export default function AuthCallbackPage() {
       <div className="relative w-full h-screen flex flex-col justify-center items-center overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50 to-slate-50">
         {/* Decorative background elements */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(59,130,246,0.1),transparent_30%),radial-gradient(circle_at_80%_20%,rgba(129,140,248,0.12),transparent_30%)]" />
-        
+
         <div className="relative z-10 flex flex-col items-center justify-center gap-8">
           <div className="text-center">
             <h1 className="text-5xl md:text-6xl font-sora font-black tracking-tight mb-3 bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-600 text-transparent bg-clip-text">
