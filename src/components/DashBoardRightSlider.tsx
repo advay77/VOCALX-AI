@@ -109,6 +109,50 @@ export function SheetDemo() {
     }
   };
 
+  const handleAboutInterviewX = () => {
+    const aboutMessage = `
+# 🚀 INTERVIEWX
+
+**Your AI-Powered Recruitment Platform**
+
+Transform your hiring process with intelligent automation and data-driven insights.
+
+---
+
+## 🎯 Key Features
+
+**🔄 AI Interview Management**
+Automated scheduling, reminders, and follow-ups
+
+**💬 Smart Candidate Communication**
+AI-powered emails and personalized messages
+
+**⚙️ Workflow Optimization**
+Streamline your entire recruitment pipeline
+
+**🧠 Intelligent Feedback**
+AI-generated interview insights and assessments
+
+**📊 Resume Scoring**
+Automated evaluation and candidate ranking
+
+---
+
+## ✨ Why Choose INTERVIEWX?
+
+✓ **Save 70% time** on administrative tasks
+✓ **Improve hiring quality** with AI insights
+✓ **Better candidate experience** with instant communication
+✓ **Reduce hiring bias** with data-driven decisions
+✓ **Scale without limits** without scaling your team
+
+---
+
+Start your free trial today and unlock the future of recruitment! 🎯`;
+
+    setMessages([{ role: "ai", text: aboutMessage }]);
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -160,7 +204,7 @@ export function SheetDemo() {
                     </div>
                   </button>
                 </SheetClose>
-                <button onClick={() => toast.info("About page coming soon")} className={`p-3 rounded-xl border-2 font-sora text-xs tracking-tight text-center hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer font-semibold group ${darkTheme
+                <button onClick={handleAboutInterviewX} className={`p-3 rounded-xl border-2 font-sora text-xs tracking-tight text-center hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer font-semibold group ${darkTheme
                   ? "bg-gradient-to-br from-purple-600/30 to-purple-600/10 border-purple-500/50 text-purple-200 hover:from-purple-600/40 hover:to-purple-600/20 hover:border-purple-400 min-h-[96px]"
                   : "bg-gradient-to-br from-purple-100 to-purple-50 border-purple-400 text-purple-700 hover:from-purple-200 hover:to-purple-100 hover:border-purple-500 min-h-[96px]"
                   }`}>
@@ -226,10 +270,10 @@ export function SheetDemo() {
         </div>
 
         {/* TEXTAREA TO SEND ------------ */}
-        <SheetFooter className="shrink-0 mt-8 pt-4 border-t" style={{ borderTopColor: darkTheme ? "rgba(51, 65, 85, 0.3)" : "rgba(191, 219, 254, 0.3)" }}>
-          <div className="w-full">
-            <Label className={`font-inter text-sm tracking-tight font-semibold mb-3 block ${darkTheme ? "text-slate-200" : "text-slate-800"}`}>
-              Send a Message
+        <SheetFooter className="shrink-0 mt-4 pt-3 border-t" style={{ borderTopColor: darkTheme ? "rgba(51, 65, 85, 0.3)" : "rgba(191, 219, 254, 0.3)" }}>
+          <div className="w-full flex flex-col gap-2">
+            <Label className={`font-inter text-xs tracking-tight font-semibold ${darkTheme ? "text-slate-200" : "text-slate-800"}`}>
+              Message
             </Label>
             <div className="relative">
               <Textarea
@@ -238,22 +282,21 @@ export function SheetDemo() {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
                 ref={inputRef}
-                className={`font-inter text-sm tracking-tight font-medium h-24 resize-none rounded-xl border-2 transition-all focus:outline-none ${darkTheme
+                className={`font-inter text-xs tracking-tight font-medium h-14 resize-none rounded-lg border-2 transition-all focus:outline-none p-2 ${darkTheme
                   ? "bg-slate-800/60 text-white placeholder-slate-500 border-slate-700/50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 backdrop-blur-sm"
                   : "bg-white/60 text-slate-900 placeholder-slate-400 border-blue-200/50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 backdrop-blur-sm"
                   }`}
               />
               <Button
-                className={`absolute right-3 bottom-3 rounded-lg transition-all active:scale-95 flex items-center justify-center w-10 h-10 p-0 ${darkTheme
+                className={`absolute right-2 bottom-2 rounded-md transition-all active:scale-95 flex items-center justify-center w-8 h-8 p-0 ${darkTheme
                   ? "bg-gradient-to-br from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg hover:shadow-xl"
                   : "bg-gradient-to-br from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg hover:shadow-xl"
                   }`}
                 onClick={sendMessage}
               >
-                <LuSend className="text-white" size={20} />
+                <LuSend className="text-white" size={16} />
               </Button>
             </div>
-            <p className={`text-xs mt-2 ${darkTheme ? "text-slate-500" : "text-slate-500"}`}>Press Enter + Shift for new line</p>
           </div>
         </SheetFooter>
       </SheetContent>
