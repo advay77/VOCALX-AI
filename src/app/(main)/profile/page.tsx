@@ -134,7 +134,14 @@ const ProfilePage = () => {
                                         {users?.[0]?.email}
                                     </p>
                                     <div className="flex items-center gap-2 mt-2">
-                                        <span className="px-2 py-1 text-xs rounded-md bg-blue-500/10 text-blue-200 border border-blue-500/30">Recruiter</span>
+                                        <span
+                                            className={`px-2.5 py-1 text-xs font-semibold rounded-md border ${darkTheme
+                                                ? "bg-blue-500/10 text-blue-200 border-blue-500/30"
+                                                : "bg-blue-50 text-blue-700 border-blue-200"
+                                                }`}
+                                        >
+                                            Recruiter
+                                        </span>
                                         <span className={`${darkTheme ? "text-slate-400" : "text-slate-500"} text-xs`}>Org: {formData.organization || "Not set"}</span>
                                     </div>
                                 </div>
