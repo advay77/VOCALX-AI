@@ -17,7 +17,8 @@ const feedbackSchema = z.object({
   weakPoints: z.array(z.string()).default([]),
 });
 
-const parser = StructuredOutputParser.fromZodSchema(feedbackSchema);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const parser = StructuredOutputParser.fromZodSchema(feedbackSchema as any);
 
 const promptTemplate = PromptTemplate.fromTemplate(`
 You are an ATS (Applicant Tracking System). Analyze the resume text below. and provides strict score and strong and weak points.

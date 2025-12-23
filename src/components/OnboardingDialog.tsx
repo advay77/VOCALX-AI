@@ -71,7 +71,7 @@ export default function OnboardingDialog({ open, onOpenChange }: OnboardingDialo
                         ? "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"
                         : "bg-gradient-to-br from-white via-blue-50 to-white"
                 )}
-                showClose={false}
+                showCloseButton={false}
             >
                 {/* Decorative gradient top bar */}
                 <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600"></div>

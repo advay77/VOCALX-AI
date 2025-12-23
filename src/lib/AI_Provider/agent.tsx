@@ -17,10 +17,22 @@ const PROJECT_SUMMARY =
   process.env.NEXT_PUBLIC_PROJECT_SUMMARY ||
   "HR can create interviews, send links to candidates, AI voice agents conduct interviews and produce summaries/insights. Candidates can also upload resumes.";
 
+type FunctionCall = {
+  name: string;
+  args: Record<string, unknown>;
+};
+
+type FunctionResponse = {
+  name: string;
+  response: {
+    result: unknown;
+  };
+};
+
 type HistoryPart =
   | { text: string }
-  | { functionCall: any }
-  | { functionResponse: any };
+  | { functionCall: FunctionCall }
+  | { functionResponse: FunctionResponse };
 
 const history: Array<{ role: string; parts: HistoryPart[] }> = [];
 
@@ -69,8 +81,9 @@ async function sendMail(to: string, subject: string, body: string) {
       return `Email sent to ${to}, messageId: ${res.data.messageId}`;
     }
     return `Failed: ${res.data.error}`;
-  } catch (err: any) {
-    return `Error: ${err.message}`;
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : String(err);
+    return `Error: ${errorMessage}`;
   }
 }
 
@@ -106,7 +119,7 @@ export const createTicketDeclaration = {
 let currentUserId: number | undefined;
 // -----------------TOOL  MAPPING------------------------
 type ToolMap = {
-  createTicket: (args: { description: string }) => Promise<any>;
+  createTicket: (args: { description: string }) => Promise<{ message: string; data: unknown }>;
   sendMail: (args: {
     to: string;
     subject: string;
@@ -163,8 +176,15 @@ export async function runAgent(userMessage: string, userId: number) {
 
     if (response.functionCalls && response.functionCalls.length > 0) {
       const { name, args } = response.functionCalls[0];
-      const tool = availableTools[name as keyof ToolMap];
-      const result = await tool(args as any);
+
+      let result: string | { message: string; data: unknown };
+      if (name === "createTicket") {
+        result = await availableTools.createTicket(args as { description: string });
+      } else if (name === "sendMail") {
+        result = await availableTools.sendMail(args as { to: string; subject: string; body: string });
+      } else {
+        throw new Error(`Unknown function: ${name}`);
+      }
 
       const functionResponsePart = {
         name: name,
@@ -178,7 +198,7 @@ export async function runAgent(userMessage: string, userId: number) {
         role: "model",
         parts: [
           {
-            functionCall: response.functionCalls[0],
+            functionCall: { name: response.functionCalls[0].name || "", args: response.functionCalls[0].args || {} },
           },
         ],
       });

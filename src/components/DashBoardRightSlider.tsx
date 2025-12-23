@@ -85,11 +85,12 @@ export function SheetDemo() {
             ...prev,
             { role: "ai", text: `✅ Ticket created. Status: ${data.status}. We'll get back to you soon.` },
           ]);
-        } catch (e: any) {
+        } catch (e: unknown) {
           console.error(e);
+          const errorMessage = e instanceof Error ? e.message : 'Unknown error';
           setMessages((prev) => [
             ...prev,
-            { role: "ai", text: `❌ Failed to create ticket: ${e?.message || "Unknown error"}` },
+            { role: "ai", text: `❌ Failed to create ticket: ${errorMessage}` },
           ]);
         } finally {
           setTicketMode(false);

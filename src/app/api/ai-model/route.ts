@@ -33,7 +33,8 @@ const questionSchema = z.array(
 );
 
 
-const parser = StructuredOutputParser.fromZodSchema(questionSchema);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const parser = StructuredOutputParser.fromZodSchema(questionSchema as any);
 
 const promptText = `
 You are generating interview questions for ${PROJECT_NAME}, an ${PROJECT_TAGLINE}.

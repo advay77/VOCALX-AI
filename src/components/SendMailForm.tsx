@@ -33,7 +33,7 @@ const SendMailForm = ({
     const userEmail = users?.[0]?.email;
     const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
     const isAdmin = userEmail === adminEmail;
-    const remainingCredits = users?.[0]?.remainingcredits ?? 0;
+    const remainingCredits = users?.[0]?.remainingCredits ?? 0;
 
     useEffect(() => {
         setTo(defaultEmail);
@@ -76,8 +76,8 @@ const SendMailForm = ({
 
             toast.success("Mail sent successfully. 1 credit used.");
             onSuccess?.();
-        } catch (err: any) {
-            const message = err?.response?.data?.error || "Failed to send mail.";
+        } catch (err: unknown) {
+            const message = (err as { response?: { data?: { error?: string } } })?.response?.data?.error || "Failed to send mail.";
             toast.error(message);
         } finally {
             setSending(false);

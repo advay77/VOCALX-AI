@@ -56,17 +56,19 @@ export async function POST(req: NextRequest) {
                 console.error('No signed URL in response data:', data);
                 throw new Error('No signed URL generated');
             }
-        } catch (error: any) {
-            console.error('Error creating signed URL with service role:', error.message);
+        } catch (error: unknown) {
+            const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+            console.error('Error creating signed URL with service role:', errorMessage);
             return NextResponse.json(
-                { error: `Failed to generate signed URL: ${error.message}` },
+                { error: `Failed to generate signed URL: ${errorMessage}` },
                 { status: 500 }
             );
         }
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Get signed URL error:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Internal server error';
         return NextResponse.json(
-            { error: error.message || 'Internal server error' },
+            { error: errorMessage },
             { status: 500 }
         );
     }

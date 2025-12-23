@@ -25,7 +25,8 @@ const feedbackSchema = z.object({
   }),
 });
 
-const parser = StructuredOutputParser.fromZodSchema(feedbackSchema);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const parser = StructuredOutputParser.fromZodSchema(feedbackSchema as any);
 
 // --- Prompt Template ---
 const promptTemplate = PromptTemplate.fromTemplate(`
@@ -75,7 +76,7 @@ export async function POST(request: Request) {
       format_instructions: parser.getFormatInstructions(),
     };
 
-    const result = await chain.invoke(input);
+    const result = await chain.invoke(input) as z.infer<typeof feedbackSchema>;
 
     // --- Normalize response (so frontend never breaks) ---
     const finalResult = {
@@ -95,10 +96,11 @@ export async function POST(request: Request) {
     };
 
     return NextResponse.json({ data: finalResult });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Failed to generate feedback';
     console.error("❌ FEEDBACK ERROR:", error);
     return NextResponse.json(
-      { isError: true, error: error.message || "Failed to generate feedback" },
+      { isError: true, error: errorMessage },
       { status: 500 }
     );
   }

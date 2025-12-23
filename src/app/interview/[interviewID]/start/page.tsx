@@ -72,7 +72,7 @@ const StartInterview = () => {
   const { interviewInfo, setInterviewInfo } = useInterview();
   const router = useRouter();
   const params = useParams<{ interviewID: string }>();
-  const [vapiError, setVapiError] = useState<any>(null);
+  const [vapiError, setVapiError] = useState<unknown>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [caption, setCaption] = useState<string>("");
   const [activeUser, setActiveUser] = useState<boolean>(false);
@@ -229,7 +229,7 @@ const StartInterview = () => {
       if (isMicOn) {
         // Mute Vapi if supported
         try {
-          (vapi as any)?.setMuted?.(true);
+          (vapi as { setMuted?: (muted: boolean) => void })?.setMuted?.(true);
         } catch { }
         setIsMicOn(false);
         toast.success("Mic turned off");
@@ -237,7 +237,7 @@ const StartInterview = () => {
         // Ensure permission at least once
         await navigator.mediaDevices.getUserMedia({ audio: true });
         try {
-          (vapi as any)?.setMuted?.(false);
+          (vapi as { setMuted?: (muted: boolean) => void })?.setMuted?.(false);
         } catch { }
         setIsMicOn(true);
         toast.success("Mic turned on");
@@ -255,7 +255,7 @@ const StartInterview = () => {
       try {
         await navigator.mediaDevices.getUserMedia({ audio: true });
         try {
-          (vapi as any)?.setMuted?.(false);
+          (vapi as { setMuted?: (muted: boolean) => void })?.setMuted?.(false);
         } catch { }
         setIsMicOn(true);
       } catch (err) {
@@ -267,7 +267,7 @@ const StartInterview = () => {
 
   const startCall = async () => {
     let questionList = "";
-    interviewInfo?.interviewData?.forEach((item: any, index: number) => {
+    interviewInfo?.interviewData?.forEach((item: { question: string }, index: number) => {
       questionList +=
         item.question +
         (index < interviewInfo.interviewData.length - 1 ? "," : "");
@@ -375,7 +375,7 @@ Ensure the interview remains focused on React
       setHasCallStartToast(false);
     };
 
-    const handleError = (e: any) => {
+    const handleError = (e: unknown) => {
       console.error(e);
       setVapiError(e);
     };
@@ -438,10 +438,10 @@ Ensure the interview remains focused on React
   };
 
   useEffect(() => {
-    const handleMessage = (message: any) => {
+    const handleMessage = (message: { type: string; transcriptType?: string; role?: string; transcript?: string }) => {
       if (message.type === "transcript" && message.transcriptType === "final") {
         const role = message.role === "user" ? "user" : "assistant";
-        const content = message.transcript;
+        const content = message.transcript || "";
 
         setMessages((prev) => {
           if (prev.length > 0) {
@@ -517,10 +517,11 @@ Ensure the interview remains focused on React
           </span>
         ),
       });
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("❌ GenerateFeedback Error:", err);
+      const errorMessage = err instanceof Error ? err.message : "An unexpected error occurred";
       toast.error("Error saving feedback", {
-        description: err.message || "An unexpected error occurred",
+        description: errorMessage,
       });
     } finally {
       setGenerateLoading(false);

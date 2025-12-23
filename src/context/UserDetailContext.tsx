@@ -51,7 +51,7 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
     setLoading(true);
 
     try {
-      const { data: authData, error: authError } =
+      const { data: authData } =
         await supabase.auth.getUser();
       const authUser = authData?.user;
 
@@ -157,8 +157,9 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
           console.log("✅ New user inserted via server:", data);
           setUsers(data);
           setIsNewUser(true);
-        } catch (e: any) {
-          console.log("❌ Error inserting new user via server:", e.message || e);
+        } catch (e: unknown) {
+          const errorMessage = e instanceof Error ? e.message : String(e);
+          console.log("❌ Error inserting new user via server:", errorMessage);
         }
       } else {
         setUsers(usersDB);
