@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useTheme } from "@/context/ThemeProvider";
+import { useUserData } from "@/context/UserDetailContext";
 
 interface SendMailFormProps {
     defaultEmail?: string;
@@ -23,10 +24,16 @@ const SendMailForm = ({
     onSuccess,
 }: SendMailFormProps) => {
     const { darkTheme } = useTheme();
+    const { users, setRemainingCredits } = useUserData();
     const [to, setTo] = useState(defaultEmail);
     const [subject, setSubject] = useState(defaultSubject);
     const [body, setBody] = useState(defaultBody);
     const [sending, setSending] = useState(false);
+
+    const userEmail = users?.[0]?.email;
+    const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
+    const isAdmin = userEmail === adminEmail;
+    const remainingCredits = users?.[0]?.remainingcredits ?? 0;
 
     useEffect(() => {
         setTo(defaultEmail);
@@ -47,14 +54,27 @@ const SendMailForm = ({
             return;
         }
 
+        // Check credits before sending
+        if (!isAdmin && remainingCredits <= 0) {
+            toast.error("No credits remaining. Please purchase credits to send emails.");
+            return;
+        }
+
         setSending(true);
         try {
             await axios.post("/api/send-mail", {
                 to: to.trim(),
                 subject: subject.trim(),
                 body: body.trim(),
+                userEmail: userEmail,
             });
-            toast.success("Mail sent successfully.");
+
+            // Update local credit count
+            if (!isAdmin) {
+                setRemainingCredits(remainingCredits - 1);
+            }
+
+            toast.success("Mail sent successfully. 1 credit used.");
             onSuccess?.();
         } catch (err: any) {
             const message = err?.response?.data?.error || "Failed to send mail.";

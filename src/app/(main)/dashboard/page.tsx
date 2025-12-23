@@ -12,12 +12,14 @@ import { SheetDemo } from "@/components/DashBoardRightSlider";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import ScreenSizeBlocker from "@/components/ScreenBlocker";
 import { useRouter } from "next/navigation";
+import OnboardingDialog from "@/components/OnboardingDialog";
 
 const Page = () => {
   const { darkTheme } = useTheme();
-  const { users, loading } = useUserData();
+  const { users, loading, isNewUser } = useUserData();
   const router = useRouter();
   const [showRecentInterviewsModal, setShowRecentInterviewsModal] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(isNewUser || users?.[0]?.organization === "no organization");
 
   const openRecentInterviewsModal = () => {
     setShowRecentInterviewsModal(true);
@@ -134,6 +136,12 @@ const Page = () => {
       <SheetDemo />
 
       <ScreenSizeBlocker />
+
+      {/* Onboarding Dialog for New Users */}
+      <OnboardingDialog
+        open={showOnboarding}
+        onOpenChange={setShowOnboarding}
+      />
     </div>
   );
 };

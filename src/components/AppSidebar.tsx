@@ -60,7 +60,7 @@ export function AppSidebar() {
   const { darkTheme } = useTheme();
 
   const totalCredits = users?.[0].credits || 0;
-  const progress = (remainingCredits / totalCredits) * 100;
+  const progress = totalCredits > 0 ? ((remainingCredits || 0) / totalCredits) * 100 : 0;
   // console.log("USERS DATA IN APPSIDEBAR", users);
   return (
     <Sidebar>

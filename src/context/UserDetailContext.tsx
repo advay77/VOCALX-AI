@@ -148,6 +148,8 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
               email: authUser.email,
               picture: authUser.user_metadata?.picture,
               organization: "no organization",
+              credits: 4,
+              remainingcredits: 4,
             }),
           });
           const data = await res.json();
