@@ -159,7 +159,7 @@ const ScheduledInterview = () => {
         <div className="flex items-center justify-between max-w-[1400px] mx-auto">
           <div className="flex items-center gap-4">
             <div className={`h-12 w-1.5 rounded-full shadow-lg ${darkTheme ? "bg-gradient-to-b from-blue-400 via-indigo-400 to-purple-500" : "bg-gradient-to-b from-blue-500 via-indigo-500 to-purple-600"}`}></div>
-            <h2 className={`font-bold text-3xl md:text-4xl font-sora tracking-tight bg-clip-text text-transparent ${darkTheme ? "bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500 drop-shadow-[0_0_20px_rgba(129,140,248,0.4)]" : "bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 drop-shadow-sm"}`}>
+            <h2 className={`font-bold text-3xl md:text-4xl font-sora tracking-tight ${darkTheme ? "bg-gradient-to-r from-white via-white to-slate-50 text-transparent bg-clip-text" : "bg-gradient-to-r from-slate-900 via-slate-900 to-slate-800 text-transparent bg-clip-text"}`}>
               Interview Results & Candidates
             </h2>
             {usedFallback && (
