@@ -196,47 +196,124 @@ export function AppSidebar() {
       </SidebarContent>
       <SidebarFooter className="px-4 pb-3">
         {/* Credits Card */}
-        <div className="group h-[155px] bg-gradient-to-br from-blue-600 via-blue-500 to-indigo-400 w-full mb-3 rounded-2xl pt-3.5 pb-2 px-3.5 relative overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300">
-          {/* Animated glow effect */}
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-400/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+        <Link href="/subscription" className="block mb-3">
+          <div className={clsx(
+            "group relative w-full rounded-xl p-4 transition-all duration-300 cursor-pointer overflow-hidden",
+            darkTheme
+              ? "bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 hover:from-gray-800 hover:to-gray-800 border border-gray-700/50 hover:border-blue-500/30"
+              : "bg-gradient-to-br from-blue-50 via-blue-50 to-indigo-50 hover:from-blue-100 hover:to-blue-50 border border-blue-200/50 hover:border-blue-400/50"
+          )}>
+            {/* Subtle background pattern */}
+            <div className={clsx(
+              "absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500",
+              darkTheme ? "bg-gradient-to-br from-blue-500/5 to-transparent" : "bg-gradient-to-br from-blue-500/5 to-transparent"
+            )}></div>
 
-          <div className="relative z-10">
-            <div className="flex justify-between items-center mb-2.5 px-0.5">
-              <span className="text-white font-inter font-bold text-base tracking-tight">
-                {remainingCredits} <span className="font-medium text-sm">left</span>
-              </span>
-              <span className="text-white/90 font-inter font-semibold text-sm bg-white/10 px-2.5 py-0.5 rounded-full">
-                {totalCredits}
-              </span>
+            {/* Credit card image - positioned on right */}
+            <div className="absolute -top-3 -right-3 w-28 h-28 opacity-40 group-hover:opacity-60 transition-all duration-500 group-hover:scale-110 group-hover:rotate-3">
+              <Image
+                src="/element2.png"
+                alt="credits"
+                width={112}
+                height={112}
+                className="w-full h-full object-contain"
+              />
             </div>
 
-            <Progress value={progress} className="h-2.5 rounded-full bg-white/25 shadow-inner border border-white/10">
-              <div
-                className="h-full rounded-full shadow-lg bg-white"
-                style={{
-                  width: `${progress}%`,
-                }}
-              ></div>
-            </Progress>
+            <div className="relative z-10">
+              {/* Credits display */}
+              <div className="mb-3">
+                <div className="flex items-center gap-2 mb-1">
+                  <div className={clsx(
+                    "w-2 h-2 rounded-full",
+                    darkTheme ? "bg-blue-500" : "bg-blue-600"
+                  )}></div>
+                  <span className={clsx(
+                    "text-[10px] uppercase tracking-wider font-inter font-bold",
+                    darkTheme ? "text-gray-400" : "text-gray-500"
+                  )}>
+                    Available Credits
+                  </span>
+                </div>
+                <div className="flex items-baseline gap-2">
+                  <span className={clsx(
+                    "font-inter font-black text-4xl tracking-tight",
+                    darkTheme
+                      ? "bg-gradient-to-br from-blue-400 via-blue-300 to-indigo-400 bg-clip-text text-transparent"
+                      : "bg-gradient-to-br from-blue-600 via-blue-500 to-indigo-600 bg-clip-text text-transparent"
+                  )}>
+                    {remainingCredits}
+                  </span>
+                  <span className={clsx(
+                    "font-inter font-medium text-sm",
+                    darkTheme ? "text-gray-500" : "text-gray-600"
+                  )}>
+                    / {totalCredits}
+                  </span>
+                </div>
+              </div>
 
-            <div className="w-full mt-2.5">
-              <h3 className="text-white font-inter font-bold text-sm hover:text-white/90 cursor-pointer transition-colors duration-200 flex items-center gap-1.5">
-                Get more credits
-                <span className="text-xs opacity-0 group-hover:opacity-100 transition-opacity">→</span>
-              </h3>
-              <h2 className="text-balance mt-2 font-inter font-medium text-white/95 text-xs max-w-[140px] leading-relaxed">
-                {users?.[0].name}, you can make <span className="font-bold">{remainingCredits}</span> more Interviews
-              </h2>
+              {/* Progress bar */}
+              <div className="mb-3">
+                <div className={clsx(
+                  "relative h-1.5 rounded-full overflow-hidden",
+                  darkTheme ? "bg-gray-800" : "bg-blue-100"
+                )}>
+                  <div
+                    className={clsx(
+                      "h-full rounded-full transition-all duration-500 relative",
+                      darkTheme
+                        ? "bg-gradient-to-r from-blue-500 to-indigo-500"
+                        : "bg-gradient-to-r from-blue-500 to-blue-600"
+                    )}
+                    style={{ width: `${progress}%` }}
+                  >
+                    {/* Animated shine */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse"></div>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between mt-1.5">
+                  <span className={clsx(
+                    "text-[10px] font-inter font-medium",
+                    darkTheme ? "text-gray-500" : "text-gray-600"
+                  )}>
+                    {Math.round(progress)}% used
+                  </span>
+                  <span className={clsx(
+                    "text-[10px] font-inter font-semibold px-2 py-0.5 rounded-full",
+                    darkTheme ? "bg-gray-800 text-blue-400" : "bg-blue-100 text-blue-600"
+                  )}>
+                    {remainingCredits} left
+                  </span>
+                </div>
+              </div>
+
+              {/* CTA */}
+              <div className={clsx(
+                "flex items-center justify-between py-2 px-3 rounded-lg transition-all duration-300",
+                darkTheme
+                  ? "bg-gradient-to-r from-blue-500/10 to-indigo-500/10 group-hover:from-blue-500/20 group-hover:to-indigo-500/20"
+                  : "bg-gradient-to-r from-blue-500/10 to-blue-600/10 group-hover:from-blue-500/20 group-hover:to-blue-600/20"
+              )}>
+                <div>
+                  <p className={clsx(
+                    "font-inter font-bold text-sm flex items-center gap-1.5",
+                    darkTheme ? "text-blue-400" : "text-blue-600"
+                  )}>
+                    Get more credits
+                    <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
+                  </p>
+                  <p className={clsx(
+                    "font-inter text-[10px] mt-0.5",
+                    darkTheme ? "text-gray-500" : "text-gray-600"
+                  )}>
+                    Upgrade your plan
+                  </p>
+                </div>
+              </div>
             </div>
-            <Image
-              src="/element2.png"
-              alt="ad"
-              width={350}
-              height={350}
-              className="absolute -bottom-2 left-20 opacity-90"
-            />
           </div>
-        </div>
+        </Link>
         <div className="group flex items-center gap-3 bg-gradient-to-r from-blue-600 via-blue-600 to-blue-700 rounded-2xl px-3.5 py-2.5 text-white shadow-xl hover:shadow-2xl transition-all duration-300">
           <div className="relative shrink-0 w-10 h-10">
             <Image
