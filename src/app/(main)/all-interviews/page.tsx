@@ -144,12 +144,9 @@ const AllInterview = () => {
     >
       <div className="">
         <div className=" flex items-center justify-between">
-          <div className="flex items-center gap-3 ml-5">
-            <div className="h-8 w-1 bg-gradient-to-b from-blue-500 via-purple-500 to-pink-500 rounded-full"></div>
-            <h2 className={`font-bold text-2xl md:text-3xl font-sora tracking-tight ${darkTheme
-              ? "text-white"
-              : "bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent"
-              }`}>
+          <div className="flex items-center gap-4 ml-5">
+            <div className={`h-12 w-1.5 rounded-full shadow-lg ${darkTheme ? "bg-gradient-to-b from-blue-400 via-indigo-400 to-purple-500" : "bg-gradient-to-b from-blue-500 via-indigo-500 to-purple-600"}`}></div>
+            <h2 className={`font-bold text-3xl md:text-4xl font-sora tracking-tight bg-clip-text text-transparent ${darkTheme ? "bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500 drop-shadow-[0_0_20px_rgba(129,140,248,0.4)]" : "bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 drop-shadow-sm"}`}>
               All Interviews
             </h2>
           </div>

@@ -64,11 +64,13 @@ const DashBoardOptions = () => {
           <p className={`text-sm font-medium tracking-tight font-inter leading-relaxed ${darkTheme ? "text-slate-300" : "text-slate-600"}`}>
             See all the resume submitted by candidates during interviews in one place.
           </p>
-          <Button
-            className="py-2.5 px-5 text-sm tracking-tight font-inter font-semibold w-full mt-5 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02] flex items-center justify-center gap-2"
-          >
-            Check Resume <LuSearch className="text-lg" />
-          </Button>
+          <Link href="/scheduled">
+            <Button
+              className="py-2.5 px-5 text-sm tracking-tight font-inter font-semibold w-full mt-5 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02] flex items-center justify-center gap-2"
+            >
+              Check Resume <LuSearch className="text-lg" />
+            </Button>
+          </Link>
         </div>
       </div>
       {/* Third Card - Send Mails */}

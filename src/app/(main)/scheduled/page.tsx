@@ -155,60 +155,11 @@ const ScheduledInterview = () => {
         } relative`}
     >
       <div>
-        {/* Welcome card */}
-        <div
-          className={`${darkTheme ? "bg-slate-800 border-slate-700 shadow-xl" : "bg-gradient-to-br from-white to-blue-50 border-blue-100 shadow-lg"}
-            rounded-2xl flex items-center justify-between relative max-w-[900px] mx-auto hover:shadow-2xl transition-all duration-300 border overflow-hidden`}
-        >
-          {/* Decorative gradient line */}
-          <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700" />
-
-          {/* Subtle overlay */}
-          <div className={`absolute inset-0 bg-gradient-to-br ${darkTheme ? "from-blue-600/10 to-purple-600/10" : "from-blue-500/5 to-purple-500/5"}`} />
-
-          <div className="relative z-10 flex flex-col justify-evenly h-full py-8 px-8">
-            <h1 className={`font-bold text-3xl tracking-tight capitalize font-sora mb-2 ${darkTheme
-              ? "text-white"
-              : "bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800 bg-clip-text text-transparent"
-              }`}>
-              Welcome {users?.[0].name}
-            </h1>
-            <p className={`font-inter text-sm md:text-base font-medium max-w-[520px] leading-relaxed ${darkTheme
-              ? "text-slate-300"
-              : "text-slate-700"
-              }`}>
-              Track and manage all your scheduled interviews. Review candidates and open interview details in one place.
-            </p>
-            <Button className={`py-2 px-6 text-sm tracking-tight font-inter font-semibold w-fit mt-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 ${darkTheme
-              ? "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white"
-              : "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white"
-              }`}>
-              View
-            </Button>
-          </div>
-          <div className="relative mr-4">
-            <div className={`absolute inset-0 bg-gradient-to-br blur-2xl rounded-full ${darkTheme
-              ? "from-blue-600/30 to-purple-600/20"
-              : "from-blue-400/30 to-purple-400/20"
-              }`} />
-            <Image
-              src="/partnership.png"
-              width={220}
-              height={220}
-              alt="welcome"
-              className="object-cover relative z-10 drop-shadow-2xl"
-            />
-          </div>
-        </div>
-
         {/* Header */}
-        <div className="flex items-center justify-between mt-12 max-w-[1400px] mx-auto">
+        <div className="flex items-center justify-between max-w-[1400px] mx-auto">
           <div className="flex items-center gap-4">
-            <div className={`h-10 w-1.5 bg-gradient-to-b from-blue-500 to-blue-700 rounded-full shadow-lg`}></div>
-            <h2 className={`font-bold text-3xl md:text-4xl font-sora tracking-tight ${darkTheme
-              ? "text-white"
-              : "bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800 bg-clip-text text-transparent"
-              }`}>
+            <div className={`h-12 w-1.5 rounded-full shadow-lg ${darkTheme ? "bg-gradient-to-b from-blue-400 via-indigo-400 to-purple-500" : "bg-gradient-to-b from-blue-500 via-indigo-500 to-purple-600"}`}></div>
+            <h2 className={`font-bold text-3xl md:text-4xl font-sora tracking-tight bg-clip-text text-transparent ${darkTheme ? "bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500 drop-shadow-[0_0_20px_rgba(129,140,248,0.4)]" : "bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 drop-shadow-sm"}`}>
               Interview Results & Candidates
             </h2>
             {usedFallback && (
