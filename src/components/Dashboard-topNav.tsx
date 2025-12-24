@@ -170,6 +170,14 @@ const DashboardTopNav = () => {
               >
                 HEY, {users?.[0].name}
               </DropdownMenuLabel>
+              <p
+                className={clsx(
+                  "text-[11px] font-semibold text-center mt-2 mb-1 tracking-wide uppercase",
+                  darkTheme ? "text-slate-300" : "text-slate-600"
+                )}
+              >
+                Developed by SYED MOHAMMAD AQUIB
+              </p>
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => router.push('/profile')}
