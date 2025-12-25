@@ -103,54 +103,73 @@ const Interview = () => {
   const GetInterviewDetails = async () => {
     setLoading(true);
     try {
-      const { data: interviews, error } = await supabase
-        .from("interviews")
-        .select(
-          "jobTitle, jobDescription, interviewDuration,  acceptResume, organization"
-        )
-        .eq("interview_id", interviewID);
+      const response = await fetch("/api/get-interview", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ interviewID }),
+      });
 
-      if (interviews && interviews.length > 0) {
-        setInterviewDetails(interviews[0]);
+      if (!response.ok) {
+        setWrongId(true);
+        toast("Incorrect Interview ID");
+        setLoading(false);
+        return;
+      }
+
+      const { interview } = await response.json();
+      if (interview) {
+        setInterviewDetails(interview);
       } else {
         setWrongId(true);
         toast("Incorrect Interview ID");
       }
     } catch (err) {
-      setLoading(false);
+      console.error("Error fetching interview:", err);
+      setWrongId(true);
       toast("Incorrect Interview ID");
     } finally {
       setLoading(false);
     }
-
-    // console.log("interviews", interviews);
   };
 
   const onJoinInterview = async () => {
     setLoading(true);
-    const { data: interviews, error } = await supabase
-      .from("interviews")
-      .select("*")
-      .eq("interview_id", interviewID);
-
-    if (interviews) {
-      setInterviewInfo({
-        userName: userName,
-        userEmail: userEmail,
-        jobTitle: interviews[0].jobTitle,
-        jobPosition: interviews[0].jobDescription,
-        interviewDuration: interviews[0].interviewDuration,
-        interviewData: interviews[0].questionList,
-        interviewID: interviewID,
-        acceptResume: interviews[0].acceptResume,
-        organization: interviews[0].organization,
-        resumeURL: resumeUrl,
+    try {
+      const response = await fetch("/api/get-interview", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ interviewID }),
       });
 
-      router.push(`/interview/${interviewID}/start`);
-      setLoading(false);
-    } else {
+      if (!response.ok) {
+        toast("Incorrect Interview ID");
+        setLoading(false);
+        return;
+      }
+
+      const { interview } = await response.json();
+      if (interview) {
+        setInterviewInfo({
+          userName: userName,
+          userEmail: userEmail,
+          jobTitle: interview.jobTitle,
+          jobPosition: interview.jobDescription,
+          interviewDuration: interview.interviewDuration,
+          interviewData: interview.questionList,
+          interviewID: interviewID,
+          acceptResume: interview.acceptResume,
+          organization: interview.organization,
+          resumeURL: resumeUrl,
+        });
+
+        router.push(`/interview/${interviewID}/start`);
+      } else {
+        toast("Incorrect Interview ID");
+      }
+    } catch (err) {
+      console.error("Error joining interview:", err);
       toast("Incorrect Interview ID");
+    } finally {
       setLoading(false);
     }
   };
