@@ -1,5 +1,6 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { supabase } from "@/services/supabaseClient";
 
 interface DBUser {
@@ -39,14 +40,20 @@ const UserDataContext = createContext<UserDataContextType | undefined>(
 );
 
 export function UserDataProvider({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const skipAuth = pathname?.startsWith("/interview"); // candidate flow should not require auth
   const [users, setUsers] = useState<DBUser[] | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [isNewUser, setIsNewUser] = useState<boolean>(false);
   const [remainingCredits, setRemainingCredits] = useState<number>(0);
 
   useEffect(() => {
+    if (skipAuth) {
+      setLoading(false);
+      return;
+    }
     constCreateNewUser();
-  }, []);
+  }, [skipAuth]);
   const constCreateNewUser = async () => {
     setLoading(true);
 
