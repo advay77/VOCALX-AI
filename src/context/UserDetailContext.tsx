@@ -165,8 +165,18 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
           // data is an array, so we need to access the first element
           const userData = Array.isArray(data) ? data : [data];
           setUsers(userData);
-          if (userData?.[0]?.remainingcredits !== undefined) {
-            setRemainingCredits(userData[0].remainingcredits);
+          const rem = userData?.[0]?.remainingcredits;
+          const cred = userData?.[0]?.credits;
+          // If a brand-new user somehow has null/zero remaining credits, reset to full credits
+          if ((rem === null || rem === undefined || rem === 0) && cred && cred > 0) {
+            setRemainingCredits(cred);
+            // Persist the correction
+            await supabase
+              .from("users")
+              .update({ remainingcredits: cred })
+              .eq("email", authUser.email);
+          } else if (rem !== undefined) {
+            setRemainingCredits(rem ?? cred ?? 0);
           }
           setIsNewUser(true);
         } catch (e: unknown) {
@@ -187,9 +197,18 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (users?.[0]) {
-      setRemainingCredits(users[0].remainingcredits);
+      const rem = users[0].remainingcredits;
+      const cred = users[0].credits;
+      if ((rem === null || rem === undefined) && cred !== undefined) {
+        setRemainingCredits(cred);
+      } else if (rem === 0 && cred > 0 && isNewUser) {
+        // For brand-new users, if remainingcredits came back as 0, treat it as a glitch and show full credits
+        setRemainingCredits(cred);
+      } else {
+        setRemainingCredits(rem ?? cred ?? 0);
+      }
     }
-  }, [users]);
+  }, [users, isNewUser]);
 
   return (
     <UserDataContext.Provider
