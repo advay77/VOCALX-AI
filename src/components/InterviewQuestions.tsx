@@ -20,14 +20,6 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -37,9 +29,14 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { LuListPlus } from "react-icons/lu";
-import { DialogDescription } from "@radix-ui/react-dialog";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { LuZap, LuInfinity } from "react-icons/lu";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 interface InterviewFormData {
   jobTitle: string;
@@ -83,7 +80,6 @@ const InterviewQuestions: React.FC<InterviewQuestionsProps> = ({
   const [newType, setNewType] =
     useState<InterviewQuestion["type"]>("Technical");
   const [open, setOpen] = useState(false);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   useEffect(() => {
     if (formData) {
@@ -144,58 +140,6 @@ const InterviewQuestions: React.FC<InterviewQuestionsProps> = ({
     const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL || "syedmohammadaquib12@gmail.com";
     const isAdmin = userEmail === ADMIN_EMAIL;
 
-    // Debug auth session to ensure requests carry a valid Supabase session (RLS can fail without it)
-    const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
-    console.log("Supabase session check:", {
-      hasSession: !!sessionData?.session,
-      user: sessionData?.session?.user?.email,
-      sessionError,
-    });
-
-    let remainingCreditsVal = Number.POSITIVE_INFINITY;
-
-    if (!isAdmin) {
-      // get current user credits
-      const { data: userData, error: userError, status, statusText } = await supabase
-        .from("users")
-        // Try common variants; DB column appears to be mis-cased, so request all
-        .select("remainingcredits, remaining_credits, remainingCredits")
-        .eq("email", userEmail)
-        .maybeSingle();
-
-      console.log("Fetched userData:", userData, "email:", userEmail, "status:", status, statusText);
-      if (userError) {
-        console.error("Supabase user fetch error:", userError);
-        console.error("Supabase user fetch error (stringified):", JSON.stringify(userError, null, 2));
-        console.error("Email used for query:", userEmail);
-
-        // If the column truly doesn't exist, show a friendly message instead of generic error
-        if (userError.code === "42703") {
-          setSaveLoading(false);
-          setIsDialogOpen(true);
-          toast("Credits are not configured for this account. Please contact support.");
-          return;
-        }
-
-        setSaveLoading(false);
-        toast("Error fetching user data");
-        return;
-      }
-
-      remainingCreditsVal =
-        (userData as any)?.remainingCredits ??
-        (userData as any)?.remaining_credits ??
-        (userData as any)?.remainingcredits ??
-        0;
-
-      if (!userData || remainingCreditsVal <= 0) {
-        setSaveLoading(false);
-        setIsDialogOpen(true);
-        toast("No remaining credits!");
-        return;
-      }
-    }
-
     // insert interview
     const { data, error } = await supabase
       .from("interviews")
@@ -225,31 +169,46 @@ const InterviewQuestions: React.FC<InterviewQuestionsProps> = ({
       return;
     }
 
-    // decrement credits in DB
+    // decrement credits in DB AFTER successfully creating interview
     if (!isAdmin) {
+      // Get current credits first
+      const { data: userData, error: userError } = await supabase
+        .from("users")
+        .select("remainingcredits")
+        .eq("email", userEmail)
+        .single();
+
+      if (userError) {
+        console.error("Error fetching user credits:", userError);
+        setSaveLoading(false);
+        toast("Error fetching user credits");
+        return;
+      }
+
+      const currentCredits = (userData as any)?.remainingcredits ?? 0;
+      const newCredits = currentCredits - 1;
+
+      // Update credits in DB
       const { data: updatedUser, error: updateError } = await supabase
         .from("users")
         .update({
-          remainingcredits: remainingCreditsVal - 1,
+          remainingcredits: newCredits,
         })
-        .eq("email", users?.[0]?.email)
+        .eq("email", userEmail)
         .select()
         .single();
 
-      if (!updateError && updatedUser) {
-        // also update context so sidebar reflects immediately
-        const updatedRemaining =
-          (updatedUser as any)?.remainingCredits ??
-          (updatedUser as any)?.remaining_credits ??
-          (updatedUser as any)?.remainingcredits ??
-          0;
-        setRemainingCredits(updatedRemaining);
-      }
-
       if (updateError) {
+        console.error("Error updating credits:", updateError);
         setSaveLoading(false);
         toast("Error updating credits");
         return;
+      }
+
+      if (updatedUser) {
+        // Update context so sidebar reflects immediately
+        const updatedRemaining = (updatedUser as any)?.remainingcredits ?? 0;
+        setRemainingCredits(updatedRemaining);
       }
     } else {
       // For admin, ensure UI reflects "unlimited"
@@ -429,66 +388,6 @@ const InterviewQuestions: React.FC<InterviewQuestionsProps> = ({
           </div>
         </motion.div>
       )}
-
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="p-0 overflow-hidden rounded-2xl max-w-lg">
-          {/* Header */}
-          <DialogHeader className="bg-gradient-to-br from-blue-500 via-indigo-400 to-pink-300 p-6">
-            <DialogTitle className="text-center flex items-center justify-center gap-3 text-white text-2xl font-bold">
-              OOPS! <LuX className="w-6 h-6" />
-            </DialogTitle>
-            <DialogDescription className="text-lg text-gray-100 tracking-wide text-center">
-              Looks like you’ve finished all your credits
-            </DialogDescription>
-          </DialogHeader>
-
-          {/* Body */}
-          <div className="p-6 space-y-6">
-            <h2 className="text-muted-foreground text-center font-medium">
-              To continue making interviews, upgrade your plan now!
-            </h2>
-
-            {/* Plans */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Plan 1 - Small pack */}
-              <Card className="border border-gray-200 shadow-sm hover:shadow-md transition rounded-xl">
-                <CardHeader className="text-center">
-                  <LuZap className="mx-auto text-yellow-500 w-8 h-8 mb-2" />
-                  <CardTitle className="text-lg font-semibold">
-                    5 More Credits
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="text-center space-y-3">
-                  <p className="text-sm text-muted-foreground">
-                    Just a quick boost to continue your interviews
-                  </p>
-                  <p className="text-xl font-bold">₹99</p>
-                  <Button className="w-full">Buy Now</Button>
-                </CardContent>
-              </Card>
-
-              {/* Plan 2 - Unlimited */}
-              <Card className="border border-gray-200 shadow-sm hover:shadow-md transition rounded-xl">
-                <CardHeader className="text-center">
-                  <LuInfinity className="mx-auto text-pink-500 w-8 h-8 mb-2" />
-                  <CardTitle className="text-lg font-semibold">
-                    Unlimited Access
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="text-center space-y-3">
-                  <p className="text-sm text-muted-foreground">
-                    Get unlimited credits and never worry again
-                  </p>
-                  <p className="text-xl font-bold">₹499 / month</p>
-                  <Button className="w-full bg-gradient-to-r from-pink-500 to-indigo-500 text-white">
-                    Upgrade
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };
