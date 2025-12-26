@@ -1,3 +1,4 @@
+"use client";
 import { AppSidebar } from "@/components/AppSidebar";
 import DashboardTopNav from "@/components/Dashboard-topNav";
 import { SidebarProvider } from "@/components/ui/SideBar";
@@ -8,10 +9,10 @@ function DashboardProvider({ children }: { children: React.ReactNode }) {
     <SidebarProvider defaultOpen={true}>
       <AppSidebar />
       <div className="flex-1">
-      
-          <DashboardTopNav />
-          {children}
-       
+
+        <DashboardTopNav />
+        {children}
+
       </div>
     </SidebarProvider>
   );

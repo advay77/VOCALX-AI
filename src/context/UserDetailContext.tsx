@@ -162,7 +162,12 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
           const data = await res.json();
           if (!res.ok) throw new Error(data?.error || "Failed to create user");
           console.log("✅ New user inserted via server:", data);
-          setUsers(data);
+          // data is an array, so we need to access the first element
+          const userData = Array.isArray(data) ? data : [data];
+          setUsers(userData);
+          if (userData?.[0]?.remainingcredits !== undefined) {
+            setRemainingCredits(userData[0].remainingcredits);
+          }
           setIsNewUser(true);
         } catch (e: unknown) {
           const errorMessage = e instanceof Error ? e.message : String(e);
