@@ -16,7 +16,7 @@ const DashBoardOptions = () => {
 
   const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
   const userEmail = users?.[0]?.email;
-  const remainingCredits = users?.[0]?.remainingCredits ?? 0;
+  const remainingCredits = users?.[0]?.remainingcredits ?? 0;
   const isAdmin = userEmail === adminEmail;
   const hasCredits = remainingCredits > 0 || isAdmin;
 
@@ -94,8 +94,8 @@ const DashBoardOptions = () => {
             onClick={() => handleProClick("/scheduled")}
             disabled={!hasCredits && !isAdmin}
             className={`py-2.5 px-5 text-sm tracking-tight font-inter font-semibold w-full mt-5 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02] flex items-center justify-center gap-2 ${hasCredits || isAdmin
-                ? "bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white"
-                : "bg-gradient-to-r from-slate-400 to-slate-500 text-white cursor-not-allowed opacity-60"
+              ? "bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white"
+              : "bg-gradient-to-r from-slate-400 to-slate-500 text-white cursor-not-allowed opacity-60"
               }`}
           >
             Check Resume <LuSearch className="text-lg" />

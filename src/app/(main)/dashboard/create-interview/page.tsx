@@ -19,7 +19,7 @@ const CreateInterview = () => {
 
   const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
   const userEmail = users?.[0]?.email;
-  const remainingCredits = users?.[0]?.remainingCredits ?? 0;
+  const remainingCredits = users?.[0]?.remainingcredits ?? 0;
   const isAdmin = userEmail === adminEmail;
 
   useEffect(() => {

@@ -33,7 +33,7 @@ const SendMailForm = ({
     const userEmail = users?.[0]?.email;
     const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
     const isAdmin = userEmail === adminEmail;
-    const remainingCredits = users?.[0]?.remainingCredits ?? 0;
+    const remainingCredits = users?.[0]?.remainingcredits ?? 0;
 
     useEffect(() => {
         setTo(defaultEmail);
