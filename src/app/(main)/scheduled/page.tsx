@@ -80,16 +80,9 @@ const ScheduledInterview = () => {
 
       let interviews = result.data || [];
 
-      // If no interviews found for this recruiter, show all interviews (admin-style view)
+      // If no interviews found for this recruiter, don't show interviews from other users
       if (!interviews || interviews.length === 0) {
-        const all = await supabase
-          .from("interviews")
-          .select(
-            "jobTitle, jobDescription, interview_id, created_at, userEmail, interview-details(userEmail, userName, feedback, resumeURL, created_at)"
-          )
-          .order("created_at", { ascending: false });
-        interviews = all.data || [];
-        setUsedFallback(true);
+        setUsedFallback(false);
       } else {
         setUsedFallback(false);
       }
