@@ -9,7 +9,7 @@ interface DBUser {
   email: string;
   picture: string;
   credits: number;
-  remainingCredits: number;
+  remainingcredits: number;
   organization: string;
   created_at: string;
 }
@@ -182,7 +182,7 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (users?.[0]) {
-      setRemainingCredits(users[0].remainingCredits);
+      setRemainingCredits(users[0].remainingcredits);
     }
   }, [users]);
 
