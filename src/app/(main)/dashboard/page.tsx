@@ -120,6 +120,9 @@ const Page = () => {
           ? "bg-slate-900 border-slate-700 [&>button]:text-slate-300 [&>button]:hover:text-white"
           : "bg-white border-slate-200"
           }`}>
+          <DialogHeader>
+            <DialogTitle className="text-xl font-semibold">Recent Interviews</DialogTitle>
+          </DialogHeader>
           <DasboardRecentInterviews />
         </DialogContent>
       </Dialog>
