@@ -45,8 +45,11 @@ const DashBoardOptions = () => {
             <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-md group-hover:scale-110 transition-transform duration-300">
               <LuVideo className="text-2xl text-white" />
             </div>
-            <span className="bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 text-white px-3 py-1.5 text-xs tracking-tight font-bold font-inter rounded-full flex items-center gap-1.5 shadow-md">
-              Pro <LuStar className="text-white text-sm" />
+            <span className="relative inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold font-inter text-white rounded-full bg-gradient-to-r from-blue-500 via-blue-600 to-indigo-600 shadow-lg shadow-blue-500/50 hover:shadow-blue-500/70 transition-all duration-300 hover:scale-105 border border-blue-400/50 group-hover:border-blue-300">
+              <span className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 opacity-0 group-hover:opacity-20 blur transition-opacity duration-300"></span>
+              <span className="relative flex items-center gap-1.5">
+                Pro <LuStar className="text-white text-xs animate-pulse" />
+              </span>
             </span>
           </div>
           <h2 className={`font-bold text-xl font-inter mt-3 mb-2 ${darkTheme ? "text-white" : "text-slate-800"}`}>
@@ -112,6 +115,12 @@ const DashBoardOptions = () => {
             <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-pink-500 to-pink-600 rounded-xl shadow-md group-hover:scale-110 transition-transform duration-300">
               <LuMessageSquareMore className="text-2xl text-white" />
             </div>
+            <span className="relative inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold font-inter text-white rounded-full bg-gradient-to-r from-pink-500 via-pink-600 to-rose-600 shadow-lg shadow-pink-500/50 hover:shadow-pink-500/70 transition-all duration-300 hover:scale-105 border border-pink-400/50 group-hover:border-pink-300">
+              <span className="absolute inset-0 rounded-full bg-gradient-to-r from-pink-400 via-rose-400 to-red-400 opacity-0 group-hover:opacity-20 blur transition-opacity duration-300"></span>
+              <span className="relative flex items-center gap-1.5">
+                Pro <LuStar className="text-white text-xs animate-pulse" />
+              </span>
+            </span>
           </div>
           <h2 className={`font-bold text-xl font-inter mt-3 mb-2 ${darkTheme ? "text-white" : "text-slate-800"}`}>
             Send Mails to Candidates
