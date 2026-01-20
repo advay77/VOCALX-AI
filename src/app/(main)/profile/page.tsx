@@ -16,6 +16,15 @@ const ProfilePage = () => {
     const { users, setUsers } = useUserData();
     const { darkTheme } = useTheme();
     const [loading, setLoading] = useState(false);
+
+    // Debug: Log user data to console
+    React.useEffect(() => {
+        if (users?.[0]) {
+            console.log("👤 User Data:", users[0]);
+            console.log("💳 Credits:", users[0].credits);
+            console.log("💰 Remaining Credits:", users[0].remainingcredits);
+        }
+    }, [users]);
     const [formData, setFormData] = useState({
         name: users?.[0]?.name || "",
         email: users?.[0]?.email || "",
@@ -91,7 +100,7 @@ const ProfilePage = () => {
                             Status: Active
                         </div>
                         <div className={`px-3 py-2 rounded-lg text-xs font-semibold uppercase tracking-[0.12em] ${darkTheme ? "bg-blue-500/10 text-blue-200 border border-blue-500/40" : "bg-blue-50 text-blue-700 border border-blue-200"}`}>
-                            Credits: {users?.[0]?.credits || 0}
+                            Credits: {users?.[0]?.remainingcredits ?? 0}
                         </div>
                     </div>
                 </div>
@@ -272,7 +281,7 @@ const ProfilePage = () => {
                                 <div className="grid grid-cols-2 gap-3">
                                     <div className={`${darkTheme ? "bg-slate-800/60 border-slate-800" : "bg-blue-50 border-blue-100"} rounded-lg p-3 border`}>
                                         <p className={`${darkTheme ? "text-slate-400" : "text-slate-600"} text-xs font-semibold uppercase tracking-[0.14em]`}>Credits</p>
-                                        <p className={`${darkTheme ? "text-blue-200" : "text-blue-700"} text-2xl font-bold`}>{users?.[0]?.credits || 0}</p>
+                                        <p className={`${darkTheme ? "text-blue-200" : "text-blue-700"} text-2xl font-bold`}>{users?.[0]?.remainingcredits ?? 0}</p>
                                     </div>
                                     <div className={`${darkTheme ? "bg-slate-800/60 border-slate-800" : "bg-emerald-50 border-emerald-100"} rounded-lg p-3 border`}>
                                         <p className={`${darkTheme ? "text-slate-400" : "text-slate-600"} text-xs font-semibold uppercase tracking-[0.14em]`}>Status</p>

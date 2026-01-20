@@ -184,6 +184,13 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
           console.log("❌ Error inserting new user via server:", errorMessage);
         }
       } else {
+        console.log("✅ Existing user found from DB:", usersDB[0]);
+        console.log("📊 User fields:", {
+          credits: usersDB[0].credits,
+          remainingcredits: usersDB[0].remainingcredits,
+          name: usersDB[0].name,
+          email: usersDB[0].email,
+        });
         setUsers(usersDB);
         setIsNewUser(false);
       }

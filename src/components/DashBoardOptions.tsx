@@ -80,9 +80,6 @@ const DashBoardOptions = () => {
             <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-md group-hover:scale-110 transition-transform duration-300">
               <LuBookText className="text-2xl text-white" />
             </div>
-            <span className="bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 text-white px-3 py-1.5 text-xs tracking-tight font-bold font-inter rounded-full flex items-center gap-1.5 shadow-md">
-              Pro <LuStar className="text-white text-sm" />
-            </span>
           </div>
           <h2 className={`font-bold text-xl font-inter mt-3 mb-2 ${darkTheme ? "text-white" : "text-slate-800"}`}>
             Check Submitted Resume
