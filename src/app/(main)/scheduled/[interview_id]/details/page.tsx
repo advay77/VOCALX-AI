@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
-import { Ghost, LucideLoader, LucideLoader2, AlertTriangle, CheckCircle2, UserCircle2, Download } from "lucide-react";
+import { Ghost, LucideLoader, LucideLoader2, AlertTriangle, CheckCircle2, UserCircle2, Download, Mail, X, FileText, MessageSquare, User, Send, Trophy, ShieldCheck, XCircle } from "lucide-react";
 import {
   LuActivity,
   LuDatabase,
@@ -430,148 +430,226 @@ export default function InterviewDetailsPage() {
           )}
         </div>
       </div>
-      <Dialog
-        open={!!selectedCandidate}
-        onOpenChange={() => setSelectedCandidate(null)}
-      >
-        <DialogContent
-          className={`!w-[85vw] !h-[95vh] !max-w-none !max-h-none overflow-auto p-0 ${darkTheme
-            ? "bg-slate-900/95 border border-slate-800 shadow-2xl"
-            : "bg-white border border-slate-200 shadow-xl"}`}
-        >
-          <DialogHeader className="px-6 py-4 border-b border-transparent">
-            <DialogTitle className={`text-2xl font-sora tracking-tight flex items-center justify-between pr-10 ${darkTheme ? "text-white" : "text-slate-900"}`}>
-              <div className="flex items-center gap-2">
-                <span className={`w-10 h-10 rounded-lg flex items-center justify-center ${darkTheme ? "bg-blue-500/15 text-blue-200" : "bg-blue-50 text-blue-600"}`}>
-                  <UserCircle2 className="h-6 w-6" />
-                </span>
-                <span>Candidate Details</span>
-              </div>
+      {/* ===== START: CANDIDATE DETAILS OVERLAY ===== */}
+      {selectedCandidate && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6 bg-slate-950/80 backdrop-blur-xl animate-in fade-in duration-500 font-inter">
+          <style>{`
+            .custom-scrollbar::-webkit-scrollbar {
+              width: 5px;
+            }
+            .custom-scrollbar::-webkit-scrollbar-track {
+              background: transparent;
+            }
+            .custom-scrollbar::-webkit-scrollbar-thumb {
+              background: ${darkTheme ? (selectedCandidate?.feedback?.data?.feedback?.recommendation === "Yes" ? '#1e293b' : '#451a1a') : (selectedCandidate?.feedback?.data?.feedback?.recommendation === "Yes" ? '#cbd5e1' : '#fecaca')};
+              border-radius: 0px;
+            }
+            .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+              background: ${darkTheme ? (selectedCandidate?.feedback?.data?.feedback?.recommendation === "Yes" ? '#334155' : '#7f1d1d') : (selectedCandidate?.feedback?.data?.feedback?.recommendation === "Yes" ? '#94a3b8' : '#f87171')};
+            }
+          `}</style>
 
-              <div
-                className={`text-sm font-semibold px-3 py-1 rounded-full border ${selectedCandidate?.feedback?.data?.feedback?.recommendation === "No"
-                  ? darkTheme
-                    ? "bg-red-500/15 border-red-700 text-red-100"
-                    : "bg-red-50 border-red-200 text-red-700"
-                  : darkTheme
-                    ? "bg-emerald-500/15 border-emerald-700 text-emerald-100"
-                    : "bg-emerald-50 border-emerald-200 text-emerald-700"}`}
-              >
-                Recommended: {selectedCandidate?.feedback?.data?.feedback?.recommendation || "-"}
-              </div>
-            </DialogTitle>
-          </DialogHeader>
-          {selectedCandidate && (
-            <div className="px-6 pb-6 pt-2 space-y-6">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div className="space-y-1">
-                  <p className={`font-semibold capitalize text-lg font-inter ${darkTheme ? "text-white" : "text-slate-900"}`}>
-                    {selectedCandidate.userName}
-                  </p>
-                  <p className={`text-sm font-inter ${darkTheme ? "text-slate-400" : "text-slate-600"}`}>
-                    Email: {selectedCandidate.userEmail}
-                  </p>
-                </div>
-              </div>
-
-              {/* Feedback Ratings with Progress */}
-              {selectedCandidate.feedback?.data?.feedback?.rating && (
-                <div className="space-y-3">
-                  {Object.entries(
-                    selectedCandidate.feedback.data.feedback.rating
-                  ).map(([key, val]) => (
-                    <div key={key} className="space-y-1">
-                      <div className="flex items-center justify-between text-sm font-medium font-inter">
-                        <span className={`capitalize ${darkTheme ? "text-slate-100" : "text-slate-900"}`}>{key}</span>
-                        <span className={`text-xs px-2 py-0.5 rounded-md ${darkTheme ? "bg-slate-800 text-slate-100" : "bg-slate-100 text-slate-700"}`}>
-                          {(val ?? 0)}/10
-                        </span>
-                      </div>
-                      <Progress value={(val ?? 0) * 10} className={darkTheme ? "bg-slate-800" : ""} />
+          <div
+            className={`relative w-full max-w-6xl h-full max-h-[850px] flex flex-col overflow-hidden rounded-none shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)] transition-all duration-700 border animate-in zoom-in-95 slide-in-from-bottom-10 ${darkTheme
+                ? `bg-slate-900/90 border-slate-800/50 text-slate-100 shadow-${selectedCandidate?.feedback?.data?.feedback?.recommendation === "Yes" ? 'blue' : 'rose'}-500/10`
+                : `bg-white/90 border-slate-200 text-slate-900 shadow-slate-200`
+              }`}
+          >
+            <div className={`flex items-center justify-between px-10 py-8 border-b shrink-0 ${darkTheme ? "border-slate-800/50 bg-slate-900/40" : "border-slate-100 bg-slate-50/50"
+              }`}>
+              <div className="flex items-center gap-8">
+                <div className="relative group">
+                  <div className={`absolute -inset-1 rounded-3xl bg-gradient-to-tr ${selectedCandidate?.feedback?.data?.feedback?.recommendation === "Yes" ? 'from-emerald-500 to-blue-500' : 'from-rose-600 to-red-400'} opacity-20 blur group-hover:opacity-40 transition duration-500`}></div>
+                  <div className={`relative w-20 h-20 rounded-2xl flex items-center justify-center shadow-2xl ${darkTheme ? "bg-slate-800 text-slate-200" : "bg-white text-slate-600 border border-slate-100"
+                    }`}>
+                    {selectedCandidate?.feedback?.data?.feedback?.recommendation === "Yes" ? (
+                      <User className={`w-10 h-10 ${darkTheme ? 'text-blue-400' : 'text-blue-600'}`} />
+                    ) : (
+                      <User className={`w-10 h-10 ${darkTheme ? 'text-rose-400' : 'text-rose-600'}`} />
+                    )}
+                    <div className={`absolute -top-2 -right-2 px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-tighter border shadow-lg ${selectedCandidate?.feedback?.data?.feedback?.recommendation === "Yes" ? "bg-emerald-500 text-white border-emerald-400" : "bg-rose-600 text-white border-rose-400"
+                      }`}>
+                      {selectedCandidate?.feedback?.data?.feedback?.recommendation === "Yes" ? "PASS" : "FAIL"}
                     </div>
-                  ))}
+                  </div>
                 </div>
-              )}
 
-              {/* Summary */}
-              {selectedCandidate.feedback?.data?.feedback?.summary && (
-                <div className={`p-4 rounded-xl border ${darkTheme ? "border-slate-700 bg-slate-800/50" : "border-slate-200 bg-slate-50"}`}>
-                  <h3 className={`font-semibold font-inter text-base mb-2 ${darkTheme ? "text-slate-100" : "text-slate-900"}`}>Summary</h3>
-                  <p className={`text-sm leading-relaxed font-inter ${darkTheme ? "text-slate-300" : "text-slate-700"}`}>
-                    {selectedCandidate.feedback.data.feedback.summary}
-                  </p>
+                <div className="space-y-1.5">
+                  <div className="flex flex-wrap items-center gap-4">
+                    <h1 className="text-3xl font-black tracking-tight capitalize">
+                      {selectedCandidate.userName}
+                    </h1>
+                    <div className={`flex items-center gap-2 px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-[0.15em] border backdrop-blur-md ${selectedCandidate?.feedback?.data?.feedback?.recommendation === "Yes"
+                        ? (darkTheme ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" : "bg-emerald-50 text-emerald-700 border-emerald-100")
+                        : (darkTheme ? "bg-rose-500/10 text-rose-400 border-rose-500/20" : "bg-rose-50 text-rose-700 border-rose-100")
+                      }`}>
+                      {selectedCandidate?.feedback?.data?.feedback?.recommendation === "Yes" ? <CheckCircle2 className="w-3 h-3" /> : <AlertTriangle className="w-3 h-3" />}
+                      {selectedCandidate?.feedback?.data?.feedback?.recommendation === "Yes" ? "Vetted Talent" : "Rejected"}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <p className={`text-sm font-bold flex items-center gap-2 ${darkTheme ? "text-slate-400" : "text-slate-500"}`}>
+                      <Mail className={`w-4 h-4 ${selectedCandidate?.feedback?.data?.feedback?.recommendation === "Yes" ? 'text-blue-500' : 'text-rose-500'}`} />
+                      {selectedCandidate.userEmail}
+                    </p>
+                  </div>
                 </div>
-              )}
+              </div>
 
-              {/* Recommendation */}
-              {selectedCandidate.feedback?.data?.feedback?.recommendation && (
-                <div className={`p-4 rounded-xl border ${darkTheme ? "border-slate-700 bg-slate-800/50" : "border-slate-200 bg-slate-50"}`}>
-                  <h3 className={`font-semibold font-inter text-base mb-2 ${darkTheme ? "text-slate-100" : "text-slate-900"}`}>Recommendation</h3>
-                  <p className={`text-sm leading-relaxed font-inter ${darkTheme ? "text-slate-300" : "text-slate-700"}`}>
-                    {selectedCandidate.feedback.data.feedback.recommendationMessage}
-                  </p>
-                </div>
-              )}
+              <button
+                onClick={() => setSelectedCandidate(null)}
+                className={`group p-4 rounded-2xl transition-all outline-none ${darkTheme ? "text-slate-400" : "text-slate-500"
+                  }`}
+              >
+                <X className="w-6 h-6 group-hover:rotate-[360deg] transition-transform duration-700 ease-in-out" />
+              </button>
             </div>
-          )}
 
-          {selectedCandidate?.feedback?.data?.feedback?.recommendation === "No" ? (
-            <div className={`mt-6 rounded-xl overflow-hidden ${darkTheme
-              ? "bg-gradient-to-r from-red-950/40 to-red-900/20 border border-red-800/40"
-              : "bg-gradient-to-r from-red-50 to-red-100/50 border border-red-200"}`}>
-              <div className="flex items-center justify-between gap-4 px-5 py-4">
-                <div className="flex items-center gap-3 flex-1">
-                  <AlertTriangle className={`h-5 w-5 flex-shrink-0 ${darkTheme ? "text-red-300" : "text-red-600"}`} />
-                  <p className={`text-sm font-medium font-inter leading-relaxed ${darkTheme ? "text-red-100" : "text-red-900"}`}>
-                    Candidate was rejected by AI interviewer, but you can revisit and follow up.
-                  </p>
+            <div className="flex-1 overflow-y-auto p-10 custom-scrollbar space-y-12">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+
+                <div className="lg:col-span-4 space-y-10">
+                  <section className="relative">
+                    <div className="flex items-center justify-between mb-8">
+                      <div className="flex items-center gap-3">
+                        <Trophy className={`w-5 h-5 ${selectedCandidate?.feedback?.data?.feedback?.recommendation === "Yes" ? (darkTheme ? "text-blue-400" : "text-blue-600") : (darkTheme ? "text-rose-400" : "text-rose-600")}`} />
+                        <h2 className="text-xs font-black uppercase tracking-[0.25em] text-slate-500">Technical Score</h2>
+                      </div>
+                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${selectedCandidate?.feedback?.data?.feedback?.recommendation === "Yes" ? 'bg-blue-500/10 text-blue-400' : 'bg-rose-500/10 text-rose-400'}`}>
+                        AI Scored
+                      </span>
+                    </div>
+
+                    <div className="space-y-8">
+                      {selectedCandidate.feedback?.data?.feedback?.rating &&
+                        Object.entries(selectedCandidate.feedback.data.feedback.rating).map(([key, val]) => (
+                          <div key={key} className="group relative">
+                            <div className="flex justify-between items-end mb-3">
+                              <span className={`text-xs font-black uppercase tracking-widest ${darkTheme ? "text-slate-400" : "text-slate-500"}`}>
+                                {key}
+                              </span>
+                              <span className={`text-sm font-mono font-black ${darkTheme ? "text-white" : "text-slate-900"}`}>
+                                {val || 0}<span className="text-[10px] opacity-30 ml-1">/ 10</span>
+                              </span>
+                            </div>
+                            <div className={`h-2 w-full rounded-full overflow-hidden ${darkTheme ? "bg-slate-800" : "bg-slate-100"}`}>
+                              <div
+                                className={`h-full transition-all duration-1000 ease-out rounded-full relative bg-gradient-to-r ${selectedCandidate?.feedback?.data?.feedback?.recommendation === "Yes" ? (darkTheme ? "from-blue-600 via-indigo-500 to-purple-500" : "from-blue-500 via-indigo-400 to-purple-400") : (darkTheme ? "from-rose-600 via-red-500 to-orange-500" : "from-rose-500 via-red-400 to-orange-400")}`}
+                                style={{ width: `${(val ?? 0) * 10}%` }}
+                              >
+                                <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
+                              </div>
+                            </div>
+                          </div>
+                        ))
+                      }
+                    </div>
+                  </section>
                 </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className={darkTheme
-                    ? "bg-red-600 text-white border-red-600 hover:bg-red-500 hover:border-red-500 font-semibold whitespace-nowrap shadow-md"
-                    : "bg-red-600 text-white border-red-600 hover:bg-red-500 hover:border-red-500 font-semibold whitespace-nowrap shadow-md"}
-                  onClick={() => {
-                    setSelectedCandidate(null);
-                    setMailCandidate(selectedCandidate);
-                  }}
-                >
-                  <LuSend className="mr-1.5 h-4 w-4" />
-                  Send Mail
-                </Button>
+
+                <div className="lg:col-span-8 space-y-8">
+                  <section className={`p-10 rounded-[3rem] border transition-all duration-500 relative group ${darkTheme
+                      ? `bg-slate-800/20 border-slate-800 hover:border-slate-700`
+                      : `bg-white border-slate-100 shadow-sm hover:border-slate-300`
+                    }`}>
+                    <div className="flex items-center gap-4 mb-8">
+                      <div className={`p-3 rounded-2xl shadow-xl ${selectedCandidate?.feedback?.data?.feedback?.recommendation === "Yes"
+                          ? "bg-blue-600 text-white shadow-blue-900/20"
+                          : "bg-rose-600 text-white shadow-rose-900/20"
+                        }`}>
+                        <FileText className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <h2 className="text-xl font-black tracking-tight">Executive Summary</h2>
+                        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">AI Assessment Output</p>
+                      </div>
+                    </div>
+                    <p className={`text-lg leading-relaxed font-medium ${darkTheme ? "text-slate-300" : "text-slate-600"}`}>
+                      {selectedCandidate.feedback?.data?.feedback?.summary || "Deep analysis pending system refresh."}
+                    </p>
+                  </section>
+
+                  <section className={`p-10 rounded-[3rem] border transition-all duration-500 ${selectedCandidate?.feedback?.data?.feedback?.recommendation === "Yes"
+                      ? (darkTheme ? "bg-emerald-500/5 border-emerald-500/10 hover:border-emerald-500/30" : "bg-emerald-50/30 border-emerald-100 hover:border-emerald-200")
+                      : (darkTheme ? "bg-rose-500/5 border-rose-500/10 hover:border-rose-500/30" : "bg-rose-50/30 border-rose-100 hover:border-rose-200")
+                    }`}>
+                    <div className="flex items-center gap-4 mb-8">
+                      <div className={`p-3 rounded-2xl shadow-xl ${selectedCandidate?.feedback?.data?.feedback?.recommendation === "Yes"
+                          ? "bg-emerald-600 text-white shadow-emerald-900/20"
+                          : "bg-rose-600 text-white shadow-rose-900/20"
+                        }`}>
+                        <MessageSquare className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <h2 className={`text-xl font-black tracking-tight ${selectedCandidate?.feedback?.data?.feedback?.recommendation === "Yes" ? 'text-emerald-500' : 'text-rose-500'}`}>Decision Rationale</h2>
+                        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Interviewer Notes</p>
+                      </div>
+                    </div>
+                    <div className="relative">
+                      <span className={`absolute -top-4 -left-2 text-6xl font-serif ${selectedCandidate?.feedback?.data?.feedback?.recommendation === "Yes" ? 'text-emerald-500/10' : 'text-rose-500/10'}`}>"</span>
+                      <p className={`text-lg italic leading-relaxed relative z-10 ${darkTheme ? "text-slate-300" : "text-slate-700"}`}>
+                        {selectedCandidate.feedback?.data?.feedback?.recommendationMessage || "Proceed with standard protocol."}
+                      </p>
+                    </div>
+                  </section>
+                </div>
               </div>
             </div>
-          ) : (
-            <div className={`mt-6 rounded-xl overflow-hidden ${darkTheme
-              ? "bg-gradient-to-r from-emerald-950/40 to-emerald-900/20 border border-emerald-800/40"
-              : "bg-gradient-to-r from-emerald-50 to-emerald-100/50 border border-emerald-200"}`}>
-              <div className="flex items-center justify-between gap-4 px-5 py-4">
-                <div className="flex items-center gap-3 flex-1">
-                  <CheckCircle2 className={`h-5 w-5 flex-shrink-0 ${darkTheme ? "text-emerald-300" : "text-emerald-600"}`} />
-                  <p className={`text-sm font-medium font-inter leading-relaxed ${darkTheme ? "text-emerald-100" : "text-emerald-900"}`}>
-                    Candidate approved by AI interviewer. You may proceed or send next steps.
-                  </p>
+
+            <div className={`px-10 py-8 border-t shrink-0 backdrop-blur-xl ${darkTheme ? "bg-slate-900/80 border-slate-800/50" : "bg-white/80 border-slate-100"
+              }`}>
+              <div className={`flex flex-col md:flex-row items-center justify-between gap-8 p-6 rounded-[2rem] border transition-all shadow-2xl ${selectedCandidate?.feedback?.data?.feedback?.recommendation === "Yes"
+                  ? (darkTheme ? "bg-emerald-500/5 border-emerald-500/20" : "bg-emerald-50/50 border-emerald-100")
+                  : (darkTheme ? "bg-rose-500/5 border-rose-500/20" : "bg-rose-50/50 border-rose-100")
+                }`}>
+                <div className="flex items-center gap-6">
+                  <div className={`w-16 h-16 rounded-3xl flex items-center justify-center shadow-inner ${selectedCandidate?.feedback?.data?.feedback?.recommendation === "Yes"
+                      ? (darkTheme ? "bg-emerald-500/20 text-emerald-400" : "bg-emerald-100 text-emerald-600")
+                      : (darkTheme ? "bg-rose-500/20 text-rose-400" : "bg-rose-100 text-rose-600")
+                    }`}>
+                    {selectedCandidate?.feedback?.data?.feedback?.recommendation === "Yes" ? <CheckCircle2 className="w-8 h-8" /> : <AlertTriangle className="w-8 h-8" />}
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-black tracking-tight">
+                      {selectedCandidate?.feedback?.data?.feedback?.recommendation === "Yes" ? "Greenlit for Hiring" : "Review Candidate Rejection"}
+                    </h4>
+                    <p className={`text-sm font-bold opacity-50`}>
+                      {selectedCandidate?.feedback?.data?.feedback?.recommendation === "Yes"
+                        ? "Candidate successfully cleared all automated benchmarks."
+                        : "AI flags indicated this candidate does not meet the minimum requirements."
+                      }
+                    </p>
+                  </div>
                 </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className={darkTheme
-                    ? "bg-emerald-600 text-white border-emerald-600 hover:bg-emerald-500 hover:border-emerald-500 font-semibold whitespace-nowrap shadow-md"
-                    : "bg-emerald-600 text-white border-emerald-600 hover:bg-emerald-500 hover:border-emerald-500 font-semibold whitespace-nowrap shadow-md"}
-                  onClick={() => {
-                    setSelectedCandidate(null);
-                    setMailCandidate(selectedCandidate);
-                  }}
-                >
-                  <LuSend className="mr-1.5 h-4 w-4" />
-                  Send Mail
-                </Button>
+
+                <div className="flex items-center gap-4 w-full md:w-auto">
+                  <button
+                    className={`flex-1 md:flex-none px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all ${darkTheme ? "bg-slate-800 hover:bg-slate-700 text-white" : "bg-white hover:bg-slate-50 border border-slate-200 text-slate-700"
+                      }`}
+                    onClick={() => setSelectedCandidate(null)}
+                  >
+                    Close View
+                  </button>
+                  <button
+                    className={`flex-1 md:flex-none flex items-center justify-center gap-3 px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-[0.2em] text-white shadow-2xl transition-all hover:scale-[1.05] active:scale-95 group ${selectedCandidate?.feedback?.data?.feedback?.recommendation === "Yes"
+                        ? "bg-gradient-to-r from-emerald-600 to-blue-600 shadow-emerald-500/30"
+                        : "bg-gradient-to-r from-rose-600 to-red-600 shadow-rose-500/30"
+                      }`}
+                    onClick={() => {
+                      setMailCandidate(selectedCandidate);
+                      setSelectedCandidate(null);
+                    }}
+                  >
+                    <Send className="w-4 h-4" />
+                    {selectedCandidate?.feedback?.data?.feedback?.recommendation === "Yes" ? "Contact" : "Send Feedback"}
+                  </button>
+                </div>
               </div>
             </div>
-          )}
-        </DialogContent>
-      </Dialog>
+          </div>
+        </div>
+      )}
+      {/* ===== END: CANDIDATE DETAILS OVERLAY ===== */}
 
       {/* RESUME DIALOG */}
       <Dialog
@@ -645,6 +723,7 @@ export default function InterviewDetailsPage() {
               )}
             </div>
 
+            {/* ===== START: ATS REPORT OVERLAY ===== */}
             {/* Right: ATS Report */}
             <div className={`w-full h-full p-8 overflow-y-auto flex flex-col ${darkTheme ? "bg-gradient-to-br from-slate-950 via-slate-900 to-slate-900" : "bg-gradient-to-br from-slate-50 via-white to-blue-50"}`}>
               {!atsReports?.[resumeCandidate?.userEmail] ? (
@@ -795,6 +874,7 @@ export default function InterviewDetailsPage() {
                 </div>
               )}
             </div>
+            {/* ===== END: ATS REPORT OVERLAY ===== */}
           </div>
         </DialogContent>
       </Dialog>
